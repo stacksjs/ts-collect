@@ -3,6 +3,7 @@ import { transformerTwoslash } from '@shikijs/vitepress-twoslash'
 import { withPwa } from '@vite-pwa/vitepress'
 import { defineConfig } from 'vitepress'
 
+import dynamicRoutes from '../api/dynamicRoutes'
 import viteConfig from './vite.config'
 
 // https://vitepress.dev/reference/site-config
@@ -17,13 +18,9 @@ const analyticsHead: HeadConfig[] = [
     },
   ],
 ]
-
 const nav = [
-  {
-    text: 'Changelog',
-    link: 'https://github.com/stacksjs/ts-collect/blob/main/CHANGELOG.md',
-  },
-  // { text: 'Blog', link: 'https://updates.ow3.org' },
+  { text: 'News', link: 'https://stacksjs.org/news' },
+  { text: 'Changelog', link: 'https://github.com/stacksjs/ts-collect/releases' },
   {
     text: 'Resources',
     items: [
@@ -31,16 +28,11 @@ const nav = [
       { text: 'Sponsors', link: '/sponsors' },
       { text: 'Partners', link: '/partners' },
       { text: 'Postcardware', link: '/postcardware' },
+      { text: 'License', link: '/license' },
       {
         items: [
-          {
-            text: 'Awesome Stacks',
-            link: 'https://github.com/stacksjs/awesome-stacks',
-          },
-          {
-            text: 'Contributing',
-            link: 'https://github.com/stacksjs/stacks/blob/main/.github/CONTRIBUTING.md',
-          },
+          { text: 'Awesome Stacks', link: 'https://github.com/stacksjs/awesome-stacks' },
+          { text: 'Contributing', link: 'https://github.com/stacksjs/ts-collect/blob/main/.github/CONTRIBUTING.md' },
         ],
       },
     ],
@@ -56,7 +48,20 @@ const sidebar = [
       { text: 'Usage', link: '/usage' },
     ],
   },
+  {
+    text: 'API',
+    items: dynamicRoutes.sort((a, b) => {
+      return a.path.localeCompare(b.path)
+    }).map(route => ({
+      text: route.path,
+      link: `/api/${route.path}`,
+    })),
+
+  },
 ]
+
+const description = 'Lightweight, zero-dependency TypeScript collection manipulation library with 100% type safety and chainable methods for arrays and objects.'
+const title = 'ts-collect | Powerful, yet lightweight, Laravel-like Collections written for TypeScript.'
 
 export default withPwa(
   defineConfig({
@@ -64,14 +69,23 @@ export default withPwa(
     title: 'ts-collect',
     description: 'Powerful, yet lightweight, Laravel-like Collections written for TypeScript.',
     metaChunk: true,
+    cleanUrls: true,
 
     head: [
       ['link', { rel: 'icon', type: 'image/svg+xml', href: './images/logo-mini.svg' }],
       ['link', { rel: 'icon', type: 'image/png', href: './images/logo.png' }],
       ['meta', { name: 'theme-color', content: '#0A0ABC' }],
+      ['meta', { name: 'title', content: title }],
+      ['meta', { name: 'description', content: description }],
+      ['meta', { name: 'author', content: 'Stacks.js, Inc.' }],
+      ['meta', {
+        name: 'tags',
+        content: 'ts-collect, typescript, collection, lightweight, array-manipulation, object-utilities, type-safe, immutable, data-structures, functional-programming',
+      }],
       ['meta', { property: 'og:type', content: 'website' }],
       ['meta', { property: 'og:locale', content: 'en' }],
-      ['meta', { property: 'og:title', content: 'ts-collect | l, yet lightweight, Laravel-like Collections written for TypeScript.' }],
+      ['meta', { property: 'og:title', content: title }],
+      ['meta', { property: 'og:description', content: description }],
       ['meta', { property: 'og:site_name', content: 'ts-collect' }],
       ['meta', { property: 'og:image', content: './images/og-image.jpg' }],
       ['meta', { property: 'og:url', content: 'https://ts-collect.netlify.app/' }],
@@ -80,7 +94,10 @@ export default withPwa(
     ],
 
     themeConfig: {
-      logo: './images/logo-transparent.svg',
+      logo: {
+        light: './images/logo-transparent.svg',
+        dark: './images/logo-white-transparent.svg',
+      },
 
       nav,
       sidebar,

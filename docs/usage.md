@@ -540,4 +540,4 @@ const products = collect<Product>([
 products.where('invalid', 'value') // Type error!
 ```
 
-For more detailed documentation and examples, please visit our documentation site.
+For more detailed documentation and examples, please visit our [documentation site](https://ts-collect.netlify.app/).
