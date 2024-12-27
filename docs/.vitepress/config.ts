@@ -81,7 +81,7 @@ export default withPwa(
       ['meta', { name: 'author', content: 'Stacks.js, Inc.' }],
       ['meta', {
         name: 'tags',
-        content: 'ts-collect, typescript, collection, lightweight, array-manipulation, object-utilities, type-safe, immutable, data-structures, functional-programming',
+        content: 'ts-collect, typescript, collection, lightweight, array-manipulation, object-utilities, type-safe, immutable, data-structures, functional-programming, laravel-like',
       }],
       ['meta', { property: 'og:type', content: 'website' }],
       ['meta', { property: 'og:locale', content: 'en' }],
