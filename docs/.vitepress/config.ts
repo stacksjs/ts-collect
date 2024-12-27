@@ -43,7 +43,7 @@ const sidebar = [
   {
     text: 'Get Started',
     items: [
-      { text: 'Introduction', link: '/intro' },
+      { text: 'Intro', link: '/intro' },
       { text: 'Install', link: '/install' },
       { text: 'Usage', link: '/usage' },
     ],
@@ -58,6 +58,7 @@ const sidebar = [
     })),
 
   },
+  { text: 'Showcase', link: '/Showcase' },
 ]
 
 const description = 'Lightweight, zero-dependency TypeScript collection manipulation library with 100% type safety and chainable methods for arrays and objects.'
