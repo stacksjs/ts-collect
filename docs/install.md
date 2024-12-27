@@ -1,18 +1,25 @@
 # Install
 
-## Bun & Node.js
+Installing `ts-collect` is easy. Simply pull it in via your package manager of choice.
 
-```bash
-bun install ts-collect
+::: code-group
+
+```sh [npm]
 npm install ts-collect
-
-# or, invoke immediately
-bunx ts-collect
-npx ts-collect
+# npm i ts-collect
 ```
 
-_We are looking to publish this package npm under the name `ts-collect`. We are also hoping npm will release the name for us._
+```sh [bun]
+bun install ts-collect
+# bun add ts-collect
+```
 
-## Binaries
+```sh [pnpm]
+pnpm add ts-collect
+```
 
-For now, you can download the `ts-collect` binaries from the [releases page](https://github.com/stacksjs/ts-collect/releases/tag/v0.4.0). Choose the binary that matches your platform and architecture:
+```sh [yarn]
+yarn add ts-collect
+```
+
+:::
