@@ -13,7 +13,7 @@ collect(arrays).collapse()
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 const collection = collect([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
 const collapsed = collection.collapse()

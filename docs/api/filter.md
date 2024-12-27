@@ -5,7 +5,8 @@ The `filter()` method creates a new collection containing all elements that pass
 ## Basic Syntax
 
 ```typescript
-collect(items).filter((item, index?) => boolean)
+const callback: (item, index?) => boolean
+collect(items).filter(callback)
 ```
 
 ## Examples
@@ -13,7 +14,7 @@ collect(items).filter((item, index?) => boolean)
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 const numbers = collect([1, 2, 3, 4, 5, 6])
 const evenNumbers = numbers.filter(num => num % 2 === 0)
@@ -225,7 +226,7 @@ interface SpecialItem extends BaseItem {
 }
 
 // Using type guard with filter
-const items = collect<BaseItem>([...])
+const items = collect<BaseItem>([])
 const specialItems = items
   .filter((item): item is SpecialItem => item.type === 'special')
 

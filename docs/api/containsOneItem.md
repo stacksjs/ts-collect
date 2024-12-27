@@ -13,7 +13,7 @@ collect(items).containsOneItem()
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 const single = collect([1])
 console.log(single.containsOneItem()) // true

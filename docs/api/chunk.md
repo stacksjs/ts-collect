@@ -14,7 +14,7 @@ collect(items).chunk(size)
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 const numbers = collect([1, 2, 3, 4, 5, 6, 7, 8])
 const chunks = numbers.chunk(3)

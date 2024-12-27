@@ -17,7 +17,7 @@ collect(items).average(key)
 ### Basic Usage with Numbers
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 const collection = collect([1, 2, 3, 4, 5])
 console.log(collection.average()) // 3

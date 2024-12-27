@@ -13,7 +13,7 @@ collect(values).combine(keys)
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 const keys = ['name', 'age', 'city']
 const values = ['John Doe', 25, 'New York']

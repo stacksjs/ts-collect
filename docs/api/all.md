@@ -13,7 +13,7 @@ collect(items).all()
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 const collection = collect([1, 2, 3, 4, 5])
 console.log(collection.all()) // [1, 2, 3, 4, 5]
