@@ -1,5 +1,6 @@
 antfu
 biomejs
+bluesky
 booleanish
 bumpp
 bunx
