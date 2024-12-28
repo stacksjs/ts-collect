@@ -12,113 +12,113 @@
 
 ### Core Operations (Laravel Collection API)
 
-- [x] Standard operations (map, filter, reduce)
-- [x] FlatMap and MapSpread operations
-- [x] Element access (first, firstOrFail, last, nth)
-- [x] Subset operations (take, skip, slice)
-- [x] Unique value handling
-- [x] Chunk operations
-- [x] Tap and Pipe utilities
-- [x] Collection conversion (toArray, toMap, toSet)
-- [x] Collection inspection (count, isEmpty, isNotEmpty)
-- [x] Combine and collapse operations
-- [x] Contains checks (contains, containsOneItem)
-- [x] Each iterations (each, eachSpread)
-- [x] Only and except operations
-- [x] Forget and random selection
-- [x] Push, prepend, and put operations
-- [x] Skip and take variants (skipUntil, skipWhile, takeUntil, takeWhile)
-- [x] Sole item retrieval
-- [x] Conditional execution (when, unless)
-- [x] Wrap and unwrap operations
+- Standard operations _(map, filter, reduce)_
+- FlatMap and MapSpread operations
+- Element access _(first, firstOrFail, last, nth)_
+- Subset operations _(take, skip, slice)_
+- Unique value handling
+- Chunk operations
+- Tap and Pipe utilities
+- Collection conversion _(toArray, toMap, toSet)_
+- Collection inspection _(count, isEmpty, isNotEmpty)_
+- Combine and collapse operations
+- Contains checks _(contains, containsOneItem)_
+- Each iterations _(each, eachSpread)_
+- Only and except operations
+- Forget and random selection
+- Push, prepend, and put operations
+- Skip and take variants _(skipUntil, skipWhile, takeUntil, takeWhile)_
+- Sole item retrieval
+- Conditional execution _(when, unless)_
+- Wrap and unwrap operations
 
 ### Advanced Array & Object Operations
 
-- [x] GroupBy with multiple key support
-- [x] Value extraction (pluck)
-- [x] Where clause variations
-  - Basic where operations (where, whereIn, whereNotIn)
-  - Range checks (whereBetween, whereNotBetween)
-  - Null handling (whereNull, whereNotNull)
-  - Pattern matching (whereLike, whereRegex)
-  - Type checks (whereInstanceOf)
-- [x] Comprehensive sorting
+- GroupBy with multiple key support
+- Value extraction _(pluck)_
+- Where clause variations
+  - Basic where operations _(where, whereIn, whereNotIn)_
+  - Range checks _(whereBetween, whereNotBetween)_
+  - Null handling _(whereNull, whereNotNull)_
+  - Pattern matching _(whereLike, whereRegex)_
+  - Type checks _(whereInstanceOf)_
+- Comprehensive sorting
   - Basic sort operations
-  - Key-based sorting (sortBy, sortByDesc)
-  - Key sorting (sortKeys, sortKeysDesc)
-- [x] Pagination & Cursor iteration
-- [x] Data partitioning
-- [x] Set operations (union, intersect, diff, symmetricDiff)
-- [x] Advanced products (cartesianProduct)
-- [x] Recursive operations (mergeRecursive, replaceRecursive)
+  - Key-based sorting _(sortBy, sortByDesc)_
+  - Key sorting _(sortKeys, sortKeysDesc)_
+- Pagination & Cursor iteration
+- Data partitioning
+- Set operations _(union, intersect, diff, symmetricDiff)_
+- Advanced products _(cartesianProduct)_
+- Recursive operations _(mergeRecursive, replaceRecursive)_
 
 ### Advanced Transformations
 
-- [x] Group transformations (mapToGroups)
-- [x] Array handling (mapSpread, mapWithKeys)
-- [x] Conditional mapping (mapUntil, mapOption)
-- [x] Data restructuring (transform)
-- [x] Type system integration (cast, mapInto)
-- [x] Property operations (pick, omit)
-- [x] Fuzzy matching algorithms
-- [x] Key-value transformations (flip, undot)
+- Group transformations _(mapToGroups)_
+- Array handling _(mapSpread, mapWithKeys)_
+- Conditional mapping _(mapUntil, mapOption)_
+- Data restructuring _(transform)_
+- Type system integration _(cast, mapInto)_
+- Property operations _(pick, omit)_
+- Fuzzy matching algorithms
+- Key-value transformations _(flip, undot)_
 
 ### Statistical Operations
 
-- [x] Basic statistics
+- Basic statistics
   - Sum and averages
   - Median and mode
-  - Range (min, max)
+  - Range _(min, max)_
   - Products
-- [x] Advanced statistics
+- Advanced statistics
   - Standard deviation
   - Variance analysis
   - Percentile calculations
   - Correlation coefficients
   - Entropy measures
   - Z-score computations
-  - Distribution analysis (kurtosis, skewness)
+  - Distribution analysis _(kurtosis, skewness)_
   - Covariance calculations
 
 ### Time Series Analysis
 
-- [x] Series conversion and formatting
-- [x] Moving average calculations
-- [x] Trend detection and analysis
-- [x] Seasonality identification
-- [x] Time-based forecasting
-- [x] Temporal grouping operations
-- [x] Time-based aggregations
-- [x] Interval handling
+- Series conversion and formatting
+- Moving average calculations
+- Trend detection and analysis
+- Seasonality identification
+- Time-based forecasting
+- Temporal grouping operations
+- Time-based aggregations
+- Interval handling
 
 ### Machine Learning Operations
 
-- [x] Clustering algorithms
+- Clustering algorithms
   - K-means implementation
   - Cluster analysis tools
-- [x] Regression analysis
+- Regression analysis
   - Linear regression
   - Multi-variable regression
-- [x] Classification tools
-  - K-nearest neighbors (KNN)
+- Classification tools
+  - K-nearest neighbors _(KNN)_
   - Naive Bayes classifier
-- [x] Anomaly detection systems
-- [x] Data preparation
+- Anomaly detection systems
+- Data preparation
   - Normalization
   - Outlier handling
   - Feature scaling
 
 ### Async & Performance Optimization
 
-- [x] Asynchronous operations
+- Asynchronous operations
   - Async mapping
   - Async filtering
   - Async reduction
-- [x] Parallel processing capabilities
-- [x] Batch processing systems
-- [x] Lazy evaluation strategies
-- [x] Caching mechanisms
-- [x] Performance tools
+- Parallel processing capabilities
+- Batch processing systems
+- Lazy evaluation strategies
+- Caching mechanisms
+- Performance tools
   - Profiling utilities
   - Memory optimization
   - Index management
@@ -126,116 +126,116 @@
 
 ### Data Validation & Quality
 
-- [x] Validation framework
+- Validation framework
   - Schema validation
   - Custom rules
   - Async validation
-- [x] Data sanitization tools
-- [x] Quality metrics
-- [x] Constraint management
-- [x] Error handling
-- [x] Type enforcement
+- Data sanitization tools
+- Quality metrics
+- Constraint management
+- Error handling
+- Type enforcement
 
 ### Text Processing
 
-- [x] String manipulation
+- String manipulation
   - Join operations
   - Implode functionality
   - Case transformation
-- [x] URL slug generation
-- [x] Text analysis
+- URL slug generation
+- Text analysis
   - Word frequency
   - N-gram generation
   - Sentiment analysis
-- [x] Pattern matching
-- [x] String normalization
+- Pattern matching
+- String normalization
 
 ### Serialization & Export
 
-- [x] Multiple format support
+- Multiple format support
   - JSON serialization
   - CSV generation
   - XML export
-- [x] Query generation
+- Query generation
   - SQL queries
   - GraphQL operations
-- [x] Integration formats
+- Integration formats
   - Elasticsearch bulk
   - Pandas DataFrame
-- [x] Custom formatting options
+- Custom formatting options
 
 ### Streaming & I/O
 
-- [x] Stream operations
+- Stream operations
   - Stream creation
   - Stream consumption
-- [x] Batch streaming
-- [x] Memory-efficient processing
-- [x] Buffered operations
+- Batch streaming
+- Memory-efficient processing
+- Buffered operations
 
 ### Advanced Mathematical Operations
 
-- [x] Signal processing
+- Signal processing
   - Fast Fourier Transform (FFT)
   - Signal interpolation
   - Convolution operations
-- [x] Calculus operations
+- Calculus operations
   - Differentiation
   - Integration
-- [x] Numerical methods
-- [x] Mathematical optimizations
+- Numerical methods
+- Mathematical optimizations
 
 ### Special Data Types Support
 
-- [x] Geographic calculations
+- Geographic calculations
   - Distance computations
   - Coordinate handling
-- [x] Financial operations
+- Financial operations
   - Money formatting
   - Currency handling
-- [x] DateTime operations
+- DateTime operations
   - Formatting
   - Timezone handling
-- [x] Complex number support
+- Complex number support
   - Basic operations
   - Advanced computations
 
 ### Versioning & History
 
-- [x] Version management
+- Version management
   - Version tracking
   - History storage
-- [x] Change tracking
+- Change tracking
   - Diff generation
   - Change detection
-- [x] History operations
+- History operations
   - Rollback support
   - Version comparison
 
 ### Development Tools
 
-- [x] Development aids
+- Development aids
   - Playground environment
   - Debugging utilities
-- [x] Analysis tools
+- Analysis tools
   - Pipeline visualization
   - Performance benchmarking
-- [x] Development modes
+- Development modes
   - Debug mode
   - Strict mode
 
 ### Utility Features
 
-- [x] System configuration
+- System configuration
   - Configuration management
   - Environment handling
-- [x] Internationalization
+- Internationalization
   - Locale support
   - Timezone management
-- [x] Error handling
+- Error handling
   - Error modes
   - Exception handling
-- [x] Resource management
+- Resource management
   - Memory tracking
   - Resource cleanup
 
