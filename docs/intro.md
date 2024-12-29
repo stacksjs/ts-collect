@@ -239,8 +239,6 @@
   - Memory tracking
   - Resource cleanup
 
-  ## Collections API
-
 | API Methods              |      API Methods       |     API Methods       |
 | ------------------------ | ---------------------- | -------------------- |
 | [avg](https://ts-collect.netlify.app/api/avg)                     | [batch](https://ts-collect.netlify.app/api/batch)             | [cache](https://ts-collect.netlify.app/api/cache)                 |

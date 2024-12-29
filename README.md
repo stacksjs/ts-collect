@@ -245,14 +245,6 @@
   - Memory tracking
   - Resource cleanup
 
-## Get Started
-
-```bash
-bun install ts-collect
-```
-
-## Collections API
-
 | API Methods              |      API Methods       |     API Methods       |
 | ------------------------ | ---------------------- | -------------------- |
 | [avg](https://ts-collect.netlify.app/api/avg)                     | [batch](https://ts-collect.netlify.app/api/batch)             | [cache](https://ts-collect.netlify.app/api/cache)                 |
@@ -294,6 +286,12 @@ bun install ts-collect
 | [whereNotBetween](https://ts-collect.netlify.app/api/whereNotBetween)       | [whereNotIn](https://ts-collect.netlify.app/api/whereNotIn)          | [whereNotNull](https://ts-collect.netlify.app/api/whereNotNull)         |
 | [whereNull](https://ts-collect.netlify.app/api/whereNull)              | [whereRegex](https://ts-collect.netlify.app/api/whereRegex)           | [wrap](https://ts-collect.netlify.app/api/wrap)                  |
 | [zscore](https://ts-collect.netlify.app/api/zscore)                  |                              |                              |
+
+## Get Started
+
+```bash
+bun install ts-collect
+```
 
 ## Usage
 
