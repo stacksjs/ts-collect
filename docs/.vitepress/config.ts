@@ -81,7 +81,7 @@ export default withPwa(
       ['meta', { name: 'author', content: 'Stacks.js, Inc.' }],
       ['meta', {
         name: 'tags',
-        content: 'ts-collect, typescript, collection, lightweight, array-manipulation, object-utilities, type-safe, immutable, data-structures, functional-programming, laravel-like',
+        content: 'ts-collect, typescript, collection, lightweight, Laravel-like, type-safe, API documentation, data processing, statistical analysis, machine learning, clustering algorithms, linear regression, K-means clustering, KNN, anomaly detection, normalization, outlier detection, z-score, standard deviation, time series, moving average, trend detection, forecasting, stream processing, JSON serialization, CSV export, XML generation, Elasticsearch integration, Pandas DataFrame, sentiment analysis, text processing, n-grams, word frequency, advanced mathematics, FFT, signal processing, differentiation, integration, geographic calculations, financial formatting, currency handling, datetime operations, version tracking, data validation, schema validation, lazy evaluation, asynchronous operations, batch processing, caching mechanisms, debugging tools, profiling utilities, performance monitoring, memory optimization, error handling, internationalization, locale support, timezone management',
       }],
       ['meta', { property: 'og:type', content: 'website' }],
       ['meta', { property: 'og:locale', content: 'en' }],
