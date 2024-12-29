@@ -68,7 +68,7 @@
 - Basic statistics
   - [Sum](https://ts-collect.netlify.app/api/sum) and [averages](https://ts-collect.netlify.app/api/avg)
   - [Median](https://ts-collect.netlify.app/api/median) and [mode](https://ts-collect.netlify.app/api/mode)
-  - Range ([min](https://ts-collect.netlify.app/api/min), [max](https://ts-collect.netlify.app/api/max))
+  - Range _([min](https://ts-collect.netlify.app/api/min), [max](https://ts-collect.netlify.app/api/max))_
   - [Products](https://ts-collect.netlify.app/api/product)
 - Advanced statistics
   - [Standard deviation](https://ts-collect.netlify.app/api/standarddeviation)
@@ -77,7 +77,7 @@
   - [Correlation coefficients](https://ts-collect.netlify.app/api/correlation)
   - [Entropy measures](https://ts-collect.netlify.app/api/entropy)
   - [Z-score computations](https://ts-collect.netlify.app/api/zscore)
-  - Distribution analysis ([kurtosis](https://ts-collect.netlify.app/api/kurtosis), [skewness](https://ts-collect.netlify.app/api/skewness))
+  - Distribution analysis _([kurtosis](https://ts-collect.netlify.app/api/kurtosis), [skewness](https://ts-collect.netlify.app/api/skewness))_
   - [Covariance calculations](https://ts-collect.netlify.app/api/covariance)
 
 ### Time Series Analysis
