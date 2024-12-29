@@ -447,8 +447,8 @@ export interface CollectionOperations<T> extends Collection<T> {
 
   // Serialization & Deserialization
   toJSON: (options?: SerializationOptions) => string
-  toCsv: (options?: SerializationOptions) => string
-  toXml: (options?: SerializationOptions) => string
+  toCSV: (options?: SerializationOptions) => string
+  toXML: (options?: SerializationOptions) => string
   parse: (data: string, format: 'json' | 'csv' | 'xml') => CollectionOperations<T>
 
   // Caching & Performance

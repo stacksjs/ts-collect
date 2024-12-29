@@ -18,230 +18,230 @@
 
 ### Core Operations (Laravel Collection API)
 
-- [x] Standard operations (map, filter, reduce)
-- [x] FlatMap and MapSpread operations
-- [x] Element access (first, firstOrFail, last, nth)
-- [x] Subset operations (take, skip, slice)
-- [x] Unique value handling
-- [x] Chunk operations
-- [x] Tap and Pipe utilities
-- [x] Collection conversion (toArray, toMap, toSet)
-- [x] Collection inspection (count, isEmpty, isNotEmpty)
-- [x] Combine and collapse operations
-- [x] Contains checks (contains, containsOneItem)
-- [x] Each iterations (each, eachSpread)
-- [x] Only and except operations
-- [x] Forget and random selection
-- [x] Push, prepend, and put operations
-- [x] Skip and take variants (skipUntil, skipWhile, takeUntil, takeWhile)
-- [x] Sole item retrieval
-- [x] Conditional execution (when, unless)
-- [x] Wrap and unwrap operations
+- Standard operations _([map](https://ts-collect.netlify.app/api/map), [filter](https://ts-collect.netlify.app/api/filter), [reduce](https://ts-collect.netlify.app/api/reduce))_
+- FlatMap and MapSpread operations _([flatMap](https://ts-collect.netlify.app/api/flatMap), [mapSpread](https://ts-collect.netlify.app/api/mapSpread))_
+- Element access _([first](https://ts-collect.netlify.app/api/first), [firstOrFail](https://ts-collect.netlify.app/api/firstOrFail), [last](https://ts-collect.netlify.app/api/last), [nth](https://ts-collect.netlify.app/api/nth))_
+- Subset operations _([take](https://ts-collect.netlify.app/api/take), [skip](https://ts-collect.netlify.app/api/skip), [slice](https://ts-collect.netlify.app/api/slice))_
+- Unique value handling _([unique](https://ts-collect.netlify.app/api/unique))_
+- Chunk operations _([chunk](https://ts-collect.netlify.app/api/chunk))_
+- Tap and Pipe utilities _([tap](https://ts-collect.netlify.app/api/tap), [pipe](https://ts-collect.netlify.app/api/pipe))_
+- Collection conversion _([toArray](https://ts-collect.netlify.app/api/toArray), [toMap](https://ts-collect.netlify.app/api/toMap), [toSet](https://ts-collect.netlify.app/api/toSet))_
+- Collection inspection _([count](https://ts-collect.netlify.app/api/count), [isEmpty](https://ts-collect.netlify.app/api/isEmpty), [isNotEmpty](https://ts-collect.netlify.app/api/isNotEmpty))_
+- Combine and collapse operations _([combine](https://ts-collect.netlify.app/api/combine), [collapse](https://ts-collect.netlify.app/api/collapse))_
+- Contains checks _([contains](https://ts-collect.netlify.app/api/contains), [containsOneItem](https://ts-collect.netlify.app/api/containsOneItem))_
+- Each iterations _([each](https://ts-collect.netlify.app/api/each), [eachSpread](https://ts-collect.netlify.app/api/eachSpread))_
+- Only and except operations _([only](https://ts-collect.netlify.app/api/only), [except](https://ts-collect.netlify.app/api/except))_
+- Forget and random selection _([forget](https://ts-collect.netlify.app/api/forget), [random](https://ts-collect.netlify.app/api/random))_
+- Push, prepend, and put operations _([push](https://ts-collect.netlify.app/api/push), [prepend](https://ts-collect.netlify.app/api/prepend), [put](https://ts-collect.netlify.app/api/put))_
+- Skip and take variants _([skipUntil](https://ts-collect.netlify.app/api/skipUntil), [skipWhile](https://ts-collect.netlify.app/api/skipWhile), [takeUntil](https://ts-collect.netlify.app/api/takeUntil), [takeWhile](https://ts-collect.netlify.app/api/takeWhile))_
+- Sole item retrieval _([sole](https://ts-collect.netlify.app/api/sole))_
+- Conditional execution _([when](https://ts-collect.netlify.app/api/when), [unless](https://ts-collect.netlify.app/api/unless))_
+- Wrap and unwrap operations _([wrap](https://ts-collect.netlify.app/api/wrap), [unwrap](https://ts-collect.netlify.app/api/unwrap))_
 
 ### Advanced Array & Object Operations
 
-- [x] GroupBy with multiple key support
-- [x] Value extraction (pluck)
-- [x] Where clause variations
-  - Basic where operations (where, whereIn, whereNotIn)
-  - Range checks (whereBetween, whereNotBetween)
-  - Null handling (whereNull, whereNotNull)
-  - Pattern matching (whereLike, whereRegex)
-  - Type checks (whereInstanceOf)
-- [x] Comprehensive sorting
-  - Basic sort operations
-  - Key-based sorting (sortBy, sortByDesc)
-  - Key sorting (sortKeys, sortKeysDesc)
-- [x] Pagination & Cursor iteration
-- [x] Data partitioning
-- [x] Set operations (union, intersect, diff, symmetricDiff)
-- [x] Advanced products (cartesianProduct)
-- [x] Recursive operations (mergeRecursive, replaceRecursive)
+- GroupBy with multiple key support _([groupBy](https://ts-collect.netlify.app/api/groupBy), [groupByMultiple](https://ts-collect.netlify.app/api/groupByMultiple))_
+- Value extraction _([pluck](https://ts-collect.netlify.app/api/pluck))_
+- Where clause variations
+  - Basic where operations _([where](https://ts-collect.netlify.app/api/where), [whereIn](https://ts-collect.netlify.app/api/whereIn), [whereNotIn](https://ts-collect.netlify.app/api/whereNotIn))_
+  - Range checks _([whereBetween](https://ts-collect.netlify.app/api/whereBetween), [whereNotBetween](https://ts-collect.netlify.app/api/whereNotBetween))_
+  - Null handling _([whereNull](https://ts-collect.netlify.app/api/whereNull), [whereNotNull](https://ts-collect.netlify.app/api/whereNotNull))_
+  - Pattern matching _([whereLike](https://ts-collect.netlify.app/api/whereLike), [whereRegex](https://ts-collect.netlify.app/api/whereRegex))_
+  - Type checks _([whereInstanceOf](https://ts-collect.netlify.app/api/whereInstanceOf))_
+- Comprehensive sorting
+  - Basic sort operations _([sort](https://ts-collect.netlify.app/api/sort))_
+  - Key-based sorting _([sortBy](https://ts-collect.netlify.app/api/sortBy), [sortByDesc](https://ts-collect.netlify.app/api/sortByDesc))_
+  - Key sorting _([sortKeys](https://ts-collect.netlify.app/api/sortKeys), [sortKeysDesc](https://ts-collect.netlify.app/api/sortKeysDesc))_
+- [Pagination](https://ts-collect.netlify.app/api/pagination) & [Cursor](https://ts-collect.netlify.app/api/cursor) iteration
+- [Data partitioning](https://ts-collect.netlify.app/api/partitioning)
+- Set operations _([union](https://ts-collect.netlify.app/api/union), [intersect](https://ts-collect.netlify.app/api/intersect), [diff](https://ts-collect.netlify.app/api/diff), [symmetricDiff](https://ts-collect.netlify.app/api/symmetricDiff))_
+- Advanced products _([cartesianProduct](https://ts-collect.netlify.app/api/cartesianProduct))_
+- Recursive operations _([mergeRecursive](https://ts-collect.netlify.app/api/mergeRecursive), [replaceRecursive](https://ts-collect.netlify.app/api/replaceRecursive))_
 
 ### Advanced Transformations
 
-- [x] Group transformations (mapToGroups)
-- [x] Array handling (mapSpread, mapWithKeys)
-- [x] Conditional mapping (mapUntil, mapOption)
-- [x] Data restructuring (transform)
-- [x] Type system integration (cast, mapInto)
-- [x] Property operations (pick, omit)
-- [x] Fuzzy matching algorithms
-- [x] Key-value transformations (flip, undot)
+- Group transformations _([mapToGroups](https://ts-collect.netlify.app/api/mapToGroups))_
+- Array handling _([mapSpread](https://ts-collect.netlify.app/api/mapSpread), [mapWithKeys](https://ts-collect.netlify.app/api/mapWithKeys))_
+- Conditional mapping _([mapUntil](https://ts-collect.netlify.app/api/mapUntil), [mapOption](https://ts-collect.netlify.app/api/mapOption))_
+- Data restructuring _([transform](https://ts-collect.netlify.app/api/transform))_
+- Type system integration _([cast](https://ts-collect.netlify.app/api/cast), [mapInto](https://ts-collect.netlify.app/api/mapInto))_
+- Property operations _([pick](https://ts-collect.netlify.app/api/pick), [omit](https://ts-collect.netlify.app/api/omit))_
+- [Fuzzy matching](https://ts-collect.netlify.app/api/fuzzyMatch) algorithms
+- Key-value transformations _([flip](https://ts-collect.netlify.app/api/flip), [undot](https://ts-collect.netlify.app/api/undot))_
 
 ### Statistical Operations
 
-- [x] Basic statistics
-  - Sum and averages
-  - Median and mode
-  - Range (min, max)
-  - Products
-- [x] Advanced statistics
-  - Standard deviation
-  - Variance analysis
-  - Percentile calculations
-  - Correlation coefficients
-  - Entropy measures
-  - Z-score computations
-  - Distribution analysis (kurtosis, skewness)
-  - Covariance calculations
+- Basic statistics
+  - [Sum](https://ts-collect.netlify.app/api/sum) and [averages](https://ts-collect.netlify.app/api/avg)
+  - [Median](https://ts-collect.netlify.app/api/median) and [mode](https://ts-collect.netlify.app/api/mode)
+  - Range ([min](https://ts-collect.netlify.app/api/min), [max](https://ts-collect.netlify.app/api/max))
+  - [Products](https://ts-collect.netlify.app/api/product)
+- Advanced statistics
+  - [Standard deviation](https://ts-collect.netlify.app/api/standarddeviation)
+  - [Variance analysis](https://ts-collect.netlify.app/api/variance)
+  - [Percentile calculations](https://ts-collect.netlify.app/api/percentile)
+  - [Correlation coefficients](https://ts-collect.netlify.app/api/correlation)
+  - [Entropy measures](https://ts-collect.netlify.app/api/entropy)
+  - [Z-score computations](https://ts-collect.netlify.app/api/zscore)
+  - Distribution analysis ([kurtosis](https://ts-collect.netlify.app/api/kurtosis), [skewness](https://ts-collect.netlify.app/api/skewness))
+  - [Covariance calculations](https://ts-collect.netlify.app/api/covariance)
 
 ### Time Series Analysis
 
-- [x] Series conversion and formatting
-- [x] Moving average calculations
-- [x] Trend detection and analysis
-- [x] Seasonality identification
-- [x] Time-based forecasting
-- [x] Temporal grouping operations
-- [x] Time-based aggregations
-- [x] Interval handling
+- [Series conversion](https://ts-collect.netlify.app/api/timeseries) and [formatting](https://ts-collect.netlify.app/api/datetime)
+- [Moving average calculations](https://ts-collect.netlify.app/api/movingAverage)
+- [Trend detection](https://ts-collect.netlify.app/api/trend) and analysis
+- [Seasonality identification](https://ts-collect.netlify.app/api/seasonality)
+- [Time-based forecasting](https://ts-collect.netlify.app/api/forecast)
+- [Temporal grouping operations](https://ts-collect.netlify.app/api/groupbymultiple)
+- [Time-based aggregations](https://ts-collect.netlify.app/api/aggregate)
+- [Interval handling](https://ts-collect.netlify.app/api/timeseries)
 
 ### Machine Learning Operations
 
-- [x] Clustering algorithms
-  - K-means implementation
-  - Cluster analysis tools
-- [x] Regression analysis
-  - Linear regression
-  - Multi-variable regression
-- [x] Classification tools
-  - K-nearest neighbors (KNN)
-  - Naive Bayes classifier
-- [x] Anomaly detection systems
-- [x] Data preparation
-  - Normalization
-  - Outlier handling
-  - Feature scaling
+- Clustering algorithms
+  - [K-means implementation](https://ts-collect.netlify.app/api/kmeans)
+  - [Cluster analysis tools](https://ts-collect.netlify.app/api/kmeans)
+- Regression analysis
+  - [Linear regression](https://ts-collect.netlify.app/api/linearRegression)
+  - [Multi-variable regression](https://ts-collect.netlify.app/api/linearRegression)
+- Classification tools
+  - [K-nearest neighbors _(KNN)_](https://ts-collect.netlify.app/api/knn)
+  - [Naive Bayes classifier](https://ts-collect.netlify.app/api/naiveBayes)
+- [Anomaly detection systems](https://ts-collect.netlify.app/api/detectAnomalies)
+- Data preparation
+  - [Normalization](https://ts-collect.netlify.app/api/normalize)
+  - [Outlier handling](https://ts-collect.netlify.app/api/removeOutliers)
+  - [Feature scaling](https://ts-collect.netlify.app/api/normalize)
 
 ### Async & Performance Optimization
 
-- [x] Asynchronous operations
-  - Async mapping
-  - Async filtering
-  - Async reduction
-- [x] Parallel processing capabilities
-- [x] Batch processing systems
-- [x] Lazy evaluation strategies
-- [x] Caching mechanisms
-- [x] Performance tools
-  - Profiling utilities
-  - Memory optimization
-  - Index management
-  - Operation monitoring
+- Asynchronous operations
+  - [Async mapping](https://ts-collect.netlify.app/api/mapAsync)
+  - [Async filtering](https://ts-collect.netlify.app/api/filterAsync)
+  - [Async reduction](https://ts-collect.netlify.app/api/reduceAsync)
+- [Parallel processing capabilities](https://ts-collect.netlify.app/api/parallel)
+- [Batch processing systems](https://ts-collect.netlify.app/api/batch)
+- [Lazy evaluation strategies](https://ts-collect.netlify.app/api/lazy)
+- [Caching mechanisms](https://ts-collect.netlify.app/api/cache)
+- Performance tools
+  - [Profiling utilities](https://ts-collect.netlify.app/api/profile)
+  - [Memory optimization](https://ts-collect.netlify.app/api/metrics)
+  - [Index management](https://ts-collect.netlify.app/api/index)
+  - [Operation monitoring](https://ts-collect.netlify.app/api/instrument)
 
 ### Data Validation & Quality
 
-- [x] Validation framework
-  - Schema validation
-  - Custom rules
-  - Async validation
-- [x] Data sanitization tools
-- [x] Quality metrics
-- [x] Constraint management
-- [x] Error handling
-- [x] Type enforcement
+- Validation framework
+  - [Schema validation](https://ts-collect.netlify.app/api/validateSync)
+  - [Custom rules](https://ts-collect.netlify.app/api/validate)
+  - [Async validation](https://ts-collect.netlify.app/api/validate)
+- [Data sanitization tools](https://ts-collect.netlify.app/api/sanitize)
+- [Quality metrics](https://ts-collect.netlify.app/api/metrics)
+- Constraint management
+- Error handling
+- [Type enforcement](https://ts-collect.netlify.app/api/assertValid)
 
 ### Text Processing
 
-- [x] String manipulation
-  - Join operations
-  - Implode functionality
-  - Case transformation
-- [x] URL slug generation
-- [x] Text analysis
-  - Word frequency
-  - N-gram generation
-  - Sentiment analysis
-- [x] Pattern matching
-- [x] String normalization
+- String manipulation
+  - [Join operations](https://ts-collect.netlify.app/api/join)
+  - [Implode functionality](https://ts-collect.netlify.app/api/implode)
+  - [Case transformation](https://ts-collect.netlify.app/api/lower)
+- [URL slug generation](https://ts-collect.netlify.app/api/slug)
+- Text analysis
+  - [Word frequency](https://ts-collect.netlify.app/api/wordFrequency)
+  - [N-gram generation](https://ts-collect.netlify.app/api/ngrams)
+  - [Sentiment analysis](https://ts-collect.netlify.app/api/sentiment)
+- Pattern matching
+- String normalization
 
 ### Serialization & Export
 
-- [x] Multiple format support
-  - JSON serialization
-  - CSV generation
-  - XML export
-- [x] Query generation
-  - SQL queries
-  - GraphQL operations
-- [x] Integration formats
-  - Elasticsearch bulk
-  - Pandas DataFrame
-- [x] Custom formatting options
+- Multiple format support
+  - [JSON serialization](https://ts-collect.netlify.app/api/toJSON)
+  - [CSV generation](https://ts-collect.netlify.app/api/toCSV)
+  - [XML export](https://ts-collect.netlify.app/api/toXML)
+- Query generation
+  - [SQL queries](https://ts-collect.netlify.app/api/toSQL)
+  - [GraphQL operations](https://ts-collect.netlify.app/api/toGraphQL)
+- Integration formats
+  - [Elasticsearch bulk](https://ts-collect.netlify.app/api/toElastic)
+  - [Pandas DataFrame](https://ts-collect.netlify.app/api/toPandas)
+- Custom formatting options
 
 ### Streaming & I/O
 
-- [x] Stream operations
-  - Stream creation
-  - Stream consumption
-- [x] Batch streaming
-- [x] Memory-efficient processing
-- [x] Buffered operations
+- Stream operations
+  - [Stream creation](https://ts-collect.netlify.app/api/stream)
+  - [Stream consumption](https://ts-collect.netlify.app/api/fromstream)
+- [Batch streaming](https://ts-collect.netlify.app/api/batch)
+- Memory-efficient processing
+- Buffered operations
 
 ### Advanced Mathematical Operations
 
-- [x] Signal processing
-  - Fast Fourier Transform (FFT)
-  - Signal interpolation
-  - Convolution operations
-- [x] Calculus operations
-  - Differentiation
-  - Integration
-- [x] Numerical methods
-- [x] Mathematical optimizations
+- Signal processing
+  - [Fast Fourier Transform (FFT)](https://ts-collect.netlify.app/api/fft)
+  - [Signal interpolation](https://ts-collect.netlify.app/api/interpolate)
+  - [Convolution operations](https://ts-collect.netlify.app/api/convolve)
+- Calculus operations
+  - [Differentiation](https://ts-collect.netlify.app/api/differentiate)
+  - [Integration](https://ts-collect.netlify.app/api/integrate)
+- Numerical methods
+- Mathematical optimizations
 
 ### Special Data Types Support
 
-- [x] Geographic calculations
-  - Distance computations
-  - Coordinate handling
-- [x] Financial operations
-  - Money formatting
-  - Currency handling
-- [x] DateTime operations
-  - Formatting
-  - Timezone handling
-- [x] Complex number support
+- Geographic calculations
+  - [Distance computations](https://ts-collect.netlify.app/api/geodistance)
+  - [Coordinate handling](https://ts-collect.netlify.app/api/geodistance)
+- Financial operations
+  - [Money formatting](https://ts-collect.netlify.app/api/money)
+  - [Currency handling](https://ts-collect.netlify.app/api/money)
+- DateTime operations
+  - [Formatting](https://ts-collect.netlify.app/api/datetime)
+  - [Timezone handling](https://ts-collect.netlify.app/api/datetime)
+- Complex number support
   - Basic operations
   - Advanced computations
 
 ### Versioning & History
 
-- [x] Version management
-  - Version tracking
-  - History storage
-- [x] Change tracking
-  - Diff generation
-  - Change detection
-- [x] History operations
+- Version management
+  - [Version tracking](https://ts-collect.netlify.app/api/snapshot)
+  - [History storage](https://ts-collect.netlify.app/api/snapshot)
+- Change tracking
+  - [Diff generation](https://ts-collect.netlify.app/api/diff)
+  - [Change detection](https://ts-collect.netlify.app/api/diffsummary)
+- History operations
   - Rollback support
   - Version comparison
 
 ### Development Tools
 
-- [x] Development aids
-  - Playground environment
-  - Debugging utilities
-- [x] Analysis tools
-  - Pipeline visualization
-  - Performance benchmarking
-- [x] Development modes
+- Development aids
+  - [Playground environment](https://ts-collect.netlify.app/api/playground)
+  - [Debugging utilities](https://ts-collect.netlify.app/api/debug)
+- Analysis tools
+  - [Pipeline visualization](https://ts-collect.netlify.app/api/explain)
+  - [Performance benchmarking](https://ts-collect.netlify.app/api/benchmark)
+- Development modes
   - Debug mode
   - Strict mode
 
 ### Utility Features
 
-- [x] System configuration
-  - Configuration management
+- System configuration
+  - [Configuration management](https://ts-collect.netlify.app/api/configure)
   - Environment handling
-- [x] Internationalization
-  - Locale support
-  - Timezone management
-- [x] Error handling
+- Internationalization
+  - [Locale support](https://ts-collect.netlify.app/api/configure)
+  - [Timezone management](https://ts-collect.netlify.app/api/datetime)
+- Error handling
   - Error modes
   - Exception handling
-- [x] Resource management
+- Resource management
   - Memory tracking
   - Resource cleanup
 
@@ -759,8 +759,8 @@ collection
 ```typescript
 // Export to different formats
 const json = collection.toJSON({ pretty: true })
-const csv = collection.toCsv()
-const xml = collection.toXml()
+const csv = collection.toCSV()
+const xml = collection.toXML()
 
 // SQL generation
 const sql = collection.toSQL('users')

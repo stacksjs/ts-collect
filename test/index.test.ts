@@ -3762,10 +3762,10 @@ describe('Collection Serialization', () => {
     })
   })
 
-  describe('toCsv()', () => {
+  describe('toCSV()', () => {
     it('should convert simple objects to CSV format', () => {
       const collection = collect(simpleData)
-      const csv = collection.toCsv()
+      const csv = collection.toCSV()
       const expectedHeader = 'id,name,age'
       const firstRow = '1,"John",30'
 
@@ -3775,41 +3775,41 @@ describe('Collection Serialization', () => {
 
     it('should handle nested objects by stringifying them', () => {
       const collection = collect(complexData)
-      const csv = collection.toCsv()
+      const csv = collection.toCSV()
       expect(csv).toContain('id,name,address,hobbies')
       expect(csv).toContain(`1,"John",{"street":"123 Main St","city":"Boston"},["reading","gaming"]`)
     })
 
     it('should escape special characters', () => {
       const collection = collect(specialCharsData)
-      const csv = collection.toCsv()
+      const csv = collection.toCSV()
       expect(csv).toContain('"John \\"Johnny\\" Doe"')
       expect(csv).toContain('"Likes to use, commas"')
     })
 
     it('should handle arrays in CSV conversion', () => {
       const collection = collect(complexData)
-      const csv = collection.toCsv()
+      const csv = collection.toCSV()
       expect(csv).toContain('["reading","gaming"]')
     })
 
     it('should respect exclude option', () => {
       const collection = collect(simpleData)
-      const csv = collection.toCsv({ exclude: ['age'] })
+      const csv = collection.toCSV({ exclude: ['age'] })
       expect(csv).not.toContain('age')
       expect(csv).toContain('id,name')
     })
 
     it('should respect include option', () => {
       const collection = collect(simpleData)
-      const csv = collection.toCsv({ include: ['id', 'name'] })
+      const csv = collection.toCSV({ include: ['id', 'name'] })
       expect(csv).not.toContain('age')
       expect(csv).toContain('id,name')
     })
 
     it('should handle empty collections', () => {
       const collection = collect([])
-      const csv = collection.toCsv()
+      const csv = collection.toCSV()
       expect(csv).toBe('')
     })
 
@@ -3819,7 +3819,7 @@ describe('Collection Serialization', () => {
         { id: 2, name: 'Jane', age: null },
       ]
       const collection = collect(data)
-      const csv = collection.toCsv()
+      const csv = collection.toCSV()
       // Update expectations to match actual CSV output
       const lines = csv.split('\n')
       expect(lines[0]).toBe('id,name,age')
@@ -3828,10 +3828,10 @@ describe('Collection Serialization', () => {
     })
   })
 
-  describe('toXml()', () => {
+  describe('toXML()', () => {
     it('should convert to XML format', () => {
       const collection = collect(simpleData)
-      const xml = collection.toXml()
+      const xml = collection.toXML()
       expect(xml).toContain('<?xml version="1.0" encoding="UTF-8"?>')
       expect(xml).toContain('<items>')
       expect(xml).toContain('<item>')
@@ -3843,14 +3843,14 @@ describe('Collection Serialization', () => {
         { id: 1, name: 'John & Jane', description: '<test>' },
       ]
       const collection = collect(specialData)
-      const xml = collection.toXml()
+      const xml = collection.toXML()
       expect(xml).toContain('John &amp; Jane')
       expect(xml).toContain('&lt;test&gt;')
     })
 
     it('should handle nested objects by stringifying them', () => {
       const collection = collect(complexData)
-      const xml = collection.toXml()
+      const xml = collection.toXML()
       // Update expectations to match actual XML output
       expect(xml).toContain('<address>[object Object]</address>')
       expect(xml).toContain('<hobbies>reading,gaming</hobbies>')
@@ -3858,14 +3858,14 @@ describe('Collection Serialization', () => {
 
     it('should respect exclude option', () => {
       const collection = collect(simpleData)
-      const xml = collection.toXml({ exclude: ['age'] })
+      const xml = collection.toXML({ exclude: ['age'] })
       expect(xml).not.toContain('<age>')
       expect(xml).toContain('<name>')
     })
 
     it('should handle empty collections', () => {
       const collection = collect([])
-      const xml = collection.toXml()
+      const xml = collection.toXML()
       expect(xml).toContain('<items>')
       expect(xml).toContain('</items>')
     })
@@ -3881,7 +3881,7 @@ describe('Collection Serialization', () => {
 
     it('should parse CSV string back to collection', () => {
       const collection = collect(simpleData)
-      const csv = collection.toCsv()
+      const csv = collection.toCSV()
       const parsed = collection.parse(csv, 'csv')
       expect(parsed.count()).toBe(simpleData.length)
       expect(parsed.first()).toHaveProperty('name')
@@ -3976,8 +3976,8 @@ describe('Collection Serialization', () => {
       }))
       const collection = collect(largeData)
       expect(() => collection.toJSON()).not.toThrow()
-      expect(() => collection.toCsv()).not.toThrow()
-      expect(() => collection.toXml()).not.toThrow()
+      expect(() => collection.toCSV()).not.toThrow()
+      expect(() => collection.toXML()).not.toThrow()
     })
   })
 })

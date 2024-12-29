@@ -506,8 +506,8 @@ collection
 ```typescript
 // Export to different formats
 const json = collection.toJSON({ pretty: true })
-const csv = collection.toCsv()
-const xml = collection.toXml()
+const csv = collection.toCSV()
+const xml = collection.toXML()
 
 // SQL generation
 const sql = collection.toSQL('users')

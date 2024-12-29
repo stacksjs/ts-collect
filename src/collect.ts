@@ -2920,7 +2920,7 @@ ${collection.items.map(item =>
       return JSON.stringify(items, null, pretty ? 2 : undefined)
     },
 
-    toCsv(options: SerializationOptions = {}): string {
+    toCSV(options: SerializationOptions = {}): string {
       const { exclude = [], include } = options
       const items = this.toArray()
       if (items.length === 0)
@@ -2936,7 +2936,7 @@ ${collection.items.map(item =>
       return [headers.join(','), ...rows].join('\n')
     },
 
-    toXml(options: SerializationOptions = {}): string {
+    toXML(options: SerializationOptions = {}): string {
       const { exclude = [], include } = options
       const items = this.toArray()
       const rootTag = 'items'
