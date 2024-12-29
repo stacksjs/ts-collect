@@ -17,7 +17,7 @@ collect(items).max(key: keyof T): T | undefined
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // Simple array maximum
 const numbers = collect([5, 3, 8, 1, 9])

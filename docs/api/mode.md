@@ -17,7 +17,7 @@ collect(items).mode(key: keyof T): T | undefined
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // Simple array mode
 const numbers = collect([1, 2, 2, 3, 3, 3, 4])

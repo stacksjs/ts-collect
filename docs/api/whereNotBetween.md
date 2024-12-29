@@ -13,7 +13,7 @@ collect(items).whereNotBetween(key: keyof T, min: T[K], max: T[K]): Collection<T
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 const numbers = collect([
   { id: 1, value: 10 },

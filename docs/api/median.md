@@ -17,7 +17,7 @@ collect(items).median(key: keyof T): number | undefined
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // Simple array median
 const numbers = collect([1, 5, 2, 8, 3])

@@ -13,7 +13,7 @@ collect(items).whereBetween(key: keyof T, min: T[K], max: T[K]): Collection<T>
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // Filter numbers in range
 const numbers = collect([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])

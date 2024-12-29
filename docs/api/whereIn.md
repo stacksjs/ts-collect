@@ -13,7 +13,7 @@ collect(items).whereIn(key: keyof T, values: T[key][]): Collection<T>
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // Filter by multiple values
 const users = collect([

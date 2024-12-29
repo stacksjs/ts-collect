@@ -17,7 +17,7 @@ collect(items).groupBy(callback: (item: T) => any): Map<any, Collection<T>>
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // Group by simple property
 const users = collect([

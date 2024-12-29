@@ -13,7 +13,7 @@ collect(items).whereNotIn(key: keyof T, values: T[K][]): Collection<T>
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // Filter excluding specific values
 const users = collect([

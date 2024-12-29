@@ -257,6 +257,14 @@ For casual chit-chat with others using this package:
 
 [Join the Stacks Discord Server](https://discord.gg/stacksjs)
 
+## Credits
+
+_Thanks to..._
+
+- [Laravel Collections](https://laravel.com/docs/main/collections) for inspiration
+- [Chris Breuer](https://github.com/chrisbreuer) for the initial implementation
+- [All Contributors](https://github.com/stacksjs/ts-collect/graphs/contributors) for their contributions to Stacks
+
 ## License
 
 The MIT License (MIT). Please see [LICENSE](https://github.com/stacksjs/ts-collect/blob/main/LICENSE.md) for more information.
