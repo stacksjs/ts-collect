@@ -13,7 +13,7 @@ collect(items).mapWithKeys((item: T) => [key: string | number, value: any])
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 const users = collect([
   { id: 1, name: 'John' },

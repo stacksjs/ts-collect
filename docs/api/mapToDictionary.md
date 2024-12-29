@@ -13,7 +13,7 @@ collect(items).mapToDictionary((item: T) => ({ key: string | number, value: any 
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 const users = collect([
   { id: 1, name: 'John Doe', role: 'admin' },

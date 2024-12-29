@@ -20,7 +20,7 @@ collect(items).merge(object: Record<string, any>)
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // Merging arrays
 const numbers = collect([1, 2, 3])

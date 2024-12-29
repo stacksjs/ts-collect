@@ -13,7 +13,7 @@ collect(items).shift()
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // Array example
 const numbers = collect([1, 2, 3, 4, 5])

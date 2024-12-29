@@ -13,7 +13,7 @@ collect(items).mapInto(constructor: new (...args: any[]) => T)
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 class User {
   constructor(public name: string, public email: string) {}

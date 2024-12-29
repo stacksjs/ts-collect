@@ -17,7 +17,7 @@ collect(items).sole(key: string, value: any)
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // With callback
 const numbers = collect([1, 2, 3, 4])

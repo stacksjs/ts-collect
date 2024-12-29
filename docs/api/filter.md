@@ -1,12 +1,11 @@
 # Filter Method
 
-The `filter()` method creates a new collection containing all elements that pass a given truth test. This method is useful for selecting specific items from a collection based on certain conditions.
+The `filter()` method creates a new collection containing all items that pass a given truth test provided by a predicate function. The predicate receives both the current item and its index.
 
 ## Basic Syntax
 
 ```typescript
-const callback: (item, index?) => boolean
-collect(items).filter(callback)
+collect(items).filter((item: T, index: number) => boolean): Collection<T>
 ```
 
 ## Examples
@@ -16,224 +15,320 @@ collect(items).filter(callback)
 ```typescript
 import { collect } from 'ts-collect'
 
-const numbers = collect([1, 2, 3, 4, 5, 6])
-const evenNumbers = numbers.filter(num => num % 2 === 0)
+// Filter numbers
+const numbers = collect([1, 2, 3, 4, 5])
+const evenNumbers = numbers.filter(n => n % 2 === 0)
+console.log(evenNumbers.all()) // [2, 4]
 
-console.log(evenNumbers.all()) // [2, 4, 6]
+// Using the index parameter
+const indexFiltered = numbers.filter((n, i) => i < 3)
+console.log(indexFiltered.all()) // [1, 2, 3]
 ```
 
-### Filtering Objects
+### Working with Objects
 
 ```typescript
 interface User {
   id: number
   name: string
-  age: number
   active: boolean
+  role: string
 }
 
 const users = collect<User>([
-  { id: 1, name: 'John', age: 25, active: true },
-  { id: 2, name: 'Jane', age: 30, active: false },
-  { id: 3, name: 'Bob', age: 35, active: true },
-  { id: 4, name: 'Alice', age: 28, active: true }
+  { id: 1, name: 'John', active: true, role: 'admin' },
+  { id: 2, name: 'Jane', active: false, role: 'user' },
+  { id: 3, name: 'Bob', active: true, role: 'user' }
 ])
 
-// Get active users
+// Filter active users
 const activeUsers = users.filter(user => user.active)
-console.log(activeUsers.all())
-// [
-//   { id: 1, name: 'John', age: 25, active: true },
-//   { id: 3, name: 'Bob', age: 35, active: true },
-//   { id: 4, name: 'Alice', age: 28, active: true }
-// ]
 
-// Get users over 30
-const over30 = users.filter(user => user.age > 30)
-console.log(over30.all())
-// [
-//   { id: 3, name: 'Bob', age: 35, active: true }
-// ]
+// Filter by role and status
+const activeAdmins = users.filter(user =>
+  user.active && user.role === 'admin'
+)
 ```
 
-### Multiple Conditions
+### Real-world Examples
+
+#### Permission System
 
 ```typescript
+interface Permission {
+  resource: string
+  action: 'read' | 'write' | 'delete'
+  granted: boolean
+  conditions?: Record<string, any>
+}
+
+class PermissionChecker {
+  private permissions: Collection<Permission>
+
+  constructor(permissions: Permission[]) {
+    this.permissions = collect(permissions)
+  }
+
+  getGrantedPermissions(resource: string): Permission[] {
+    return this.permissions
+      .filter(permission =>
+        permission.resource === resource
+        && permission.granted
+        && this.validateConditions(permission.conditions)
+      )
+      .all()
+  }
+
+  private validateConditions(conditions?: Record<string, any>): boolean {
+    // Conditions validation logic
+    return true
+  }
+}
+```
+
+#### Task Queue
+
+```typescript
+interface Task {
+  id: string
+  priority: number
+  status: 'pending' | 'processing' | 'completed' | 'failed'
+  attempts: number
+  lastAttempt?: Date
+}
+
+class TaskQueue {
+  private tasks: Collection<Task>
+  private readonly maxAttempts = 3
+
+  constructor(tasks: Task[]) {
+    this.tasks = collect(tasks)
+  }
+
+  getProcessableTasks(): Task[] {
+    const now = new Date()
+    return this.tasks
+      .filter((task) => {
+        // Filter based on multiple conditions
+        const isEligible
+          = task.status === 'pending'
+          || (task.status === 'failed' && task.attempts < this.maxAttempts)
+
+        if (!isEligible)
+          return false
+
+        // Check cooldown period if there was a previous attempt
+        if (task.lastAttempt) {
+          const cooldownPeriod = 5 * 60 * 1000 // 5 minutes
+          return now.getTime() - task.lastAttempt.getTime() > cooldownPeriod
+        }
+
+        return true
+      })
+      .sortBy('priority')
+      .all()
+  }
+}
+```
+
+### Advanced Usage
+
+#### Data Validator
+
+```typescript
+interface ValidationRule<T> {
+  field: keyof T
+  validate: (value: any) => boolean
+  message: string
+}
+
+class DataValidator<T> {
+  private rules: ValidationRule<T>[]
+
+  constructor(rules: ValidationRule<T>[]) {
+    this.rules = rules
+  }
+
+  validate(data: T[]): Collection<T> {
+    return collect(data).filter((item) => {
+      return this.rules.every((rule) => {
+        const value = item[rule.field]
+        return rule.validate(value)
+      })
+    })
+  }
+}
+
+// Usage
 interface Product {
   id: number
   name: string
   price: number
-  inStock: boolean
-  category: string
+  stock: number
 }
 
-const products = collect<Product>([
-  { id: 1, name: 'Phone', price: 599, inStock: true, category: 'Electronics' },
-  { id: 2, name: 'Laptop', price: 1299, inStock: false, category: 'Electronics' },
-  { id: 3, name: 'Book', price: 20, inStock: true, category: 'Books' },
-  { id: 4, name: 'Headphones', price: 99, inStock: true, category: 'Electronics' }
-])
-
-// Get in-stock electronics under $1000
-const affordableElectronics = products.filter(product =>
-  product.category === 'Electronics'
-  && product.inStock
-  && product.price < 1000
-)
-
-console.log(affordableElectronics.all())
-// [
-//   { id: 1, name: 'Phone', price: 599, inStock: true, category: 'Electronics' },
-//   { id: 4, name: 'Headphones', price: 99, inStock: true, category: 'Electronics' }
-// ]
-```
-
-### Using with Type Guards
-
-```typescript
-interface BaseItem {
-  id: number
-  type: string
-}
-
-interface BookItem extends BaseItem {
-  type: 'book'
-  author: string
-}
-
-interface MovieItem extends BaseItem {
-  type: 'movie'
-  director: string
-}
-
-type Item = BookItem | MovieItem
-
-const items = collect<Item>([
-  { id: 1, type: 'book', author: 'John Doe' },
-  { id: 2, type: 'movie', director: 'Jane Smith' },
-  { id: 3, type: 'book', author: 'Bob Johnson' }
-])
-
-// Filter only books with type guard
-const books = items.filter((item): item is BookItem => item.type === 'book')
-
-// TypeScript now knows these are definitely books
-books.each(book => console.log(book.author))
-```
-
-### Filtering with Index
-
-```typescript
-const numbers = collect([10, 20, 30, 40, 50])
-
-// Filter items based on both value and index
-const filtered = numbers.filter((value, index) => {
-  return value > 20 && index < 3
-})
-
-console.log(filtered.all()) // [30]
-```
-
-### Chaining with Other Methods
-
-```typescript
-interface Task {
-  id: number
-  title: string
-  completed: boolean
-  priority: number
-}
-
-const tasks = collect<Task>([
-  { id: 1, title: 'Task 1', completed: false, priority: 1 },
-  { id: 2, title: 'Task 2', completed: true, priority: 2 },
-  { id: 3, title: 'Task 3', completed: false, priority: 3 },
-  { id: 4, title: 'Task 4', completed: true, priority: 1 }
-])
-
-// Get high priority incomplete tasks, sorted by priority
-const highPriorityTasks = tasks
-  .filter(task => !task.completed && task.priority > 1)
-  .sortBy('priority')
-  .all()
-
-console.log(highPriorityTasks)
-// [
-//   { id: 3, title: 'Task 3', completed: false, priority: 3 }
-// ]
-```
-
-### Working with Nested Data
-
-```typescript
-interface Department {
-  name: string
-  employees: {
-    id: number
-    name: string
-    salary: number
-  }[]
-}
-
-const departments = collect<Department>([
+const validator = new DataValidator<Product>([
   {
-    name: 'IT',
-    employees: [
-      { id: 1, name: 'John', salary: 60000 },
-      { id: 2, name: 'Jane', salary: 70000 }
-    ]
+    field: 'price',
+    validate: price => price > 0,
+    message: 'Price must be positive'
   },
   {
-    name: 'HR',
-    employees: [
-      { id: 3, name: 'Bob', salary: 55000 },
-      { id: 4, name: 'Alice', salary: 65000 }
-    ]
+    field: 'stock',
+    validate: stock => stock >= 0,
+    message: 'Stock cannot be negative'
   }
 ])
+```
 
-// Filter departments that have employees with salary > 65000
-const highPayDepts = departments
-  .filter(dept => dept.employees
-    .some(emp => emp.salary > 65000)
-  )
+#### Event Processor
 
-console.log(highPayDepts.all())
-// [
-//   {
-//     name: 'IT',
-//     employees: [
-//       { id: 1, name: 'John', salary: 60000 },
-//       { id: 2, name: 'Jane', salary: 70000 }
-//     ]
-//   }
-// ]
+```typescript
+interface Event {
+  type: string
+  timestamp: Date
+  severity: 'low' | 'medium' | 'high'
+  data: any
+  processed: boolean
+}
+
+class EventProcessor {
+  private events: Collection<Event>
+  private readonly processingWindow = 24 * 60 * 60 * 1000 // 24 hours
+
+  constructor(events: Event[]) {
+    this.events = collect(events)
+  }
+
+  getUnprocessedCriticalEvents(): Event[] {
+    const cutoffTime = new Date(Date.now() - this.processingWindow)
+
+    return this.events
+      .filter((event) => {
+        // Multiple filter conditions
+        return (
+          !event.processed
+          && event.severity === 'high'
+          && event.timestamp >= cutoffTime
+          && this.isValidEventData(event.data)
+        )
+      })
+      .sortBy('timestamp')
+      .all()
+  }
+
+  private isValidEventData(data: any): boolean {
+    // Data validation logic
+    return true
+  }
+}
 ```
 
 ## Type Safety
 
-The filter method maintains type safety and can be used with type guards to narrow types:
-
 ```typescript
-interface BaseItem {
-  type: string
+interface TypedItem {
   id: number
+  value: string
+  status: 'active' | 'inactive'
+  metadata?: Record<string, any>
 }
 
-interface SpecialItem extends BaseItem {
-  type: 'special'
-  extraData: string
-}
+const items = collect<TypedItem>([
+  { id: 1, value: 'one', status: 'active' },
+  { id: 2, value: 'two', status: 'inactive' },
+  { id: 3, value: 'three', status: 'active', metadata: { important: true } }
+])
 
-// Using type guard with filter
-const items = collect<BaseItem>([])
-const specialItems = items
-  .filter((item): item is SpecialItem => item.type === 'special')
+// Type-safe filtering
+const activeItems = items.filter(item => item.status === 'active')
+const importantItems = items.filter(item => item.metadata?.important === true)
 
-// TypeScript knows these items have extraData
-specialItems.each(item => console.log(item.extraData))
+// TypeScript enforces proper property access
+items.filter((item) => {
+  return item.status === 'active' // ✓ Valid
+  // return item.invalid === true  // ✗ TypeScript error
+})
 ```
 
 ## Return Value
 
-Returns a new Collection instance containing all elements that pass the truth test.
+- Returns a new Collection instance containing only items that pass the predicate
+- Original collection remains unchanged
+- Collection length may be shorter than original collection
+- Items maintain their original type
+- Maintains type safety with TypeScript
+- Can be chained with other collection methods
+- Index parameter is optional in predicate function
+
+## Common Use Cases
+
+### 1. Status Filtering
+
+- Filtering active/inactive items
+- Finding completed tasks
+- Identifying valid records
+- Filtering enabled features
+
+### 2. Data Validation
+
+- Removing invalid entries
+- Filtering out malformed data
+- Validating business rules
+- Checking data integrity
+
+### 3. Permission Checking
+
+- Filtering accessible resources
+- Checking user permissions
+- Validating access rights
+- Filtering authorized operations
+
+### 4. Date-based Filtering
+
+- Finding recent items
+- Filtering by date range
+- Getting upcoming events
+- Finding expired records
+
+### 5. Search and Query
+
+- Implementing search functionality
+- Filtering by keywords
+- Finding matching records
+- Query result filtering
+
+### 6. State Management
+
+- Filtering by state
+- Finding items in specific states
+- Identifying state transitions
+- Managing workflow states
+
+### 7. Error Handling
+
+- Filtering successful operations
+- Identifying failed operations
+- Finding error conditions
+- Validating process results
+
+### 8. Business Rules
+
+- Applying business logic
+- Enforcing constraints
+- Validating requirements
+- Checking conditions
+
+### 9. Data Cleanup
+
+- Removing duplicates
+- Filtering null values
+- Removing empty entries
+- Sanitizing data sets
+
+### 10. Performance Optimization
+
+- Filtering unnecessary data
+- Reducing data sets
+- Optimizing processing
+- Filtering for efficiency

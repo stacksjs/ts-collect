@@ -17,7 +17,7 @@ collect(items).has(keys: (keyof T)[])
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 const data = collect({
   name: 'John',

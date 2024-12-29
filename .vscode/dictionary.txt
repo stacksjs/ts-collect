@@ -37,6 +37,7 @@ Solana
 Spatie
 stacksjs
 stringifying
+twoslash
 typecheck
 unconfig
 undefineds

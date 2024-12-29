@@ -17,7 +17,7 @@ collect(items).get(key: keyof T, defaultValue?: any)
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // Simple object
 const data = collect({

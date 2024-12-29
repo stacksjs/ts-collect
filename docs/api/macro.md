@@ -13,7 +13,7 @@ Collection.macro(name: string, fn: Function)
 ### Basic Usage
 
 ```typescript
-import { Collection } from '@stacksjs/ts-collect'
+import { Collection } from 'ts-collect'
 
 // Add a custom method to sum numbers and multiply by a factor
 Collection.macro('sumAndMultiply', function (factor: number = 1) {
@@ -29,7 +29,7 @@ console.log(numbers.sumAndMultiply(2)) // 20 (sum is 10, multiplied by 2)
 
 ```typescript
 // Extend the Collection type
-declare module '@stacksjs/ts-collect' {
+declare module 'ts-collect' {
   interface Collection<T> {
     uppercase(): Collection<string>
     titleCase(): Collection<string>
@@ -72,7 +72,7 @@ interface Product {
 }
 
 // Extend Collection type
-declare module '@stacksjs/ts-collect' {
+declare module 'ts-collect' {
   interface Collection<T> {
     totalValue(): number
     inStock(): Collection<T>
@@ -117,7 +117,7 @@ interface DataPoint {
 }
 
 // Extend Collection type
-declare module '@stacksjs/ts-collect' {
+declare module 'ts-collect' {
   interface Collection<T> {
     average(): number
     standardDeviation(): number
@@ -165,7 +165,7 @@ console.log(dataPoints.normalize().all())
 #### Chain-aware Macros
 
 ```typescript
-declare module '@stacksjs/ts-collect' {
+declare module 'ts-collect' {
   interface Collection<T> {
     whenNotEmpty<R>(callback: (collection: Collection<T>) => R): R | Collection<T>
     transformIf(condition: boolean, callback: (item: T) => T): Collection<T>
@@ -201,7 +201,7 @@ interface CustomItem {
 }
 
 // Extend Collection type with strictly typed methods
-declare module '@stacksjs/ts-collect' {
+declare module 'ts-collect' {
   interface Collection<T> {
     customSort(key: keyof T): Collection<T>
     validateAll(predicate: (item: T) => boolean): boolean

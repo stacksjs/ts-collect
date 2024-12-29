@@ -13,7 +13,7 @@ collect(items).skipWhile((item: T) => boolean)
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // Skip while numbers are less than 3
 const numbers = collect([1, 2, 3, 4, 2, 1])

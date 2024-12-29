@@ -5,15 +5,15 @@
   "description": "Laravel Collections for TypeScript.",
   "author": "Chris Breuer <chris@stacksjs.org>",
   "license": "MIT",
-  "homepage": "https://github.com/stacksjs/ts-starter#readme",
+  "homepage": "https://github.com/stacksjs/ts-collect#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stacksjs/ts-starter.git"
+    "url": "git+https://github.com/stacksjs/ts-collect.git"
   },
   "bugs": {
-    "url": "https://github.com/stacksjs/ts-starter/issues"
+    "url": "https://github.com/stacksjs/ts-collect/issues"
   },
-  "keywords": ["collections", "laravel", "typescript"],
+  "keywords": ["collections", "laravel", "typescript", "utilities"],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

@@ -13,7 +13,7 @@ collect(items).replace(items: T[])
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // Simple replacement
 const numbers = collect([1, 2, 3])

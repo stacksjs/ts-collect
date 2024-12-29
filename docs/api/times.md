@@ -13,7 +13,7 @@ collect().times<U>(count: number, callback: (index: number) => U)
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // Generate sequence of numbers
 const numbers = collect().times(5, n => n + 1)

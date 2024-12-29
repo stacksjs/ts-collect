@@ -13,7 +13,7 @@ collect(items).replaceRecursive(items: any)
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // Simple nested object replacement
 const original = collect({

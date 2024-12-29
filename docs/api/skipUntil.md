@@ -17,7 +17,7 @@ collect(items).skipUntil(value: any)
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // Using a callback
 const numbers = collect([1, 2, 3, 4, 5, 6])

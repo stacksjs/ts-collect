@@ -13,7 +13,7 @@ collect(items).split(numberOfGroups: number)
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // Split numbers into groups
 const numbers = collect([1, 2, 3, 4, 5, 6])

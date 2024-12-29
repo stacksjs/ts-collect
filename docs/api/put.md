@@ -17,7 +17,7 @@ collect(items).random(length: number)
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // Get single random item
 const numbers = collect([1, 2, 3, 4, 5])

@@ -13,7 +13,7 @@ collect(items).shuffle()
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // Simple array shuffle
 const numbers = collect([1, 2, 3, 4, 5])

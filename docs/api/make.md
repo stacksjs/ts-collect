@@ -14,7 +14,7 @@ Collection.make<T>(items?: T[])
 ### Basic Usage
 
 ```typescript
-import { Collection } from '@stacksjs/ts-collect'
+import { Collection } from 'ts-collect'
 
 // Create an empty collection
 const empty = Collection.make()

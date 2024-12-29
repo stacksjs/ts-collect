@@ -17,7 +17,7 @@ collect(items).keyBy(callback: (item: T) => string | number)
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 interface User {
   id: number

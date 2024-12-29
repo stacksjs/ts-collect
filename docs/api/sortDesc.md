@@ -17,7 +17,7 @@ collect(items).sortDesc(key: keyof T)
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // Simple array sorting
 const numbers = collect([1, 3, 5, 2, 4])

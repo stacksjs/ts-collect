@@ -17,7 +17,7 @@ collect(items).only(keys: string[])
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 const user = collect({
   id: 1,

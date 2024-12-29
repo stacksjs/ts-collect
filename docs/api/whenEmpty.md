@@ -13,7 +13,7 @@ collect(items).whenEmpty(callback: (collection: Collection<T>) => Collection<U>)
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // Empty collection with default values
 const empty = collect([])

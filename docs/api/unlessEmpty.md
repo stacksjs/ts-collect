@@ -13,7 +13,7 @@ collect(items).unlessEmpty(callback: (collection: Collection<T>) => Collection<U
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // With non-empty collection
 const numbers = collect([1, 2, 3])

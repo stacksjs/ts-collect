@@ -13,7 +13,7 @@ collect(items).unlessNotEmpty(callback: (collection: Collection<T>) => Collectio
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // With empty collection
 const empty = collect([])

@@ -17,7 +17,7 @@ collect(items).prepend(value: T, key: string)
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // With arrays
 const numbers = collect([2, 3, 4])

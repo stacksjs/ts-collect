@@ -13,7 +13,7 @@ collect(items).mergeRecursive(items: array | Collection | object)
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // Simple nested objects
 const original = collect({

@@ -13,7 +13,7 @@ collect(items).reject((item: T, key?: any) => boolean)
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // Reject even numbers
 const numbers = collect([1, 2, 3, 4, 5, 6])

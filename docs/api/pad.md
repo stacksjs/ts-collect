@@ -13,7 +13,7 @@ collect(items).pad(size: number, value: any, side?: 'left' | 'right' | 'both')
 ### Basic Usage
 
 ```typescript
-import { collect } from '@stacksjs/ts-collect'
+import { collect } from 'ts-collect'
 
 // Right padding (default)
 const numbers = collect([1, 2, 3])
