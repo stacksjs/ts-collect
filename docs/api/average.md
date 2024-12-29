@@ -191,6 +191,78 @@ items.average('price') // 15
 // items.average('invalid')
 ```
 
+## Common Use Cases
+
+### 1. Statistical Analysis
+
+- Computing averages
+- Calculating means
+- Processing measurements
+- Analyzing datasets
+
+### 2. Performance Metrics
+
+- Average response times
+- Mean performance scores
+- Metric calculations
+- KPI analysis
+
+### 3. Financial Calculations
+
+- Average transaction value
+- Mean account balance
+- Spending patterns
+- Cost analysis
+
+### 4. Quality Control
+
+- Average measurements
+- Mean deviations
+- Quality metrics
+- Process control
+
+### 5. Sensor Data
+
+- Average readings
+- Mean values
+- Sensor metrics
+- Data aggregation
+
+### 6. Academic Scoring
+
+- Grade averaging
+- Score calculations
+- Performance metrics
+- Assessment analysis
+
+### 7. Load Balancing
+
+- Average load
+- Mean utilization
+- Resource usage
+- Capacity planning
+
+### 8. Time Analysis
+
+- Average duration
+- Mean processing time
+- Time metrics
+- Period analysis
+
+### 9. Usage Statistics
+
+- Average consumption
+- Mean usage
+- Utilization metrics
+- Resource analysis
+
+### 10. Market Analysis
+
+- Average prices
+- Mean values
+- Market metrics
+- Trend analysis
+
 ## Return Value
 
 Returns a number representing the average value. If the collection is empty or if the specified key doesn't exist, returns 0.

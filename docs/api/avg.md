@@ -1,15 +1,15 @@
 # Avg Method
 
-The `avg()` method is an alias of `average()`. It returns the average value of a given key in the collection. If no key is provided, it calculates the average of all elements (assuming they are numbers).
+The `avg()` method (alias for `average()`) returns the average of all items in the collection. When given a key, it returns the average of the values of that key across all objects in the collection.
 
 ## Basic Syntax
 
 ```typescript
-// For arrays of numbers
-collect(numbers).avg()
+// Average of array values
+collect(items).avg(): number
 
-// For arrays of objects
-collect(items).avg(key)
+// Average of object property values
+collect(items).avg(key: keyof T): number
 ```
 
 ## Examples
@@ -17,176 +17,310 @@ collect(items).avg(key)
 ### Basic Usage
 
 ```typescript
-import { collect } from 'ts-collect'
+import { collect } from '@stacksjs/ts-collect'
 
-const numbers = collect([1, 2, 3, 4, 5])
-console.log(numbers.avg()) // 3
-```
+// Simple array average
+const numbers = collect([2, 4, 6, 8, 10])
+console.log(numbers.avg()) // 6
 
-### With Object Arrays
-
-```typescript
-const products = collect([
-  { name: 'Keyboard', price: 99 },
-  { name: 'Mouse', price: 59 },
-  { name: 'Monitor', price: 299 }
+// Average with objects
+const scores = collect([
+  { value: 85 },
+  { value: 90 },
+  { value: 95 }
 ])
-
-console.log(products.avg('price')) // 152.33
+console.log(scores.avg('value')) // 90
 ```
 
-### Working with Scores
+### Working with Objects
 
 ```typescript
-interface Score {
+interface StudentGrade {
+  studentId: number
   subject: string
-  value: number
+  score: number
   weight: number
 }
 
-const scores = collect<Score>([
-  { subject: 'Math', value: 95, weight: 2 },
-  { subject: 'Science', value: 88, weight: 1.5 },
-  { subject: 'English', value: 92, weight: 1 }
+const grades = collect<StudentGrade>([
+  { studentId: 1, subject: 'Math', score: 85, weight: 1.0 },
+  { studentId: 1, subject: 'Science', score: 92, weight: 1.2 },
+  { studentId: 1, subject: 'History', score: 78, weight: 0.8 }
 ])
 
-const avgScore = scores.avg('value')
-console.log(avgScore) // 91.67
+// Simple average
+const averageScore = grades.avg('score') // 85
+
+// Weighted average
+const weightedAvg = grades
+  .map(grade => grade.score * grade.weight)
+  .sum() / grades.sum('weight')
 ```
 
-### Real-world Example: E-commerce
+### Real-world Examples
 
-```typescript
-interface OrderItem {
-  productId: number
-  quantity: number
-  unitPrice: number
-  discount: number
-}
-
-const orderItems = collect<OrderItem>([
-  { productId: 1, quantity: 2, unitPrice: 29.99, discount: 0 },
-  { productId: 2, quantity: 1, unitPrice: 49.99, discount: 5 },
-  { productId: 3, quantity: 3, unitPrice: 19.99, discount: 2 }
-])
-
-// Average unit price
-const avgPrice = orderItems.avg('unitPrice')
-console.log(avgPrice) // 33.32
-
-// Average quantity per item
-const avgQuantity = orderItems.avg('quantity')
-console.log(avgQuantity) // 2
-
-// Average discount
-const avgDiscount = orderItems.avg('discount')
-console.log(avgDiscount) // 2.33
-```
-
-### Working with Performance Metrics
+#### Performance Metrics
 
 ```typescript
 interface Performance {
-  day: string
-  metrics: {
-    responseTime: number
-    errorRate: number
-    userSatisfaction: number
-  }
+  employeeId: string
+  metric: string
+  value: number
+  period: string
 }
 
-const performanceData = collect<Performance>([
-  {
-    day: 'Monday',
-    metrics: {
-      responseTime: 150,
-      errorRate: 0.5,
-      userSatisfaction: 4.2
-    }
-  },
-  {
-    day: 'Tuesday',
-    metrics: {
-      responseTime: 145,
-      errorRate: 0.3,
-      userSatisfaction: 4.5
-    }
-  },
-  {
-    day: 'Wednesday',
-    metrics: {
-      responseTime: 160,
-      errorRate: 0.4,
-      userSatisfaction: 4.3
-    }
+class PerformanceAnalyzer {
+  private metrics: Collection<Performance>
+
+  constructor(metrics: Performance[]) {
+    this.metrics = collect(metrics)
   }
-])
 
-// Using map and avg together
-const avgResponseTime = performanceData
-  .map(data => data.metrics.responseTime)
-  .avg()
+  getAverageMetric(metric: string, period?: string): number {
+    let filtered = this.metrics.filter(m => m.metric === metric)
+    if (period) {
+      filtered = filtered.filter(m => m.period === period)
+    }
+    return filtered.avg('value')
+  }
 
-console.log(avgResponseTime) // 151.67
+  getEmployeeAverage(employeeId: string): number {
+    return this.metrics
+      .filter(m => m.employeeId === employeeId)
+      .avg('value')
+  }
+}
 ```
 
-### Empty Collections
+#### Quality Control
 
 ```typescript
-const empty = collect([])
-console.log(empty.avg()) // 0
+interface ProductMeasurement {
+  batchId: string
+  timestamp: Date
+  measurement: number
+  tolerance: number
+}
 
-const emptyObjects = collect<{ value: number }>([])
-console.log(emptyObjects.avg('value')) // 0
+class QualityController {
+  private measurements: Collection<ProductMeasurement>
+
+  constructor(measurements: ProductMeasurement[]) {
+    this.measurements = collect(measurements)
+  }
+
+  getBatchAverage(batchId: string): number {
+    return this.measurements
+      .filter(m => m.batchId === batchId)
+      .avg('measurement')
+  }
+
+  getDeviationFromTarget(target: number): number {
+    return Math.abs(
+      target - this.measurements.avg('measurement')
+    )
+  }
+
+  isWithinTolerance(target: number): boolean {
+    const avgDeviation = this.measurements
+      .map(m => Math.abs(m.measurement - target))
+      .avg()
+
+    return avgDeviation <= this.measurements.avg('tolerance')
+  }
+}
 ```
 
-### Chaining with Other Methods
+### Advanced Usage
+
+#### Financial Analysis
 
 ```typescript
-const data = collect([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+interface Transaction {
+  date: Date
+  amount: number
+  category: string
+  isRecurring: boolean
+}
 
-// Average of even numbers
-const avgEven = data
-  .filter(n => n % 2 === 0)
-  .avg()
+class SpendingAnalyzer {
+  private transactions: Collection<Transaction>
 
-console.log(avgEven) // 6
+  constructor(transactions: Transaction[]) {
+    this.transactions = collect(transactions)
+  }
 
-// Average of numbers greater than 5
-const avgGreaterThanFive = data
-  .filter(n => n > 5)
-  .avg()
+  getAverageTransaction(): number {
+    return this.transactions.avg('amount')
+  }
 
-console.log(avgGreaterThanFive) // 7.5
+  getAverageByCategory(category: string): number {
+    return this.transactions
+      .filter(t => t.category === category)
+      .avg('amount')
+  }
+
+  getRecurringAverage(): number {
+    return this.transactions
+      .filter(t => t.isRecurring)
+      .avg('amount')
+  }
+
+  getMonthlyAverage(month: number, year: number): number {
+    return this.transactions
+      .filter((t) => {
+        const date = new Date(t.date)
+        return date.getMonth() === month
+          && date.getFullYear() === year
+      })
+      .avg('amount')
+  }
+}
+```
+
+#### Sensor Data Analysis
+
+```typescript
+interface SensorReading {
+  sensorId: string
+  value: number
+  confidence: number
+  timestamp: Date
+}
+
+class SensorAnalyzer {
+  private readings: Collection<SensorReading>
+
+  constructor(readings: SensorReading[]) {
+    this.readings = collect(readings)
+  }
+
+  getWeightedAverage(sensorId: string): number {
+    const sensorData = this.readings
+      .filter(r => r.sensorId === sensorId)
+
+    const weightedSum = sensorData
+      .map(r => r.value * r.confidence)
+      .sum()
+
+    return weightedSum / sensorData.sum('confidence')
+  }
+
+  getHourlyAverage(hour: number): number {
+    return this.readings
+      .filter(r => r.timestamp.getHours() === hour)
+      .avg('value')
+  }
+
+  getConfidenceThresholdAverage(threshold: number): number {
+    return this.readings
+      .filter(r => r.confidence >= threshold)
+      .avg('value')
+  }
+}
 ```
 
 ## Type Safety
 
-The `avg()` method maintains type safety and will only accept valid keys from your object type:
-
 ```typescript
-interface MetricData {
+interface TypedItem {
+  id: number
   value: number
-  importance: number
+  optional?: number
 }
 
-const metrics = collect<MetricData>([
-  { value: 100, importance: 3 },
-  { value: 200, importance: 2 },
-  { value: 300, importance: 1 }
+const items = collect<TypedItem>([
+  { id: 1, value: 100 },
+  { id: 2, value: 200, optional: 50 },
+  { id: 3, value: 300 }
 ])
 
-// These are valid
-const avgValue = metrics.avg('value') // 200
-const avgImportance = metrics.avg('importance') // 2
-
-// This would cause a TypeScript error
-// metrics.avg('invalidKey')
+// Type-safe property access
+const avgValue = items.avg('value') // ✓ Valid
+const avgOptional = items.avg('optional') // ✓ Valid
+// items.avg('nonexistent')              // ✗ TypeScript error
 ```
 
 ## Return Value
 
-Returns a number representing the average value. If the collection is empty or if the specified key doesn't exist, returns 0.
+- Returns a number representing the average value
+- For arrays: computes average of numeric values
+- For objects: computes average of specified property values
+- Returns 0 for empty collections
+- Maintains type safety with TypeScript
+- Handles undefined/null values appropriately
+
+## Common Use Cases
+
+### 1. Statistical Analysis
+
+- Computing averages
+- Calculating means
+- Processing measurements
+- Analyzing datasets
+
+### 2. Performance Metrics
+
+- Average response times
+- Mean performance scores
+- Metric calculations
+- KPI analysis
+
+### 3. Financial Calculations
+
+- Average transaction value
+- Mean account balance
+- Spending patterns
+- Cost analysis
+
+### 4. Quality Control
+
+- Average measurements
+- Mean deviations
+- Quality metrics
+- Process control
+
+### 5. Sensor Data
+
+- Average readings
+- Mean values
+- Sensor metrics
+- Data aggregation
+
+### 6. Academic Scoring
+
+- Grade averaging
+- Score calculations
+- Performance metrics
+- Assessment analysis
+
+### 7. Load Balancing
+
+- Average load
+- Mean utilization
+- Resource usage
+- Capacity planning
+
+### 8. Time Analysis
+
+- Average duration
+- Mean processing time
+- Time metrics
+- Period analysis
+
+### 9. Usage Statistics
+
+- Average consumption
+- Mean usage
+- Utilization metrics
+- Resource analysis
+
+### 10. Market Analysis
+
+- Average prices
+- Mean values
+- Market metrics
+- Trend analysis
 
 ## Note
 
