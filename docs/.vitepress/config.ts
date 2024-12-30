@@ -61,7 +61,7 @@ const sidebar = [
   { text: 'Showcase', link: '/Showcase' },
 ]
 
-const description = 'Lightweight, zero-dependency TypeScript collection manipulation library. Type safe and chainable methods for arrays and objects.'
+const description = 'Lightweight & powerful Laravel-like Collections written for TypeScript.'
 const title = 'ts-collect | Lightweight & powerful Laravel-like Collections written for TypeScript.'
 
 export default withPwa(
