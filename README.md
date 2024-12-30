@@ -13,7 +13,7 @@
 ## Features
 
 - Lightweight & Dependency-free
-- Fully typed
+- Type safe
 - Laravel-inspired APIs
 
 ### Core Operations (Laravel Collection API)
