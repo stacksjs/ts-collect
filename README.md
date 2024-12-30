@@ -251,45 +251,45 @@ Please note, all of these methods may be chained to fluently manipulate the unde
 
 | API Methods              |      API Methods       |     API Methods       |
 | ------------------------ | ---------------------- | -------------------- |
-| [avg](https://ts-collect.netlify.app/api/avg)                     | [batch](https://ts-collect.netlify.app/api/batch)             | [cache](https://ts-collect.netlify.app/api/cache)                 |
-| [cartesianProduct](https://ts-collect.netlify.app/api/cartesianProduct)        | [cast](https://ts-collect.netlify.app/api/cast)                | [chunk](https://ts-collect.netlify.app/api/chunk)                 |
-| [collapse](https://ts-collect.netlify.app/api/collapse)                | [combine](https://ts-collect.netlify.app/api/combine)             | [contains](https://ts-collect.netlify.app/api/contains)              |
-| [containsOneItem](https://ts-collect.netlify.app/api/containsOneItem)         | [count](https://ts-collect.netlify.app/api/count)               | [countBy](https://ts-collect.netlify.app/api/countBy)               |
-| [cursor](https://ts-collect.netlify.app/api/cursor)                  | [dd](https://ts-collect.netlify.app/api/dd)                  | [describe](https://ts-collect.netlify.app/api/describe)              |
-| [diff](https://ts-collect.netlify.app/api/diff)                    | [diffAssoc](https://ts-collect.netlify.app/api/diffAssoc)           | [diffKeys](https://ts-collect.netlify.app/api/diffKeys)              |
-| [each](https://ts-collect.netlify.app/api/each)                    | [eachSpread](https://ts-collect.netlify.app/api/eachSpread)          | [except](https://ts-collect.netlify.app/api/except)                |
-| [filter](https://ts-collect.netlify.app/api/filter)                  | [first](https://ts-collect.netlify.app/api/first)               | [firstOrFail](https://ts-collect.netlify.app/api/firstOrFail)           |
-| [firstWhere](https://ts-collect.netlify.app/api/firstWhere)              | [flatMap](https://ts-collect.netlify.app/api/flatMap)             | [flip](https://ts-collect.netlify.app/api/flip)                  |
-| [forget](https://ts-collect.netlify.app/api/forget)                  | [fuzzyMatch](https://ts-collect.netlify.app/api/fuzzyMatch)          | [get](https://ts-collect.netlify.app/api/get)                   |
-| [groupBy](https://ts-collect.netlify.app/api/groupBy)                 | [groupByMultiple](https://ts-collect.netlify.app/api/groupByMultiple)     | [has](https://ts-collect.netlify.app/api/has)                   |
-| [index](https://ts-collect.netlify.app/api/index)                   | [instrument](https://ts-collect.netlify.app/api/instrument)          | [intersect](https://ts-collect.netlify.app/api/intersect)             |
-| [isEmpty](https://ts-collect.netlify.app/api/isEmpty)                 | [isNotEmpty](https://ts-collect.netlify.app/api/isNotEmpty)          | [join](https://ts-collect.netlify.app/api/join)                  |
-| [last](https://ts-collect.netlify.app/api/last)                    | [lazy](https://ts-collect.netlify.app/api/lazy)                | [map](https://ts-collect.netlify.app/api/map)                   |
-| [mapAsync](https://ts-collect.netlify.app/api/mapAsync)                | [mapInto](https://ts-collect.netlify.app/api/mapInto)             | [mapOption](https://ts-collect.netlify.app/api/mapOption)            |
-| [mapSpread](https://ts-collect.netlify.app/api/mapSpread)              | [mapToGroups](https://ts-collect.netlify.app/api/mapToGroups)         | [mapUntil](https://ts-collect.netlify.app/api/mapUntil)             |
-| [mapWithKeys](https://ts-collect.netlify.app/api/mapWithKeys)           | [max](https://ts-collect.netlify.app/api/max)                 | [median](https://ts-collect.netlify.app/api/median)                |
-| [mergeRecursive](https://ts-collect.netlify.app/api/mergeRecursive)       | [min](https://ts-collect.netlify.app/api/min)                 | [mode](https://ts-collect.netlify.app/api/mode)                  |
-| [nth](https://ts-collect.netlify.app/api/nth)                    | [omit](https://ts-collect.netlify.app/api/omit)                | [only](https://ts-collect.netlify.app/api/only)                  |
-| [paginate](https://ts-collect.netlify.app/api/paginate)               | [partition](https://ts-collect.netlify.app/api/partition)           | [pick](https://ts-collect.netlify.app/api/pick)                  |
-| [pipe](https://ts-collect.netlify.app/api/pipe)                   | [pluck](https://ts-collect.netlify.app/api/pluck)               | [prepend](https://ts-collect.netlify.app/api/prepend)               |
-| [product](https://ts-collect.netlify.app/api/product)                | [profile](https://ts-collect.netlify.app/api/profile)             | [push](https://ts-collect.netlify.app/api/push)                  |
-| [random](https://ts-collect.netlify.app/api/random)                 | [reduce](https://ts-collect.netlify.app/api/reduce)              | [replaceRecursive](https://ts-collect.netlify.app/api/replaceRecursive) |
-| [sanitize](https://ts-collect.netlify.app/api/sanitize)               | [skip](https://ts-collect.netlify.app/api/skip)                | [skipUntil](https://ts-collect.netlify.app/api/skipUntil)            |
-| [skipWhile](https://ts-collect.netlify.app/api/skipWhile)              | [slice](https://ts-collect.netlify.app/api/slice)               | [sole](https://ts-collect.netlify.app/api/sole)                  |
-| [sort](https://ts-collect.netlify.app/api/sort)                   | [sortBy](https://ts-collect.netlify.app/api/sortBy)              | [sortByDesc](https://ts-collect.netlify.app/api/sortByDesc)           |
-| [sortKeys](https://ts-collect.netlify.app/api/sortKeys)               | [sortKeysDesc](https://ts-collect.netlify.app/api/sortKeysDesc)        | [standardDeviation](https://ts-collect.netlify.app/api/standardDeviation) |
-| [sum](https://ts-collect.netlify.app/api/sum)                    | [symmetricDiff](https://ts-collect.netlify.app/api/symmetricDiff)      | [take](https://ts-collect.netlify.app/api/take)                  |
-| [takeUntil](https://ts-collect.netlify.app/api/takeUntil)             | [takeWhile](https://ts-collect.netlify.app/api/takeWhile)           | [tap](https://ts-collect.netlify.app/api/tap)                   |
-| [toArray](https://ts-collect.netlify.app/api/toArray)                | [toCSV](https://ts-collect.netlify.app/api/toCSV)               | [toElastic](https://ts-collect.netlify.app/api/toElastic)            |
-| [toGraphQL](https://ts-collect.netlify.app/api/toGraphQL)             | [toJSON](https://ts-collect.netlify.app/api/toJSON)              | [toMap](https://ts-collect.netlify.app/api/toMap)                 |
-| [toPandas](https://ts-collect.netlify.app/api/toPandas)               | [toSet](https://ts-collect.netlify.app/api/toSet)               | [toSQL](https://ts-collect.netlify.app/api/toSQL)                 |
-| [toXML](https://ts-collect.netlify.app/api/toXML)                  | [transform](https://ts-collect.netlify.app/api/transform)           | [union](https://ts-collect.netlify.app/api/union)                 |
-| [unique](https://ts-collect.netlify.app/api/unique)                 | [unless](https://ts-collect.netlify.app/api/unless)              | [unwrap](https://ts-collect.netlify.app/api/unwrap)                |
-| [variance](https://ts-collect.netlify.app/api/variance)               | [where](https://ts-collect.netlify.app/api/where)               | [whereBetween](https://ts-collect.netlify.app/api/whereBetween)       |
-| [whereIn](https://ts-collect.netlify.app/api/whereIn)                | [whereInstanceOf](https://ts-collect.netlify.app/api/whereInstanceOf)    | [whereLike](https://ts-collect.netlify.app/api/whereLike)            |
-| [whereNotBetween](https://ts-collect.netlify.app/api/whereNotBetween)       | [whereNotIn](https://ts-collect.netlify.app/api/whereNotIn)          | [whereNotNull](https://ts-collect.netlify.app/api/whereNotNull)         |
-| [whereNull](https://ts-collect.netlify.app/api/whereNull)              | [whereRegex](https://ts-collect.netlify.app/api/whereRegex)           | [wrap](https://ts-collect.netlify.app/api/wrap)                  |
-| [zscore](https://ts-collect.netlify.app/api/zscore)                  |                              |                              |
+| [_avg_](https://ts-collect.netlify.app/api/avg)                     | [_batch_](https://ts-collect.netlify.app/api/batch)             | [_cache_](https://ts-collect.netlify.app/api/cache)                 |
+| [_cartesianProduct_](https://ts-collect.netlify.app/api/cartesianProduct)        | [_cast_](https://ts-collect.netlify.app/api/cast)                | [_chunk_](https://ts-collect.netlify.app/api/chunk)                 |
+| [_collapse_](https://ts-collect.netlify.app/api/collapse)                | [_combine_](https://ts-collect.netlify.app/api/combine)             | [_contains_](https://ts-collect.netlify.app/api/contains)              |
+| [_containsOneItem_](https://ts-collect.netlify.app/api/containsOneItem)         | [_count_](https://ts-collect.netlify.app/api/count)               | [_countBy_](https://ts-collect.netlify.app/api/countBy)               |
+| [_cursor_](https://ts-collect.netlify.app/api/cursor)                  | [_dd_](https://ts-collect.netlify.app/api/dd)                  | [_describe_](https://ts-collect.netlify.app/api/describe)              |
+| [_diff_](https://ts-collect.netlify.app/api/diff)                    | [_diffAssoc_](https://ts-collect.netlify.app/api/diffAssoc)           | [_diffKeys_](https://ts-collect.netlify.app/api/diffKeys)              |
+| [_each_](https://ts-collect.netlify.app/api/each)                    | [_eachSpread_](https://ts-collect.netlify.app/api/eachSpread)          | [_except_](https://ts-collect.netlify.app/api/except)                |
+| [_filter_](https://ts-collect.netlify.app/api/filter)                  | [_first_](https://ts-collect.netlify.app/api/first)               | [_firstOrFail_](https://ts-collect.netlify.app/api/firstOrFail)           |
+| [_firstWhere_](https://ts-collect.netlify.app/api/firstWhere)              | [_flatMap_](https://ts-collect.netlify.app/api/flatMap)             | [_flip_](https://ts-collect.netlify.app/api/flip)                  |
+| [_forget_](https://ts-collect.netlify.app/api/forget)                  | [_fuzzyMatch_](https://ts-collect.netlify.app/api/fuzzyMatch)          | [_get_](https://ts-collect.netlify.app/api/get)                   |
+| [_groupBy_](https://ts-collect.netlify.app/api/groupBy)                 | [_groupByMultiple_](https://ts-collect.netlify.app/api/groupByMultiple)     | [_has_](https://ts-collect.netlify.app/api/has)                   |
+| [_index_](https://ts-collect.netlify.app/api/index)                   | [_instrument_](https://ts-collect.netlify.app/api/instrument)          | [_intersect_](https://ts-collect.netlify.app/api/intersect)             |
+| [_isEmpty_](https://ts-collect.netlify.app/api/isEmpty)                 | [_isNotEmpty_](https://ts-collect.netlify.app/api/isNotEmpty)          | [_join_](https://ts-collect.netlify.app/api/join)                  |
+| [_last_](https://ts-collect.netlify.app/api/last)                    | [_lazy_](https://ts-collect.netlify.app/api/lazy)                | [_map_](https://ts-collect.netlify.app/api/map)                   |
+| [_mapAsync_](https://ts-collect.netlify.app/api/mapAsync)                | [_mapInto_](https://ts-collect.netlify.app/api/mapInto)             | [_mapOption_](https://ts-collect.netlify.app/api/mapOption)            |
+| [_mapSpread_](https://ts-collect.netlify.app/api/mapSpread)              | [_mapToGroups_](https://ts-collect.netlify.app/api/mapToGroups)         | [_mapUntil_](https://ts-collect.netlify.app/api/mapUntil)             |
+| [_mapWithKeys_](https://ts-collect.netlify.app/api/mapWithKeys)           | [_max_](https://ts-collect.netlify.app/api/max)                 | [_median_](https://ts-collect.netlify.app/api/median)                |
+| [_mergeRecursive_](https://ts-collect.netlify.app/api/mergeRecursive)       | [_min_](https://ts-collect.netlify.app/api/min)                 | [_mode_](https://ts-collect.netlify.app/api/mode)                  |
+| [_nth_](https://ts-collect.netlify.app/api/nth)                    | [_omit_](https://ts-collect.netlify.app/api/omit)                | [_only_](https://ts-collect.netlify.app/api/only)                  |
+| [_paginate_](https://ts-collect.netlify.app/api/paginate)               | [_partition_](https://ts-collect.netlify.app/api/partition)           | [_pick_](https://ts-collect.netlify.app/api/pick)                  |
+| [_pipe_](https://ts-collect.netlify.app/api/pipe)                   | [_pluck_](https://ts-collect.netlify.app/api/pluck)               | [_prepend_](https://ts-collect.netlify.app/api/prepend)               |
+| [_product_](https://ts-collect.netlify.app/api/product)                | [_profile_](https://ts-collect.netlify.app/api/profile)             | [_push_](https://ts-collect.netlify.app/api/push)                  |
+| [_random_](https://ts-collect.netlify.app/api/random)                 | [_reduce_](https://ts-collect.netlify.app/api/reduce)              | [_replaceRecursive_](https://ts-collect.netlify.app/api/replaceRecursive) |
+| [_sanitize_](https://ts-collect.netlify.app/api/sanitize)               | [_skip_](https://ts-collect.netlify.app/api/skip)                | [_skipUntil_](https://ts-collect.netlify.app/api/skipUntil)            |
+| [_skipWhile_](https://ts-collect.netlify.app/api/skipWhile)              | [_slice_](https://ts-collect.netlify.app/api/slice)               | [_sole_](https://ts-collect.netlify.app/api/sole)                  |
+| [_sort_](https://ts-collect.netlify.app/api/sort)                   | [_sortBy_](https://ts-collect.netlify.app/api/sortBy)              | [_sortByDesc_](https://ts-collect.netlify.app/api/sortByDesc)           |
+| [_sortKeys_](https://ts-collect.netlify.app/api/sortKeys)               | [_sortKeysDesc_](https://ts-collect.netlify.app/api/sortKeysDesc)        | [_standardDeviation_](https://ts-collect.netlify.app/api/standardDeviation) |
+| [_sum_](https://ts-collect.netlify.app/api/sum)                    | [_symmetricDiff_](https://ts-collect.netlify.app/api/symmetricDiff)      | [_take_](https://ts-collect.netlify.app/api/take)                  |
+| [_takeUntil_](https://ts-collect.netlify.app/api/takeUntil)             | [_takeWhile_](https://ts-collect.netlify.app/api/takeWhile)           | [_tap_](https://ts-collect.netlify.app/api/tap)                   |
+| [_toArray_](https://ts-collect.netlify.app/api/toArray)                | [_toCSV_](https://ts-collect.netlify.app/api/toCSV)               | [_toElastic_](https://ts-collect.netlify.app/api/toElastic)            |
+| [_toGraphQL_](https://ts-collect.netlify.app/api/toGraphQL)             | [_toJSON_](https://ts-collect.netlify.app/api/toJSON)              | [_toMap_](https://ts-collect.netlify.app/api/toMap)                 |
+| [_toPandas_](https://ts-collect.netlify.app/api/toPandas)               | [_toSet_](https://ts-collect.netlify.app/api/toSet)               | [_toSQL_](https://ts-collect.netlify.app/api/toSQL)                 |
+| [_toXML_](https://ts-collect.netlify.app/api/toXML)                  | [_transform_](https://ts-collect.netlify.app/api/transform)           | [_union_](https://ts-collect.netlify.app/api/union)                 |
+| [_unique_](https://ts-collect.netlify.app/api/unique)                 | [_unless_](https://ts-collect.netlify.app/api/unless)              | [_unwrap_](https://ts-collect.netlify.app/api/unwrap)                |
+| [_variance_](https://ts-collect.netlify.app/api/variance)               | [_where_](https://ts-collect.netlify.app/api/where)               | [_whereBetween_](https://ts-collect.netlify.app/api/whereBetween)       |
+| [_whereIn_](https://ts-collect.netlify.app/api/whereIn)                | [_whereInstanceOf_](https://ts-collect.netlify.app/api/whereInstanceOf)    | [_whereLike_](https://ts-collect.netlify.app/api/whereLike)            |
+| [_whereNotBetween_](https://ts-collect.netlify.app/api/whereNotBetween)       | [_whereNotIn_](https://ts-collect.netlify.app/api/whereNotIn)          | [_whereNotNull_](https://ts-collect.netlify.app/api/whereNotNull)         |
+| [_whereNull_](https://ts-collect.netlify.app/api/whereNull)              | [_whereRegex_](https://ts-collect.netlify.app/api/whereRegex)           | [_wrap_](https://ts-collect.netlify.app/api/wrap)                  |
+| [_zscore_](https://ts-collect.netlify.app/api/zscore)                  |                              |                              |
 
 ## Get Started
 
