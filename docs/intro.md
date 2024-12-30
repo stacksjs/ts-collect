@@ -2,7 +2,7 @@
 
 # Introduction
 
-> `ts-collect`, a powerful, fully-typed collections library for TypeScript, combining Laravel's collection elegance with advanced data processing capabilities. Features lazy evaluation, statistical analysis, machine learning operations, and comprehensive data manipulation tools—all with zero dependencies.
+> A powerful, fully-typed collections library for TypeScript, combining Laravel's collection elegance with advanced data processing capabilities. Features a fluent API, lazy evaluation, statistical analysis, machine learning operations, and comprehensive data manipulation tools—all with zero dependencies.
 
 ## Features
 
@@ -309,7 +309,7 @@ _Thanks to..._
 
 - [Laravel Collections](https://laravel.com/docs/main/collections) for inspiration
 - [Chris Breuer](https://github.com/chrisbreuer) for the initial implementation
-- [All Contributors](https://github.com/stacksjs/ts-collect/graphs/contributors) for their contributions to Stacks
+- [All Contributors](https://github.com/stacksjs/ts-collect/graphs/contributors) for their contributions to Stacks & ts-collect
 
 ## License
 
