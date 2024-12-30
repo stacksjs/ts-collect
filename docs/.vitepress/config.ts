@@ -61,7 +61,7 @@ const sidebar = [
   { text: 'Showcase', link: '/Showcase' },
 ]
 
-const description = 'Lightweight, zero-dependency TypeScript collection manipulation library with 100% type safety and chainable methods for arrays and objects.'
+const description = 'Lightweight, zero-dependency TypeScript collection manipulation library. Type safe and chainable methods for arrays and objects.'
 const title = 'ts-collect | Lightweight & powerful Laravel-like Collections written for TypeScript.'
 
 export default withPwa(
@@ -88,7 +88,7 @@ export default withPwa(
       ['meta', { property: 'og:title', content: title }],
       ['meta', { property: 'og:description', content: description }],
       ['meta', { property: 'og:site_name', content: 'ts-collect' }],
-      ['meta', { property: 'og:image', content: './images/og-image.jpg' }],
+      ['meta', { property: 'og:image', content: '/images/og-image.jpg' }],
       ['meta', { property: 'og:url', content: 'https://ts-collect.netlify.app/' }],
       // ['script', { 'src': 'https://cdn.usefathom.com/script.js', 'data-site': '', 'data-spa': 'auto', 'defer': '' }],
       ...analyticsHead,
