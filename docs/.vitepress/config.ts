@@ -347,7 +347,7 @@ export default withPwa(
 
       footer: {
         message: 'Released under the MIT License.',
-        copyright: 'Copyright © 2024-present Stacks.js, Inc.',
+        copyright: 'Copyright © 2025-present Stacks.js, Inc.',
       },
 
       socialLinks: [
