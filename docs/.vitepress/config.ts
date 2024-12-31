@@ -1,8 +1,9 @@
 import type { HeadConfig } from 'vitepress'
+import { groupCollapsed } from 'node:console'
 import { transformerTwoslash } from '@shikijs/vitepress-twoslash'
 import { withPwa } from '@vite-pwa/vitepress'
-import { defineConfig } from 'vitepress'
 
+import { defineConfig } from 'vitepress'
 import dynamicRoutes from '../api/dynamicRoutes'
 import viteConfig from './vite.config'
 
@@ -51,13 +52,245 @@ const sidebar = [
   },
   {
     text: 'API',
-    items: dynamicRoutes.sort((a, b) => {
-      return a.path.localeCompare(b.path)
-    }).map(route => ({
-      text: route.path,
-      link: `/api/${route.path}`,
-    })),
-
+    items: [
+      {
+        text: 'Aggregation',
+        collapsed: false,
+        items: dynamicRoutes
+          .filter(route => [
+            'aggregate',
+            'average',
+            'avg',
+            'count',
+            'countBy',
+            'max',
+            'median',
+            'min',
+            'mode',
+            'sum',
+            'product',
+          ].includes(route.path))
+          .sort((a, b) => a.path.localeCompare(b.path))
+          .map(route => ({
+            text: route.path,
+            link: `/api/${route.path}`,
+          })),
+      },
+      {
+        text: 'Array Operations',
+        collapsed: true,
+        items: dynamicRoutes
+          .filter(route => [
+            'chunk',
+            'collapse',
+            'flatten',
+            'pad',
+            'reverse',
+            'shuffle',
+            'slice',
+            'splice',
+            'wrap',
+            'unwrap',
+          ].includes(route.path))
+          .sort((a, b) => a.path.localeCompare(b.path))
+          .map(route => ({
+            text: route.path,
+            link: `/api/${route.path}`,
+          })),
+      },
+      {
+        text: 'Collection Manipulation',
+        collapsed: true,
+        items: dynamicRoutes
+          .filter(route => [
+            'combine',
+            'concat',
+            'merge',
+            'mergeRecursive',
+            'push',
+            'pop',
+            'pull',
+            'put',
+            'shift',
+          ].includes(route.path))
+          .sort((a, b) => a.path.localeCompare(b.path))
+          .map(route => ({
+            text: route.path,
+            link: `/api/${route.path}`,
+          })),
+      },
+      {
+        text: 'Filtering',
+        collapsed: true,
+        items: dynamicRoutes
+          .filter(route => [
+            'filter',
+            'filterAsync',
+            'reject',
+            'where',
+            'whereBetween',
+            'whereIn',
+            'whereNotBetween',
+            'whereNotNull',
+            'whereRegex',
+          ].includes(route.path))
+          .sort((a, b) => a.path.localeCompare(b.path))
+          .map(route => ({
+            text: route.path,
+            link: `/api/${route.path}`,
+          })),
+      },
+      {
+        text: 'Mapping & Transformation',
+        collapsed: true,
+        items: dynamicRoutes
+          .filter(route => [
+            'map',
+            'mapAsync',
+            'mapInto',
+            'mapWithKeys',
+            'flatMap',
+            'transform',
+            'reduce',
+            'reduceAsync',
+          ].includes(route.path))
+          .sort((a, b) => a.path.localeCompare(b.path))
+          .map(route => ({
+            text: route.path,
+            link: `/api/${route.path}`,
+          })),
+      },
+      {
+        text: 'Grouping & Sorting',
+        collapsed: true,
+        items: dynamicRoutes
+          .filter(route => [
+            'groupBy',
+            'groupByMultiple',
+            'sortBy',
+            'sortByDesc',
+            'sortKeys',
+            'sortKeysDesc',
+            'keyBy',
+          ].includes(route.path))
+          .sort((a, b) => a.path.localeCompare(b.path))
+          .map(route => ({
+            text: route.path,
+            link: `/api/${route.path}`,
+          })),
+      },
+      {
+        text: 'Statistics & Math',
+        collapsed: true,
+        items: dynamicRoutes
+          .filter(route => [
+            'standardDeviation',
+            'variance',
+            'covariance',
+            'kurtosis',
+            'skewness',
+            'zscore',
+            'linearRegression',
+          ].includes(route.path))
+          .sort((a, b) => a.path.localeCompare(b.path))
+          .map(route => ({
+            text: route.path,
+            link: `/api/${route.path}`,
+          })),
+      },
+      {
+        text: 'Time Series',
+        collapsed: true,
+        items: dynamicRoutes
+          .filter(route => [
+            'timeSeries',
+            'forecast',
+            'seasonality',
+            'trend',
+            'movingAverage',
+          ].includes(route.path))
+          .sort((a, b) => a.path.localeCompare(b.path))
+          .map(route => ({
+            text: route.path,
+            link: `/api/${route.path}`,
+          })),
+      },
+      {
+        text: 'Utilities',
+        collapsed: true,
+        items: dynamicRoutes
+          .filter(route => [
+            'debug',
+            'dd',
+            'dump',
+            'tap',
+            'pipe',
+            'profile',
+            'validate',
+            'validateSync',
+          ].includes(route.path))
+          .sort((a, b) => a.path.localeCompare(b.path))
+          .map(route => ({
+            text: route.path,
+            link: `/api/${route.path}`,
+          })),
+      },
+      {
+        text: 'Query & Search',
+        collapsed: true,
+        items: dynamicRoutes
+          .filter(route => [
+            'first',
+            'firstOrFail',
+            'last',
+            'lazy',
+            'query',
+            'search',
+            'fuzzyMatch',
+          ].includes(route.path))
+          .sort((a, b) => a.path.localeCompare(b.path))
+          .map(route => ({
+            text: route.path,
+            link: `/api/${route.path}`,
+          })),
+      },
+      {
+        text: 'Data Conversion',
+        collapsed: true,
+        items: dynamicRoutes
+          .filter(route => [
+            'toArray',
+            'toMap',
+            'toSet',
+            'toPandas',
+            'toSql',
+            'toGraphQL',
+            'toElastic',
+          ].includes(route.path))
+          .sort((a, b) => a.path.localeCompare(b.path))
+          .map(route => ({
+            text: route.path,
+            link: `/api/${route.path}`,
+          })),
+      },
+      {
+        text: 'Set Operations',
+        collapsed: true,
+        items: dynamicRoutes
+          .filter(route => [
+            'union',
+            'intersect',
+            'difference',
+            'symmetricDiff',
+            'unique',
+          ].includes(route.path))
+          .sort((a, b) => a.path.localeCompare(b.path))
+          .map(route => ({
+            text: route.path,
+            link: `/api/${route.path}`,
+          })),
+      },
+    ],
   },
   { text: 'Showcase', link: '/Showcase' },
 ]
