@@ -24,6 +24,7 @@ const nav = [
   {
     text: 'Resources',
     items: [
+      { text: 'Showcase', link: '/Showcase' },
       { text: 'Team', link: '/team' },
       { text: 'Sponsors', link: '/sponsors' },
       { text: 'Partners', link: '/partners' },
