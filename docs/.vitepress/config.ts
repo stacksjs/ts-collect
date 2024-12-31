@@ -303,6 +303,7 @@ export default withPwa(
     description: 'Lightweight & powerful Laravel-like Collections written for TypeScript.',
     metaChunk: true,
     cleanUrls: true,
+    lastUpdated: true,
 
     head: [
       ['link', { rel: 'icon', type: 'image/svg+xml', href: './images/logo-mini.svg' }],
