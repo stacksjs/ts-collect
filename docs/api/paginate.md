@@ -269,7 +269,7 @@ const page: PaginationResult<TypedItem> = items.paginate(2, 1)
 const activeItems = page.data.filter(item => item.active)
 ```
 
-## Return Value (PaginationResult<T>)
+## Return Value `(PaginationResult<T>)`
 
 ```typescript
 interface PaginationResult<T> {

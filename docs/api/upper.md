@@ -96,7 +96,7 @@ const result: StringCollection = strings.upper() // ✓ Valid
 
 ## Return Value
 
-- Returns a new Collection<string> with uppercase values
+- Returns a new Collection`<string>` with uppercase values
 - Original collection remains unchanged
 - Maintains the order of elements
 - Preserves collection chain methods

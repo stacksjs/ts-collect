@@ -115,7 +115,7 @@ const result: StringCollection = strings.slug() // ✓ Valid
 
 ## Return Value
 
-- Returns a new Collection<string> with slugified values
+- Returns a new Collection`<string>` with slugified values
 - Original collection remains unchanged
 - Maintains the order of elements
 - Preserves collection chain methods

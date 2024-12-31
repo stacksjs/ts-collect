@@ -165,7 +165,7 @@ type ResultType = ReturnType<typeof values.first> // string | undefined
 - Returns a new Collection without null/undefined values
 - Automatically filters out null and undefined results
 - Maintains type safety through generics
-- Result type is NonNullable<U>
+- Result type is NonNullable`<U>`
 - Preserves collection chain methods
 - Empty collection if all results are null/undefined
 

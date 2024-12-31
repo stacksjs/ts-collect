@@ -93,7 +93,7 @@ const result: StringCollection = strings.lower() // ✓ Valid
 
 ## Return Value
 
-- Returns a new Collection<string> with lowercase values
+- Returns a new Collection`<string>` with lowercase values
 - Original collection remains unchanged
 - Maintains the order of elements
 - Preserves collection chain methods

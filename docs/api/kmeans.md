@@ -163,7 +163,7 @@ const cluster0 = clusters
   .all()
 ```
 
-## Return Value (KMeansResult<T>)
+## Return Value `(KMeansResult<T>)`
 
 - Returns a specialized collection containing:
   - `cluster`: The assigned cluster number (0 to k-1)
