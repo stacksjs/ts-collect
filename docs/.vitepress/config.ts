@@ -82,12 +82,14 @@ const sidebar = [
             'chunk',
             'collapse',
             'flatten',
+            'flip',
             'pad',
             'reverse',
             'shuffle',
             'slice',
             'splice',
             'wrap',
+            'unfold',
             'unwrap',
           ].includes(route.path))
           .sort((a, b) => a.path.localeCompare(b.path))
@@ -109,6 +111,8 @@ const sidebar = [
             'pop',
             'pull',
             'put',
+            'replace',
+            'replaceRecursive',
             'shift',
           ].includes(route.path))
           .sort((a, b) => a.path.localeCompare(b.path))
@@ -128,7 +132,10 @@ const sidebar = [
             'where',
             'whereBetween',
             'whereIn',
+            'whereInstanceOf',
+            'whereLike',
             'whereNotBetween',
+            'whereNotIn',
             'whereNotNull',
             'whereRegex',
           ].includes(route.path))
@@ -144,13 +151,18 @@ const sidebar = [
         items: dynamicRoutes
           .filter(route => [
             'map',
+            'flatMap',
             'mapAsync',
             'mapInto',
+            'mapOption',
+            'mapSpread',
+            'mapToDictionary',
+            'mapToGroups',
+            'mapUntil',
             'mapWithKeys',
-            'flatMap',
-            'transform',
             'reduce',
             'reduceAsync',
+            'transform',
           ].includes(route.path))
           .sort((a, b) => a.path.localeCompare(b.path))
           .map(route => ({
@@ -239,6 +251,7 @@ const sidebar = [
         items: dynamicRoutes
           .filter(route => [
             'first',
+            'firstWhere',
             'firstOrFail',
             'last',
             'lazy',
@@ -252,6 +265,24 @@ const sidebar = [
             link: `/api/${route.path}`,
           })),
       },
+
+      {
+        text: 'Data Transformation',
+        collapsed: true,
+        items: dynamicRoutes
+          .filter(route => [
+            'pivot',
+            'pivotTable',
+            'transform',
+            'split',
+          ].includes(route.path))
+          .sort((a, b) => a.path.localeCompare(b.path))
+          .map(route => ({
+            text: route.path,
+            link: `/api/${route.path}`,
+          })),
+      },
+
       {
         text: 'Data Conversion',
         collapsed: true,
@@ -271,6 +302,7 @@ const sidebar = [
             link: `/api/${route.path}`,
           })),
       },
+
       {
         text: 'Set Operations',
         collapsed: true,
@@ -281,6 +313,242 @@ const sidebar = [
             'difference',
             'symmetricDiff',
             'unique',
+          ].includes(route.path))
+          .sort((a, b) => a.path.localeCompare(b.path))
+          .map(route => ({
+            text: route.path,
+            link: `/api/${route.path}`,
+          })),
+      },
+
+      {
+        text: 'Iteration & Flow Control',
+        collapsed: true,
+        items: dynamicRoutes
+          .filter(route => [
+            'each',
+            'eachSpread',
+            'everyAsync',
+            'someAsync',
+            'unless',
+            'when',
+            'whenEmpty',
+            'whenNotEmpty',
+            'takeUntil',
+            'takeWhile',
+            'skipUntil',
+            'skipWhile',
+            'times',
+            'parallel',
+          ].includes(route.path))
+          .sort((a, b) => a.path.localeCompare(b.path))
+          .map(route => ({
+            text: route.path,
+            link: `/api/${route.path}`,
+          })),
+      },
+
+      {
+        text: 'Joins & Relations',
+        collapsed: true,
+        items: dynamicRoutes
+          .filter(route => [
+            'join',
+            'leftJoin',
+            'crossJoin',
+            'zip',
+            'cartesianProduct',
+          ].includes(route.path))
+          .sort((a, b) => a.path.localeCompare(b.path))
+          .map(route => ({
+            text: route.path,
+            link: `/api/${route.path}`,
+          })),
+      },
+
+      {
+        text: 'Validation & Checking',
+        collapsed: true,
+        items: dynamicRoutes
+          .filter(route => [
+            'assertValid',
+            'contains',
+            'containsAll',
+            'containsOneItem',
+            'doesntContain',
+            'has',
+            'isEmpty',
+            'isNotEmpty',
+            'unlessEmpty',
+            'unlessNotEmpty',
+          ].includes(route.path))
+          .sort((a, b) => a.path.localeCompare(b.path))
+          .map(route => ({
+            text: route.path,
+            link: `/api/${route.path}`,
+          })),
+      },
+
+      {
+        text: 'Advanced Math',
+        collapsed: true,
+        items: dynamicRoutes
+          .filter(route => [
+            'convolve',
+            'correlate',
+            'differentiate',
+            'entropy',
+            'fft',
+            'frequency',
+            'geoDistance',
+            'integrate',
+            'interpolate',
+            'kmeans',
+            'power',
+          ].includes(route.path))
+          .sort((a, b) => a.path.localeCompare(b.path))
+          .map(route => ({
+            text: route.path,
+            link: `/api/${route.path}`,
+          })),
+      },
+
+      {
+        text: 'Data Formatting',
+        collapsed: true,
+        items: dynamicRoutes
+          .filter(route => [
+            'cast',
+            'dateTime',
+            'implode',
+            'money',
+            'slug',
+            'lower',
+            'upper',
+            'sanitize',
+          ].includes(route.path))
+          .sort((a, b) => a.path.localeCompare(b.path))
+          .map(route => ({
+            text: route.path,
+            link: `/api/${route.path}`,
+          })),
+      },
+
+      {
+        text: 'Performance & Diagnostics',
+        collapsed: true,
+        items: dynamicRoutes
+          .filter(route => [
+            'batch',
+            'benchmark',
+            'cursor',
+            'explain',
+            'metrics',
+            'parallel',
+            'profile',
+            'stream',
+          ].includes(route.path))
+          .sort((a, b) => a.path.localeCompare(b.path))
+          .map(route => ({
+            text: route.path,
+            link: `/api/${route.path}`,
+          })),
+      },
+
+      {
+        text: 'Data Access',
+        collapsed: true,
+        items: dynamicRoutes
+          .filter(route => [
+            'except',
+            'first',
+            'get',
+            'keys',
+            'last',
+            'nth',
+            'only',
+            'pluck',
+            'random',
+            'values',
+          ].includes(route.path))
+          .sort((a, b) => a.path.localeCompare(b.path))
+          .map(route => ({
+            text: route.path,
+            link: `/api/${route.path}`,
+          })),
+      },
+
+      {
+        text: 'Diff & Comparison',
+        collapsed: true,
+        items: dynamicRoutes
+          .filter(route => [
+            'diffAssoc',
+            'diffKeys',
+            'diffUsing',
+            'duplicates',
+            'outliers',
+          ].includes(route.path))
+          .sort((a, b) => a.path.localeCompare(b.path))
+          .map(route => ({
+            text: route.path,
+            link: `/api/${route.path}`,
+          })),
+      },
+
+      {
+        text: 'Pagination',
+        collapsed: true,
+        items: dynamicRoutes
+          .filter(route => [
+            'forPage',
+            'paginate',
+            'skip',
+            'take',
+          ].includes(route.path))
+          .sort((a, b) => a.path.localeCompare(b.path))
+          .map(route => ({
+            text: route.path,
+            link: `/api/${route.path}`,
+          })),
+      },
+
+      {
+        text: 'Object Manipulation',
+        collapsed: true,
+        items: dynamicRoutes
+          .filter(route => [
+            'as',
+            'forget',
+            'having',
+            'index',
+            'macro',
+            'make',
+            'omit',
+            'partition',
+            'pick',
+            'prepend',
+          ].includes(route.path))
+          .sort((a, b) => a.path.localeCompare(b.path))
+          .map(route => ({
+            text: route.path,
+            link: `/api/${route.path}`,
+          })),
+      },
+
+      {
+        text: 'Helper Methods',
+        collapsed: true,
+        items: dynamicRoutes
+          .filter(route => [
+            'all',
+            'configure',
+            'describe',
+            'fromStream',
+            'playground',
+            'scan',
+            'sole',
+            'undot',
           ].includes(route.path))
           .sort((a, b) => a.path.localeCompare(b.path))
           .map(route => ({
