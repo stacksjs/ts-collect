@@ -3,7 +3,7 @@ import { transformerTwoslash } from '@shikijs/vitepress-twoslash'
 import { withPwa } from '@vite-pwa/vitepress'
 import { defineConfig } from 'vitepress'
 import dynamicRoutes from '../api/dynamicRoutes'
-import viteConfig from './vite.config'
+import vite from './vite.config'
 
 // https://vitepress.dev/reference/site-config
 
@@ -544,6 +544,6 @@ export default withPwa(
       ],
     },
 
-    vite: viteConfig,
+    vite,
   }),
 )
