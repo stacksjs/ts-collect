@@ -483,7 +483,7 @@ export default withPwa(
       ['meta', { property: 'og:title', content: title }],
       ['meta', { property: 'og:description', content: description }],
       ['meta', { property: 'og:site_name', content: 'ts-collect' }],
-      ['meta', { property: 'og:image', content: '/images/og-image.jpg' }],
+      ['meta', { property: 'og:image', content: '/images/og-image.png' }],
       ['meta', { property: 'og:url', content: 'https://ts-collect.netlify.app/' }],
       // ['script', { 'src': 'https://cdn.usefathom.com/script.js', 'data-site': '', 'data-spa': 'auto', 'defer': '' }],
       ...analyticsHead,
