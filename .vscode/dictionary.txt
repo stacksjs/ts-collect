@@ -1,9 +1,11 @@
 antfu
 apos
+audiox
 biomejs
 bluesky
 booleanish
 bumpp
+bunfig
 bunx
 changelogen
 changelogithub
@@ -16,12 +18,15 @@ davidanson
 degit
 deps
 destructurable
+dnsx
 doesnt
 dtsx
 entrypoints
 Flippable
 heroicons
+httx
 iconify
+imgx
 Interquartile
 kmeans
 Laravel
@@ -41,6 +46,7 @@ Solana
 Spatie
 stacksjs
 stringifying
+tlsx
 twoslash
 typecheck
 unconfig
@@ -50,6 +56,7 @@ unocss
 unplugin
 unref
 upath
+vidx
 vite
 vitebook
 vitejs
