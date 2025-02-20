@@ -50,7 +50,7 @@
     "lint-staged": "^15.4.3",
     "simple-git-hooks": "^2.11.1",
     "typescript": "^5.7.3",
-    "unocss": "65.4.3"
+    "unocss": "66.0.0"
   },
   "overrides": {
     "unconfig": "0.3.10"
