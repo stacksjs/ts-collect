@@ -323,6 +323,10 @@ Please see our [releases](https://github.com/stackjs/ts-collect/releases) page f
 
 Please see [CONTRIBUTING](https://github.com/stackjs/contribute) for details.
 
+## Stargazers
+
+[![Stargazers](https://starchart.cc/stacksjs/ts-collect.svg?variant=adaptive)](https://starchart.cc/stacksjs/ts-collect)
+
 ## Community
 
 For help, discussion about best practices, or any other conversation that would benefit from being searchable:

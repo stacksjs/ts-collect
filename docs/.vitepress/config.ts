@@ -28,6 +28,7 @@ const nav = [
       { text: 'Sponsors', link: '/sponsors' },
       { text: 'Partners', link: '/partners' },
       { text: 'Postcardware', link: '/postcardware' },
+      { text: 'Stargazers', link: '/stargazers' },
       { text: 'License', link: '/license' },
       {
         items: [
