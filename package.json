@@ -28,37 +28,42 @@
   "files": ["README.md", "dist"],
   "scripts": {
     "build": "bun --bun build.ts",
+    "fresh": "bunx rimraf node_modules/ bun.lock && bun i",
+    "prepublishOnly": "bun --bun run build",
+    "test": "bun test",
     "lint": "bunx --bun eslint .",
     "lint:fix": "bunx --bun eslint . --fix",
-    "fresh": "bunx rimraf node_modules/ bun.lock && bun i",
-    "changelog": "bunx changelogen --output CHANGELOG.md",
-    "prepublishOnly": "bun --bun run build",
-    "release": "bun run changelog && bunx bumpp package.json --all",
-    "test": "bun test",
+    "changelog": "bunx logsmith --verbose",
+    "changelog:generate": "bunx logsmith --output CHANGELOG.md",
+    "release": "bun run changelog:generate && bunx bumpx prompt --recursive",
+    "postinstall": "bunx git-hooks",
     "dev:docs": "bun --bun vitepress dev docs",
     "build:docs": "bun --bun vitepress build docs",
     "preview:docs": "bun --bun vitepress preview docs",
     "typecheck": "bun --bun tsc --noEmit"
   },
   "devDependencies": {
+    "@stacksjs/bumpx": "^0.1.17",
     "@stacksjs/docs": "^0.69.3",
     "@stacksjs/eslint-config": "^3.15.1-beta.4",
+    "@stacksjs/gitlint": "^0.1.5",
+    "@stacksjs/logsmith": "^0.1.8",
     "@types/bun": "^1.2.2",
-    "bumpp": "^10.0.3",
+    "buddy-bot": "^0.8.9",
+    "bun-git-hooks": "^0.2.19",
     "bun-plugin-dtsx": "^0.21.9",
-    "changelogen": "^0.5.7",
-    "lint-staged": "^15.4.3",
-    "simple-git-hooks": "^2.11.1",
     "typescript": "^5.7.3",
     "unocss": "66.0.0"
   },
   "overrides": {
     "unconfig": "0.3.10"
   },
-  "simple-git-hooks": {
-    "pre-commit": "bun lint-staged"
-  },
-  "lint-staged": {
-    "*.{js,ts}": "bunx eslint . --fix"
+  "git-hooks": {
+    "pre-commit": {
+      "staged-lint": {
+        "*.{js,ts,json,yaml,yml,md}": "bunx --bun eslint --fix"
+      }
+    },
+    "commit-msg": "bunx gitlint --edit .git/COMMIT_EDITMSG"
   }
 }
