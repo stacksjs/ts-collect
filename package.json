@@ -44,6 +44,7 @@
   },
   "devDependencies": {
     "@stacksjs/bumpx": "^0.1.84",
+    "@stacksjs/clarity": "^0.3.23",
     "@stacksjs/docs": "^0.69.3",
     "@stacksjs/eslint-config": "^4.14.0-beta.3",
     "@stacksjs/gitlint": "^0.1.5",
