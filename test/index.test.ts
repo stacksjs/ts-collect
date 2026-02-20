@@ -4296,7 +4296,6 @@ describe('Collection Performance Features', () => {
         .filter(item => item.value > 0.9)
         .map(item => ({
           ...item,
-          // @ts-expect-error somehow it fails typecheck
           computed: Buffer.from(item.data).reduce((a, b) => a + b, 0),
         }))
         .take(10)
@@ -4316,7 +4315,6 @@ describe('Collection Performance Features', () => {
         .filter(item => item.value > 0.9)
         .map(item => ({
           ...item,
-          // @ts-expect-error somehow it fails typecheck
           computed: Buffer.from(item.data).reduce((a, b) => a + b, 0),
         }))
         .take(10)
