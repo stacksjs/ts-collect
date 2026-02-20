@@ -90,7 +90,7 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
     },
 
     countBy<K extends keyof T | string | number>(
-      keyOrCallback: K | ((item: T) => K extends keyof T ? T[K] : string | number),
+      keyOrCallback: K | ((_item: T) => K extends keyof T ? T[K] : string | number),
     ): Map<any, number> {
       const counts = new Map<any, number>()
 
@@ -460,9 +460,9 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       return collect([...collection.items].sort(() => Math.random() - 0.5))
     },
 
-    skipUntil(value: T | ((item: T) => boolean)): CollectionOperations<T> {
+    skipUntil(value: T | ((_item: T) => boolean)): CollectionOperations<T> {
       const predicate = typeof value === 'function'
-        ? value as (item: T) => boolean
+        ? value as (_item: T) => boolean
         : (item: T) => item === value
 
       const index = collection.items.findIndex(predicate)
@@ -471,9 +471,9 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       ) as CollectionOperations<T>
     },
 
-    skipWhile(value: T | ((item: T) => boolean)) {
+    skipWhile(value: T | ((_item: T) => boolean)) {
       const predicate = typeof value === 'function'
-        ? value as (item: T) => boolean
+        ? value as (_item: T) => boolean
         : (item: T) => item === value
 
       let index = 0
@@ -561,9 +561,9 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       return collect(result)
     },
 
-    takeUntil(value: T | ((item: T) => boolean)) {
+    takeUntil(value: T | ((_item: T) => boolean)) {
       const predicate = typeof value === 'function'
-        ? value as (item: T) => boolean
+        ? value as (_item: T) => boolean
         : (item: T) => item === value
 
       const index = collection.items.findIndex(predicate)
@@ -572,9 +572,9 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
         : collect(collection.items.slice(0, index))
     },
 
-    takeWhile(value: T | ((item: T) => boolean)) {
+    takeWhile(value: T | ((_item: T) => boolean)) {
       const predicate = typeof value === 'function'
-        ? value as (item: T) => boolean
+        ? value as (_item: T) => boolean
         : (item: T) => item === value
 
       let index = 0
@@ -1707,7 +1707,7 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
         collection.items.map((item) => {
           const result = {} as U
           // Use type assertion to maintain type safety while iterating
-          const entries = Object.entries(schema) as Array<[keyof U, (item: T) => U[keyof U]]>
+          const entries = Object.entries(schema) as Array<[keyof U, (_item: T) => U[keyof U]]>
           for (const [key, transform] of entries) {
             result[key] = transform(item)
           }
@@ -2204,7 +2204,7 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       const mean2 = values2.reduce((a, b) => a + b, 0) / values2.length
       const variance1 = values1.reduce((a, b) => a + (b - mean1) ** 2, 0)
       const variance2 = values2.reduce((a, b) => a + (b - mean2) ** 2, 0)
-      const covariance = values1.reduce((a, i, idx) => a + (values1[idx] - mean1) * (values2[idx] - mean2), 0)
+      const covariance = values1.reduce((a, _i, idx) => a + (values1[idx] - mean1) * (values2[idx] - mean2), 0)
       return covariance / Math.sqrt(variance1 * variance2)
     },
 
@@ -2822,7 +2822,7 @@ ${collection.items.map(item =>
     sanitize(rules: Record<keyof T, (value: any) => any>): CollectionOperations<T> {
       return this.map((item) => {
         const sanitized = { ...item } as T
-        for (const [key, sanitizer] of Object.entries(rules) as [keyof T, (value: any) => any][]) {
+        for (const [key, sanitizer] of Object.entries(rules) as [keyof T, (_value: any) => any][]) {
           sanitized[key] = sanitizer(item[key])
         }
         return sanitized

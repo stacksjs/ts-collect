@@ -1,17 +1,17 @@
 /**
  * Type for any function that takes a value and returns a string/number key
  */
-export type KeySelector<T> = (item: T) => string | number
+export type KeySelector<T> = (_item: T) => string | number
 
 /**
  * Type for comparison function
  */
-export type CompareFunction<T> = (a: T, b: T) => number
+export type CompareFunction<T> = (_a: T, _b: T) => number
 
 /**
  * Type for when/unless callback
  */
-export type ConditionalCallback<T> = (collection: CollectionOperations<T>) => boolean
+export type ConditionalCallback<T> = (_collection: CollectionOperations<T>) => boolean
 
 /**
  * Types for pagination
@@ -36,7 +36,7 @@ export interface StandardDeviationResult {
 /**
  * Types for async operations
  */
-export type AsyncCallback<T, U> = (item: T, index: number) => Promise<U>
+export type AsyncCallback<T, U> = (_item: T, _index: number) => Promise<U>
 
 /**
  * Represents a collection of items with type safety and chainable methods
@@ -69,7 +69,7 @@ export interface MovingAverageOptions {
 /**
  * Types for validation
  */
-export type ValidationRule<T> = (value: T) => boolean | Promise<boolean>
+export type ValidationRule<T> = (_value: T) => boolean | Promise<boolean>
 
 export type ValidationSchema<T> = {
   [K in keyof T]?: ValidationRule<T[K]>[]
@@ -213,7 +213,7 @@ export interface CollectionOperations<T> extends Collection<T> {
   diffAssoc: (other: T[] | CollectionOperations<T>) => CollectionOperations<T>
   diffKeys: <K extends keyof T>(other: Record<K, T[K]>[]) => CollectionOperations<T>
   diffUsing: (other: T[], callback: (a: T, b: T) => number) => CollectionOperations<T>
-  doesntContain: ((item: T) => boolean) & (<K extends keyof T>(key: K, value: T[K]) => boolean)
+  doesntContain: ((_item: T) => boolean) & (<K extends keyof T>(key: K, value: T[K]) => boolean)
   duplicates: <K extends keyof T>(key?: K) => CollectionOperations<T>
   each: (callback: (item: T) => void) => CollectionOperations<T>
   eachSpread: (callback: (...args: any[]) => void) => CollectionOperations<T>
@@ -263,8 +263,8 @@ export interface CollectionOperations<T> extends Collection<T> {
   reverse: () => CollectionOperations<T>
   shift: () => T | undefined
   shuffle: () => CollectionOperations<T>
-  skipUntil: (value: T | ((item: T) => boolean)) => CollectionOperations<T>
-  skipWhile: (value: T | ((item: T) => boolean)) => CollectionOperations<T>
+  skipUntil: (value: T | ((_item: T) => boolean)) => CollectionOperations<T>
+  skipWhile: (value: T | ((_item: T) => boolean)) => CollectionOperations<T>
   slice: (start: number, length?: number) => CollectionOperations<T>
   sole: () => T
   sortDesc: () => CollectionOperations<T>
@@ -272,8 +272,8 @@ export interface CollectionOperations<T> extends Collection<T> {
   sortKeysDesc: () => CollectionOperations<T>
   splice: (start: number, deleteCount?: number, ...items: T[]) => CollectionOperations<T>
   split: (numberOfGroups: number) => CollectionOperations<T[]>
-  takeUntil: (value: T | ((item: T) => boolean)) => CollectionOperations<T>
-  takeWhile: (value: T | ((item: T) => boolean)) => CollectionOperations<T>
+  takeUntil: (value: T | ((_item: T) => boolean)) => CollectionOperations<T>
+  takeWhile: (value: T | ((_item: T) => boolean)) => CollectionOperations<T>
   times: <U>(count: number, callback: (index: number) => U) => CollectionOperations<U>
   undot: () => CollectionOperations<Record<string, any>>
   unlessEmpty: <U = T>(callback: (collection: CollectionOperations<T>) => CollectionOperations<U>) => CollectionOperations<T | U>
@@ -332,7 +332,7 @@ export interface CollectionOperations<T> extends Collection<T> {
 
   // Grouping & Chunking
   chunk: (size: number) => CollectionOperations<T[]>
-  groupBy: (<K extends keyof T>(key: K) => Map<T[K], CollectionOperations<T>>) & ((callback: KeySelector<T>) => Map<string | number, CollectionOperations<T>>)
+  groupBy: (<K extends keyof T>(_key: K) => Map<T[K], CollectionOperations<T>>) & ((callback: KeySelector<T>) => Map<string | number, CollectionOperations<T>>)
   partition: (predicate: (item: T) => boolean) => [CollectionOperations<T>, CollectionOperations<T>]
 
   // Advanced Grouping
