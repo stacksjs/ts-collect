@@ -5632,14 +5632,12 @@ describe('Data Quality Operations', () => {
     })
 
     it('should handle single-value collections', () => {
-      it('should handle single-value collections', () => {
-        const single = collect([{ value: 42 }])
-        const result = single.removeOutliers('value')
+      const single = collect([{ value: 42 }])
+      const result = single.removeOutliers('value')
 
-        // The current implementation removes all values for single-item collections
-        // as there isn't enough data to determine outliers
-        expect(result.count()).toBe(0)
-      })
+      // The current implementation removes all values for single-item collections
+      // as there isn't enough data to determine outliers
+      expect(result.count()).toBe(0)
     })
   })
 })
