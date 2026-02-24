@@ -323,6 +323,54 @@ export interface CollectionOperations<T> extends Collection<T> {
   median: (key?: keyof T) => number | undefined
   mode: (key?: keyof T) => T | undefined
 
+  /**
+   * Round numeric values to the specified precision
+   */
+  round: {
+    (this: CollectionOperations<number>, precision?: number): CollectionOperations<number>
+    <K extends keyof T>(key: K, precision?: number): CollectionOperations<T>
+  }
+
+  /**
+   * Ceil numeric values
+   */
+  ceil: {
+    (this: CollectionOperations<number>, precision?: number): CollectionOperations<number>
+    <K extends keyof T>(key: K, precision?: number): CollectionOperations<T>
+  }
+
+  /**
+   * Floor numeric values
+   */
+  floor: {
+    (this: CollectionOperations<number>, precision?: number): CollectionOperations<number>
+    <K extends keyof T>(key: K, precision?: number): CollectionOperations<T>
+  }
+
+  /**
+   * Get absolute values
+   */
+  abs: {
+    (this: CollectionOperations<number>): CollectionOperations<number>
+    <K extends keyof T>(key: K): CollectionOperations<T>
+  }
+
+  /**
+   * Clamp values between min and max
+   */
+  clamp: {
+    (this: CollectionOperations<number>, min: number, max: number): CollectionOperations<number>
+    <K extends keyof T>(key: K, min: number, max: number): CollectionOperations<T>
+  }
+
+  /**
+   * Calculate mean (alias for avg)
+   */
+  mean: {
+    (this: CollectionOperations<number>): number
+    <K extends keyof T>(key: K): number
+  }
+
   // Advanced Mathematical Operations
   product: (key?: keyof T) => number
   standardDeviation: (key?: keyof T) => StandardDeviationResult

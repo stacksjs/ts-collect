@@ -1956,6 +1956,139 @@ describe('Collection Aggregation Methods', () => {
     })
   })
 
+  describe('round()', () => {
+    it('should round numbers', () => {
+      const numbers = collect([1.234, 5.678, 9.123])
+      expect(numbers.round().toArray()).toEqual([1, 6, 9])
+      expect(numbers.round(2).toArray()).toEqual([1.23, 5.68, 9.12])
+    })
+
+    it('should round by key', () => {
+      const items = collect([
+        { value: 1.234 },
+        { value: 5.678 },
+        { value: 9.123 },
+      ])
+      expect(items.round('value', 2).toArray()).toEqual([
+        { value: 1.23 },
+        { value: 5.68 },
+        { value: 9.12 },
+      ])
+    })
+  })
+
+  describe('ceil()', () => {
+    it('should ceil numbers', () => {
+      const numbers = collect([1.234, 5.678, 9.123])
+      expect(numbers.ceil().toArray()).toEqual([2, 6, 10])
+      expect(numbers.ceil(2).toArray()).toEqual([1.24, 5.68, 9.13])
+    })
+
+    it('should ceil by key', () => {
+      const items = collect([
+        { value: 1.234 },
+        { value: 5.678 },
+        { value: 9.123 },
+      ])
+      expect(items.ceil('value', 2).toArray()).toEqual([
+        { value: 1.24 },
+        { value: 5.68 },
+        { value: 9.13 },
+      ])
+    })
+  })
+
+  describe('floor()', () => {
+    it('should floor numbers', () => {
+      const numbers = collect([1.234, 5.678, 9.123])
+      expect(numbers.floor().toArray()).toEqual([1, 5, 9])
+      expect(numbers.floor(2).toArray()).toEqual([1.23, 5.67, 9.12])
+    })
+
+    it('should floor by key', () => {
+      const items = collect([
+        { value: 1.234 },
+        { value: 5.678 },
+        { value: 9.123 },
+      ])
+      expect(items.floor('value', 2).toArray()).toEqual([
+        { value: 1.23 },
+        { value: 5.67 },
+        { value: 9.12 },
+      ])
+    })
+  })
+
+  describe('abs()', () => {
+    it('should get absolute values', () => {
+      const numbers = collect([-1.5, 2.5, -3.5, 4.5])
+      expect(numbers.abs().toArray()).toEqual([1.5, 2.5, 3.5, 4.5])
+    })
+
+    it('should get absolute values by key', () => {
+      const items = collect([
+        { value: -1.5 },
+        { value: 2.5 },
+        { value: -3.5 },
+      ])
+      expect(items.abs('value').toArray()).toEqual([
+        { value: 1.5 },
+        { value: 2.5 },
+        { value: 3.5 },
+      ])
+    })
+  })
+
+  describe('clamp()', () => {
+    it('should clamp numbers', () => {
+      const numbers = collect([1, 5, 10, 15, 20])
+      expect(numbers.clamp(5, 15).toArray()).toEqual([5, 5, 10, 15, 15])
+    })
+
+    it('should clamp by key', () => {
+      const items = collect([
+        { value: 1 },
+        { value: 5 },
+        { value: 10 },
+        { value: 15 },
+        { value: 20 },
+      ])
+      expect(items.clamp('value', 5, 15).toArray()).toEqual([
+        { value: 5 },
+        { value: 5 },
+        { value: 10 },
+        { value: 15 },
+        { value: 15 },
+      ])
+    })
+  })
+
+  describe('mean()', () => {
+    it('should calculate mean of numbers', () => {
+      const numbers = collect([1, 2, 3, 4, 5])
+      expect(numbers.mean()).toBe(3)
+    })
+
+    it('should calculate mean by key', () => {
+      const items = collect([
+        { value: 10 },
+        { value: 20 },
+        { value: 30 },
+      ])
+      expect(items.mean('value')).toBe(20)
+    })
+
+    it('should handle empty collections', () => {
+      const empty = collect([])
+      expect(empty.mean()).toBe(0)
+    })
+
+    it('should handle NaN values', () => {
+      const withNaN = collect([1, Number.NaN, 3, 4, Number.NaN])
+      expect(withNaN.mean()).toBe(1.6) // (1 + 0 + 3 + 4 + 0) / 5
+    })
+  })
+
   describe('median()', () => {
     it('should find median of odd length collection', () => {
       const numbers = collect([1, 2, 3, 4, 5])
