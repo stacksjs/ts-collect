@@ -2079,7 +2079,7 @@ describe('Collection Aggregation Methods', () => {
     })
 
     it('should handle empty collections', () => {
-      const empty = collect([])
+      const empty = collect([] as number[])
       expect(empty.mean()).toBe(0)
     })
 

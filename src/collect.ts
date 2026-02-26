@@ -706,8 +706,8 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       }, 0)
     },
 
-    round(this: CollectionOperations<any>, keyOrPrecision?: keyof T | number, precisionOrUndefined?: number) {
-      function roundNumberCollection(this: CollectionOperations<number>, precision: number = 0): CollectionOperations<number> {
+    round(this: CollectionOperations<any>, keyOrPrecision?: keyof T | number, precisionOrUndefined?: number): CollectionOperations<any> {
+      function roundNumberCollection(precision: number = 0): CollectionOperations<number> {
         const multiplier = 10 ** precision
         return collect(
           collection.items.map(item =>
@@ -722,21 +722,21 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
           collection.items.map(item => ({
             ...item,
             [key]: Math.round(Number(item[key]) * multiplier) / multiplier
-          }))
+          } as T))
         )
       }
 
       // If first argument is number or undefined, treat as number collection
       if (typeof keyOrPrecision === 'number' || keyOrPrecision === undefined) {
-        return roundNumberCollection.call(this, keyOrPrecision ?? 0)
+        return roundNumberCollection(keyOrPrecision ?? 0)
       }
 
       // Otherwise treat as object collection
       return roundObjectCollection(keyOrPrecision, precisionOrUndefined ?? 0)
     },
 
-    ceil(this: CollectionOperations<any>, keyOrPrecision?: keyof T | number, precisionOrUndefined?: number) {
-      function ceilNumberCollection(this: CollectionOperations<number>, precision: number = 0): CollectionOperations<number> {
+    ceil(this: CollectionOperations<any>, keyOrPrecision?: keyof T | number, precisionOrUndefined?: number): CollectionOperations<any> {
+      function ceilNumberCollection(precision: number = 0): CollectionOperations<number> {
         const multiplier = 10 ** precision
         return collect(
           collection.items.map(item =>
@@ -751,18 +751,18 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
           collection.items.map(item => ({
             ...item,
             [key]: Math.ceil(Number(item[key]) * multiplier) / multiplier
-          }))
+          } as T))
         )
       }
 
       if (typeof keyOrPrecision === 'number' || keyOrPrecision === undefined) {
-        return ceilNumberCollection.call(this, keyOrPrecision ?? 0)
+        return ceilNumberCollection(keyOrPrecision ?? 0)
       }
       return ceilObjectCollection(keyOrPrecision, precisionOrUndefined ?? 0)
     },
 
-    floor(this: CollectionOperations<any>, keyOrPrecision?: keyof T | number, precisionOrUndefined?: number) {
-      function floorNumberCollection(this: CollectionOperations<number>, precision: number = 0): CollectionOperations<number> {
+    floor(this: CollectionOperations<any>, keyOrPrecision?: keyof T | number, precisionOrUndefined?: number): CollectionOperations<any> {
+      function floorNumberCollection(precision: number = 0): CollectionOperations<number> {
         const multiplier = 10 ** precision
         return collect(
           collection.items.map(item =>
@@ -777,18 +777,18 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
           collection.items.map(item => ({
             ...item,
             [key]: Math.floor(Number(item[key]) * multiplier) / multiplier
-          }))
+          } as T))
         )
       }
 
       if (typeof keyOrPrecision === 'number' || keyOrPrecision === undefined) {
-        return floorNumberCollection.call(this, keyOrPrecision ?? 0)
+        return floorNumberCollection(keyOrPrecision ?? 0)
       }
       return floorObjectCollection(keyOrPrecision, precisionOrUndefined ?? 0)
     },
 
-    abs(this: CollectionOperations<any>, key?: keyof T) {
-      function absNumberCollection(this: CollectionOperations<number>): CollectionOperations<number> {
+    abs(this: CollectionOperations<any>, key?: keyof T): CollectionOperations<any> {
+      function absNumberCollection(): CollectionOperations<number> {
         return collect(
           collection.items.map(item => Math.abs(Number(item)))
         )
@@ -799,18 +799,18 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
           collection.items.map(item => ({
             ...item,
             [key]: Math.abs(Number(item[key]))
-          }))
+          } as T))
         )
       }
 
       if (key === undefined) {
-        return absNumberCollection.call(this)
+        return absNumberCollection()
       }
       return absObjectCollection(key)
     },
 
-    clamp(this: CollectionOperations<any>, keyOrMin: keyof T | number, minOrMax: number, maxOrUndefined?: number) {
-      function clampNumberCollection(this: CollectionOperations<number>, min: number, max: number): CollectionOperations<number> {
+    clamp(this: CollectionOperations<any>, keyOrMin: keyof T | number, minOrMax: number, maxOrUndefined?: number): CollectionOperations<any> {
+      function clampNumberCollection(min: number, max: number): CollectionOperations<number> {
         return collect(
           collection.items.map(item =>
             Math.min(Math.max(Number(item), min), max)
@@ -823,12 +823,12 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
           collection.items.map(item => ({
             ...item,
             [key]: Math.min(Math.max(Number(item[key]), min), max)
-          }))
+          } as T))
         )
       }
 
       if (typeof keyOrMin === 'number') {
-        return clampNumberCollection.call(this, keyOrMin, minOrMax)
+        return clampNumberCollection(keyOrMin, minOrMax)
       }
       return clampObjectCollection(keyOrMin, minOrMax, maxOrUndefined!)
     },
