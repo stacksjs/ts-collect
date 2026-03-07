@@ -1,4 +1,4 @@
-import type { AnomalyDetectionOptions, AsyncCallback, CacheEntry, ClusterResult, Collection, CollectionMetrics, CollectionOperations, CompareFunction, ConditionalCallback, KeySelector, KMeansOptions, KMeansResult, LazyCollectionOperations, MovingAverageOptions, PaginationResult, PluckedCluster, PluckedData, RecordMerge, RegressionResult, SerializationOptions, StandardDeviationResult, TimeSeriesOptions, TimeSeriesPoint, ValidationResult, ValidationRule, ValidationSchema } from './types'
+import type { AnomalyDetectionOptions, AsyncCallback, ClusterResult, Collection, CollectionMetrics, CollectionOperations, CompareFunction, ConditionalCallback, KeySelector, KMeansOptions, KMeansResult, LazyCollectionOperations, MovingAverageOptions, PaginationResult, PluckedCluster, PluckedData, RecordMerge, RegressionResult, SerializationOptions, StandardDeviationResult, TimeSeriesOptions, TimeSeriesPoint, ValidationResult, ValidationRule, ValidationSchema } from './types'
 import process from 'node:process'
 import { createLazyOperations } from './lazy'
 import { calculateFuzzyScore, getNextTimestamp, isSameDay, validateCoordinates } from './utils'
@@ -26,8 +26,10 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
   //   changes: [],
   // }
 
-  return {
-    ...collection,
+  const ops: CollectionOperations<T> = {
+    get items() { return collection.items },
+    set items(_: T[]) { /* no-op: items is read-only */ },
+    get length() { return collection.items.length },
 
     all() {
       return [...collection.items]
@@ -3623,6 +3625,8 @@ ${collection.items.map(item =>
       }
     },
   }
+
+  return ops
 }
 
 function createKMeansResult<T>(collection: CollectionOperations<ClusterResult<T>>): KMeansResult<T> {
