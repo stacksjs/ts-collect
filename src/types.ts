@@ -87,8 +87,13 @@ export interface SerializationOptions {
   pretty?: boolean
   exclude?: string[]
   include?: string[]
-  transform?: Record<string, (value: any) => any>
+  transform?: Record<string, (value: unknown) => unknown>
 }
+
+/**
+ * Valid comparison operators for the having() method
+ */
+export type HavingOperator = '>' | '<' | '>=' | '<=' | '=' | '!='
 
 /**
  * Types for machine learning operations
@@ -275,7 +280,7 @@ export interface CollectionOperations<T> extends Collection<T> {
   takeUntil: (value: T | ((_item: T) => boolean)) => CollectionOperations<T>
   takeWhile: (value: T | ((_item: T) => boolean)) => CollectionOperations<T>
   times: <U>(count: number, callback: (index: number) => U) => CollectionOperations<U>
-  undot: () => CollectionOperations<Record<string, any>>
+  undot: () => CollectionOperations<Record<string, unknown>>
   unlessEmpty: <U = T>(callback: (collection: CollectionOperations<T>) => CollectionOperations<U>) => CollectionOperations<T | U>
   unlessNotEmpty: <U = T>(callback: (collection: CollectionOperations<T>) => CollectionOperations<U>) => CollectionOperations<T | U>
   unwrap: <U>(value: U | U[] | CollectionOperations<U>) => U extends any[] ? U : U[]
@@ -376,7 +381,10 @@ export interface CollectionOperations<T> extends Collection<T> {
   standardDeviation: (key?: keyof T) => StandardDeviationResult
   percentile: (p: number, key?: keyof T) => number | undefined
   variance: (key?: keyof T) => number
-  frequency: (key?: keyof T) => Map<any, number>
+  frequency: {
+    (): Map<T, number>
+    <K extends keyof T>(key: K): Map<T[K], number>
+  }
 
   // Grouping & Chunking
   chunk: (size: number) => CollectionOperations<T[]>
@@ -476,11 +484,11 @@ export interface CollectionOperations<T> extends Collection<T> {
   validate: (schema: ValidationSchema<T>) => Promise<ValidationResult>
   validateSync: (schema: ValidationSchema<T>) => ValidationResult
   assertValid: (schema: ValidationSchema<T>) => Promise<void>
-  sanitize: (rules: Record<keyof T, (value: any) => any>) => CollectionOperations<T>
+  sanitize: (rules: { [K in keyof T]?: (value: T[K]) => T[K] }) => CollectionOperations<T>
 
   // Advanced Querying
-  query: (sql: string, params?: any[]) => CollectionOperations<T>
-  having: <K extends keyof T>(key: K, op: string, value: any) => CollectionOperations<T>
+  query: (sql: string, params?: unknown[]) => CollectionOperations<T>
+  having: <K extends keyof T>(key: K, op: HavingOperator, value: T[K]) => CollectionOperations<T>
   crossJoin: <U>(other: CollectionOperations<U>) => CollectionOperations<T & U>
   leftJoin: <U, K extends keyof T>(
     other: CollectionOperations<U>,
@@ -552,7 +560,7 @@ export interface CollectionOperations<T> extends Collection<T> {
   as: <U extends Record<string, any>>(type: new () => U) => CollectionOperations<U>
   pick: <K extends keyof T>(...keys: K[]) => CollectionOperations<Pick<T, K>>
   omit: <K extends keyof T>(...keys: K[]) => CollectionOperations<Omit<T, K>>
-  transform: <U>(schema: Record<keyof U, (item: T) => any>) => CollectionOperations<U>
+  transform: <U>(schema: { [K in keyof U]: (item: T) => U[K] }) => CollectionOperations<U>
 
   // Machine Learning Operations
   kmeans: (options: KMeansOptions) => CollectionOperations<{ cluster: number, data: T }>
@@ -635,7 +643,7 @@ export interface CollectionOperations<T> extends Collection<T> {
    * @param typename The GraphQL type name for the objects
    */
   toGraphQL: (typename: string) => string
-  toElastic: (index: string) => Record<string, any>
+  toElastic: (index: string) => Record<string, unknown>
   toPandas: () => string // Returns Python code for pandas DataFrame
 
   // Developer Experience

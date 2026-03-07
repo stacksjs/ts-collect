@@ -1,4 +1,4 @@
-import type { AnomalyDetectionOptions, AsyncCallback, ClusterResult, Collection, CollectionMetrics, CollectionOperations, CompareFunction, ConditionalCallback, KeySelector, KMeansOptions, KMeansResult, LazyCollectionOperations, MovingAverageOptions, PaginationResult, PluckedCluster, PluckedData, RecordMerge, RegressionResult, SerializationOptions, StandardDeviationResult, TimeSeriesOptions, TimeSeriesPoint, ValidationResult, ValidationRule, ValidationSchema } from './types'
+import type { AnomalyDetectionOptions, AsyncCallback, ClusterResult, Collection, CollectionMetrics, CollectionOperations, CompareFunction, ConditionalCallback, HavingOperator, KeySelector, KMeansOptions, KMeansResult, LazyCollectionOperations, MovingAverageOptions, PaginationResult, PluckedCluster, PluckedData, RecordMerge, RegressionResult, SerializationOptions, StandardDeviationResult, TimeSeriesOptions, TimeSeriesPoint, ValidationResult, ValidationRule, ValidationSchema } from './types'
 import process from 'node:process'
 import { createLazyOperations } from './lazy'
 import { calculateFuzzyScore, getNextTimestamp, isSameDay, validateCoordinates } from './utils'
@@ -582,18 +582,18 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       return collect(items)
     },
 
-    undot() {
-      const result: Record<string, any> = {}
+    undot(): CollectionOperations<Record<string, unknown>> {
+      const result: Record<string, unknown> = {}
       collection.items.forEach((item) => {
         Object.entries(item as object).forEach(([key, value]) => {
-          key.split('.').reduce((acc: any, part, index, parts) => {
+          key.split('.').reduce((acc: Record<string, unknown>, part, index, parts) => {
             if (index === parts.length - 1) {
               acc[part] = value
             }
             else {
               acc[part] = acc[part] || {}
             }
-            return acc[part]
+            return acc[part] as Record<string, unknown>
           }, result)
         })
       })
@@ -1313,8 +1313,8 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       return this.standardDeviation(key).population ** 2
     },
 
-    frequency(key?: keyof T): Map<any, number> {
-      const freq = new Map<any, number>()
+    frequency(key?: keyof T) {
+      const freq = new Map()
       for (const item of collection.items) {
         const value = key ? item[key] : item
         freq.set(value, (freq.get(value) || 0) + 1)
@@ -1828,7 +1828,7 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       }
     },
 
-    transform<U>(schema: Record<keyof U, (item: T) => U[keyof U]>): CollectionOperations<U> {
+    transform<U>(schema: { [K in keyof U]: (item: T) => U[K] }): CollectionOperations<U> {
       return collect(
         collection.items.map((item) => {
           const result = {} as U
@@ -2634,7 +2634,7 @@ ${collection.items.map(item =>
 }`
     },
 
-    toElastic(index: string): Record<string, any> {
+    toElastic(index: string): Record<string, unknown> {
       return {
         index,
         body: collection.items.flatMap(doc => [
@@ -2934,18 +2934,20 @@ ${collection.items.map(item =>
       }
     },
 
-    sanitize(rules: Record<keyof T, (value: any) => any>): CollectionOperations<T> {
+    sanitize(rules: { [K in keyof T]?: (value: T[K]) => T[K] }): CollectionOperations<T> {
       return this.map((item) => {
         const sanitized = { ...item } as T
-        for (const [key, sanitizer] of Object.entries(rules) as [keyof T, (_value: any) => any][]) {
-          sanitized[key] = sanitizer(item[key])
+        for (const [key, sanitizer] of Object.entries(rules) as [keyof T, (value: T[keyof T]) => T[keyof T]][]) {
+          if (sanitizer) {
+            sanitized[key] = sanitizer(item[key]) as T[keyof T]
+          }
         }
         return sanitized
       })
     },
 
     // This is a basic implementation, updates may come in the future
-    query(sql: string, params: any[] = []): CollectionOperations<T> {
+    query(sql: string, params: unknown[] = []): CollectionOperations<T> {
       const lowerSQL = sql.toLowerCase()
       // eslint-disable-next-line ts/no-this-alias
       let result = this
@@ -3025,8 +3027,8 @@ ${collection.items.map(item =>
       return result
     },
 
-    having<K extends keyof T>(key: K, op: string, value: any): CollectionOperations<T> {
-      const ops: Record<string, (a: any, b: any) => boolean> = {
+    having<K extends keyof T>(key: K, op: HavingOperator, value: T[K]): CollectionOperations<T> {
+      const ops: Record<HavingOperator, (a: T[K], b: T[K]) => boolean> = {
         '>': (a, b) => a > b,
         '<': (a, b) => a < b,
         '>=': (a, b) => a >= b,
