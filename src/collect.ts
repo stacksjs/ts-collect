@@ -8,19 +8,12 @@ import { calculateFuzzyScore, getNextTimestamp, isSameDay, validateCoordinates }
  * @param items - Array of items or iterable
  */
 export function collect<T>(items: T[] | Iterable<T>): CollectionOperations<T> {
-  // Handle empty array case explicitly
-  if (Array.isArray(items) && items.length === 0) {
-    return createCollectionOperations({
-      items: [] as any[],
-      length: 0,
-    })
-  }
-
   const array = Array.isArray(items) ? items : Array.from(items)
-  return createCollectionOperations({
+  const collection: Collection<T> = {
     items: array,
-    length: array.length,
-  })
+    get length() { return array.length },
+  }
+  return createCollectionOperations(collection)
 }
 
 /**
@@ -181,10 +174,9 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
     },
 
     firstOrFail() {
-      const item = this.first()
-      if (!item)
+      if (collection.length === 0)
         throw new Error('Item not found.')
-      return item
+      return collection.items[0]
     },
 
     firstWhere<K extends keyof T>(key: K, value: T[K]) {
@@ -449,11 +441,7 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
     },
 
     shift(): T | undefined {
-      if (collection.length === 0)
-        return undefined
-      const value = collection.items[0]
-      collection.items.splice(0, 1)
-      return value
+      return collection.items.shift()
     },
 
     shuffle() {
@@ -1297,8 +1285,9 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
         return diff * diff
       })
 
-      const populationVariance = squaredDiffs.reduce((sum, diff) => sum + diff, 0) / collection.length
-      const sampleVariance = squaredDiffs.reduce((sum, diff) => sum + diff, 0) / (collection.length - 1)
+      const sumSquaredDiffs = squaredDiffs.reduce((sum, diff) => sum + diff, 0)
+      const populationVariance = sumSquaredDiffs / collection.length
+      const sampleVariance = sumSquaredDiffs / (collection.length - 1)
 
       return {
         population: Math.sqrt(populationVariance),
@@ -1340,7 +1329,11 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
     },
 
     whereLike<K extends keyof T>(key: K, pattern: string): CollectionOperations<T> {
-      const regex = new RegExp(pattern.replace(/%/g, '.*'), 'i')
+      // Escape regex special chars except %, then replace % with .*
+      const escaped = pattern.replace(/[.*+?^${}()|[\]\\]/g, (ch) => {
+        return ch === '%' ? ch : `\\${ch}`
+      })
+      const regex = new RegExp(`^${escaped.replace(/%/g, '.*')}$`, 'i')
       return collect(collection.items.filter(item => regex.test(String(item[key]))))
     },
 
@@ -1396,7 +1389,7 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
 
     paginate(perPage: number, page: number = 1): PaginationResult<T> {
       const total = collection.length
-      const lastPage = Math.ceil(total / perPage)
+      const lastPage = Math.max(1, Math.ceil(total / perPage))
       const currentPage = Math.min(Math.max(page, 1), lastPage)
 
       return {
@@ -1554,9 +1547,9 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
         return collect(sorted)
       }
 
-      // Find min and max dates using timestamps
-      const startTimestamp = Math.min(...sorted.map(point => point.date.getTime()))
-      const endTimestamp = Math.max(...sorted.map(point => point.date.getTime()))
+      // Already sorted, so first and last give min/max
+      const startTimestamp = sorted[0].date.getTime()
+      const endTimestamp = sorted[sorted.length - 1].date.getTime()
       let currentTimestamp = startTimestamp
 
       const result: TimeSeriesPoint[] = []
@@ -1598,7 +1591,7 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
 
       // If window size equals collection length, return the overall average
       if (window === collection.length) {
-        const avg = collection.items.reduce((a, b) => Number(a) + Number(b), 0) / window
+        const avg = collection.items.reduce((a, b) => a + Number(b), 0 as number) / window
         return collect<number>([avg])
       }
 
@@ -2026,7 +2019,7 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       callback: (chunk: CollectionOperations<T>) => Promise<U>,
       options: { chunks?: number, maxConcurrency?: number } = {},
     ): Promise<CollectionOperations<U>> {
-      const { chunks = navigator.hardwareConcurrency || 4, maxConcurrency = chunks } = options
+      const { chunks = 4, maxConcurrency = chunks } = options
 
       // Calculate chunk size and create batches
       const itemsPerChunk = Math.ceil(collection.length / chunks)
@@ -2335,14 +2328,19 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       const mean2 = values2.reduce((a, b) => a + b, 0) / values2.length
       const variance1 = values1.reduce((a, b) => a + (b - mean1) ** 2, 0)
       const variance2 = values2.reduce((a, b) => a + (b - mean2) ** 2, 0)
+      const denom = Math.sqrt(variance1 * variance2)
+      if (denom === 0)
+        return 0
       const covariance = values1.reduce((a, _i, idx) => a + (values1[idx] - mean1) * (values2[idx] - mean2), 0)
-      return covariance / Math.sqrt(variance1 * variance2)
+      return covariance / denom
     },
 
     outliers<K extends keyof T>(key: K, threshold = 2): CollectionOperations<T> {
       const values = collection.items.map(item => Number(item[key]))
       const mean = values.reduce((a, b) => a + b, 0) / values.length
       const std = Math.sqrt(values.reduce((a, b) => a + (b - mean) ** 2, 0) / values.length)
+      if (std === 0)
+        return collect([] as T[])
       return collect(collection.items.filter(item =>
         Math.abs((Number(item[key]) - mean) / std) > threshold,
       ))
@@ -2355,53 +2353,39 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
 
     // Advanced statistical operations
     zscore<K extends keyof T>(key?: K): CollectionOperations<number> {
-      if (key === undefined) {
-        // Handle case where T is number and we're working directly with the values
-        const values = this.items as number[]
-        const mean = values.reduce((a, b) => a + b, 0) / values.length
-        const std = Math.sqrt(values.reduce((a, b) => a + (b - mean) ** 2, 0) / values.length)
-        return collect(values.map(value => (value - mean) / std))
-      }
+      const values = key === undefined
+        ? this.items as number[]
+        : collection.items.map(item => Number(item[key]))
 
-      // Handle case where we're working with a key from an object
-      const values = collection.items.map(item => Number(item[key]))
       const mean = values.reduce((a, b) => a + b, 0) / values.length
       const std = Math.sqrt(values.reduce((a, b) => a + (b - mean) ** 2, 0) / values.length)
+      if (std === 0)
+        return collect(values.map(() => 0))
       return collect(values.map(value => (value - mean) / std))
     },
 
     kurtosis<K extends keyof T>(key?: K): number {
-      let values: number[]
-
-      if (key === undefined) {
-        // Handle case where T is number
-        values = this.items as number[]
-      }
-      else {
-        // Handle case where we're working with a key from an object
-        values = collection.items.map(item => Number(item[key]))
-      }
+      const values = key === undefined
+        ? this.items as number[]
+        : collection.items.map(item => Number(item[key]))
 
       const mean = values.reduce((a, b) => a + b, 0) / values.length
       const std = Math.sqrt(values.reduce((a, b) => a + (b - mean) ** 2, 0) / values.length)
+      if (std === 0)
+        return 0
       const m4 = values.reduce((a, b) => a + (b - mean) ** 4, 0) / values.length
       return m4 / (std ** 4) - 3
     },
 
     skewness<K extends keyof T>(key?: K): number {
-      let values: number[]
-
-      if (key === undefined) {
-        // Handle case where T is number
-        values = this.items as number[]
-      }
-      else {
-        // Handle case where we're working with a key from an object
-        values = collection.items.map(item => Number(item[key]))
-      }
+      const values = key === undefined
+        ? this.items as number[]
+        : collection.items.map(item => Number(item[key]))
 
       const mean = values.reduce((a, b) => a + b, 0) / values.length
       const std = Math.sqrt(values.reduce((a, b) => a + (b - mean) ** 2, 0) / values.length)
+      if (std === 0)
+        return 0
       const m3 = values.reduce((a, b) => a + (b - mean) ** 3, 0) / values.length
       return m3 / (std ** 3)
     },
@@ -2446,10 +2430,11 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
     },
 
     zipWith<U, R>(other: CollectionOperations<U>, fn: (a: T, b: U) => R): CollectionOperations<R> {
-      const length = Math.min(collection.length, other.count())
+      const otherItems = other.toArray()
+      const length = Math.min(collection.length, otherItems.length)
       const results: R[] = []
       for (let i = 0; i < length; i++) {
-        results.push(fn(collection.items[i], other.toArray()[i]))
+        results.push(fn(collection.items[i], otherItems[i]))
       }
       return collect(results)
     },
@@ -2863,13 +2848,10 @@ ${collection.items.map(item =>
       locale?: string
       errorHandling?: 'strict' | 'loose'
     }): void {
-      if (options.locale) {
-        Intl.NumberFormat.prototype.format = new Intl.NumberFormat(options.locale).format
-      }
-      if (options.timezone) {
-        Intl.DateTimeFormat.prototype.format = new Intl.DateTimeFormat(undefined, {
-          timeZone: options.timezone,
-        }).format
+      // Store configuration on the collection instance for use by other methods
+      ;(this as any).__config = {
+        ...(this as any).__config,
+        ...options,
       }
     },
 
@@ -2968,9 +2950,10 @@ ${collection.items.map(item =>
 
       if (lowerSQL.includes('where')) {
         const whereClause = sql.split('where')[1].trim()
-        let paramIndex = 0
 
         result = this.filter((item) => {
+          let paramIndex = 0
+
           // Replace both named parameters ${name} and positional parameters ?
           const parsedClause = whereClause
             // Handle ${property} style parameters
@@ -2984,8 +2967,56 @@ ${collection.items.map(item =>
               return JSON.stringify(param)
             })
 
-          // eslint-disable-next-line no-eval
-          return eval(parsedClause)
+          // Resolve item.property references to their actual values
+          function resolveValue(expr: string): any {
+            const trimmed = expr.trim()
+            // Handle item.property access
+            const itemMatch = trimmed.match(/^item\.(\w+)$/)
+            if (itemMatch) {
+              return item[itemMatch[1] as keyof T]
+            }
+            // Handle literals
+            if (trimmed === 'true') return true
+            if (trimmed === 'false') return false
+            if (trimmed === 'null') return null
+            if (trimmed === 'undefined') return undefined
+            if (/^-?\d+(\.\d+)?$/.test(trimmed)) return Number(trimmed)
+            if ((trimmed.startsWith('"') && trimmed.endsWith('"')) || (trimmed.startsWith('\'') && trimmed.endsWith('\'')))
+              return trimmed.slice(1, -1)
+            return trimmed
+          }
+
+          function evaluateComparison(clause: string): boolean {
+            const match = clause.match(/^(.+?)\s*(===|!==|==|!=|>=|<=|>|<)\s*(.+)$/)
+            if (!match)
+              return false
+
+            const left = resolveValue(match[1])
+            const op = match[2]
+            const right = resolveValue(match[3])
+
+            switch (op) {
+              case '===':
+              case '==': return left === right
+              case '!==':
+              case '!=': return left !== right
+              case '>': return left > right
+              case '<': return left < right
+              case '>=': return left >= right
+              case '<=': return left <= right
+              default: return false
+            }
+          }
+
+          // Handle && and || connectors
+          if (parsedClause.includes('&&')) {
+            return parsedClause.split('&&').every(part => evaluateComparison(part.trim()))
+          }
+          if (parsedClause.includes('||')) {
+            return parsedClause.split('||').some(part => evaluateComparison(part.trim()))
+          }
+
+          return evaluateComparison(parsedClause)
         })
       }
 
@@ -3002,7 +3033,12 @@ ${collection.items.map(item =>
         '!=': (a, b) => a !== b,
       }
 
-      return this.filter(item => ops[op](item[key], value))
+      const comparator = ops[op]
+      if (!comparator) {
+        throw new Error(`Unsupported operator: ${op}`)
+      }
+
+      return this.filter(item => comparator(item[key], value))
     },
 
     crossJoin<U>(other: CollectionOperations<U>): CollectionOperations<T & U> {
@@ -3019,15 +3055,15 @@ ${collection.items.map(item =>
       other: CollectionOperations<U>,
       key: K,
       otherKey: O,
-      // Add type constraint to ensure the key types match
     ): CollectionOperations<T & Partial<U>> {
-      type KeyType = T[K] & U[O]
+      // Build a lookup map for O(n+m) instead of O(n×m)
+      const otherMap = new Map<unknown, U>()
+      for (const otherItem of other.items) {
+        otherMap.set(otherItem[otherKey], otherItem)
+      }
+
       return this.map((item) => {
-        const match = other.items.find((otherItem) => {
-          const itemValue = item[key] as KeyType
-          const otherValue = otherItem[otherKey] as KeyType
-          return itemValue === otherValue
-        })
+        const match = otherMap.get(item[key])
         return { ...item, ...(match || {}) }
       })
     },
@@ -3101,11 +3137,51 @@ ${collection.items.map(item =>
         case 'csv': {
           const lines = data.trim().split('\n')
           const headers = lines[0].split(',')
+
+          function parseCSVValue(val: string | undefined): any {
+            if (val === undefined) return undefined
+            const trimmed = val.trim()
+            // Handle JSON-stringified values (quoted strings, numbers, booleans, null)
+            if ((trimmed.startsWith('"') && trimmed.endsWith('"')) || trimmed === 'true' || trimmed === 'false' || trimmed === 'null' || /^-?\d+(\.\d+)?$/.test(trimmed)) {
+              try { return JSON.parse(trimmed) }
+              catch { return trimmed }
+            }
+            return trimmed
+          }
+
           const items = lines.slice(1).map((line) => {
-            const values = line.split(',')
+            // Handle quoted fields that may contain commas
+            const values: string[] = []
+            let current = ''
+            let inQuotes = false
+            for (let i = 0; i < line.length; i++) {
+              const ch = line[i]
+              if (ch === '"') {
+                if (inQuotes && line[i + 1] === '"') {
+                  current += '"'
+                  i++
+                }
+                else {
+                  inQuotes = !inQuotes
+                  current += ch
+                }
+              }
+              else if (ch === ',' && !inQuotes) {
+                values.push(current)
+                current = ''
+              }
+              else {
+                current += ch
+              }
+            }
+            values.push(current)
+
             const item: any = {}
             headers.forEach((header, i) => {
-              item[header] = values[i]
+              const parsed = parseCSVValue(i < values.length ? values[i] : undefined)
+              if (parsed !== undefined) {
+                item[header] = parsed
+              }
             })
             return item
           })
@@ -3118,24 +3194,10 @@ ${collection.items.map(item =>
       }
     },
 
-    cache(ttl: number = 60000): CollectionOperations<T> {
-      const cacheStore = new Map<string, CacheEntry<any>>()
-      const cacheKey = JSON.stringify(this.items)
-      const now = Date.now()
-
-      // Check if we have a valid cache entry
-      const cached = cacheStore.get(cacheKey) as CacheEntry<T> | undefined
-      if (cached && cached.expiry > now) {
-        return collect(cached.data)
-      }
-
-      // Store current items in cache with expiry
-      cacheStore.set(cacheKey, {
-        data: [...this.items],
-        expiry: now + ttl,
-      })
-
-      return this
+    cache(_ttl: number = 60000): CollectionOperations<T> {
+      // Snapshot the current items so repeated access doesn't recompute
+      const snapshot = [...this.items]
+      return collect(snapshot)
     },
 
     memoize<K extends keyof T>(key: K): CollectionOperations<T> {
@@ -3177,7 +3239,7 @@ ${collection.items.map(item =>
       return this.map((text) => {
         // Clean and split words, removing punctuation
         const words = text.toLowerCase()
-          .replace(/[.,!?]*/g, '')
+          .replace(/[.,!?]+/g, '')
           .split(/\s+/)
           .filter(word => word.length > 0)
 
@@ -3278,11 +3340,17 @@ ${collection.items.map(item =>
     },
 
     removeOutliers<K extends keyof T>(key: K, threshold = 2): CollectionOperations<T> {
+      if (collection.length <= 1)
+        return collect([] as T[])
+
       const values = this.pluck(key).toArray()
       const mean = values.reduce((a, b) => Number(a) + Number(b), 0) / values.length
       const stdDev = Math.sqrt(
         values.reduce((a, b) => a + (Number(b) - mean) ** 2, 0) / values.length,
       )
+
+      if (stdDev === 0)
+        return this
 
       return this.filter((item) => {
         const value = Number(item[key])
@@ -3337,8 +3405,12 @@ ${collection.items.map(item =>
       const values = this.pluck(key).toArray().map(Number)
 
       if (method === 'minmax') {
-        const min = Math.min(...values)
-        const max = Math.max(...values)
+        let min = Infinity
+        let max = -Infinity
+        for (const v of values) {
+          if (v < min) min = v
+          if (v > max) max = v
+        }
         const range = max - min
 
         return this.map(item => ({
@@ -3461,14 +3533,22 @@ ${collection.items.map(item =>
             ? features
             : (Object.keys(this.first() || {}) as Array<keyof T>)
 
+          // Pre-compute stats for each feature to avoid recalculating per item
+          const zscoreStats = new Map<keyof T, { mean: number, std: number }>()
+          for (const key of featureKeys) {
+            const values = this.pluck(key).toArray().map(Number)
+            const mean = values.reduce((a, b) => a + b, 0) / values.length
+            const std = Math.sqrt(
+              values.reduce((a, b) => a + (b - mean) ** 2, 0) / values.length,
+            )
+            zscoreStats.set(key, { mean, std })
+          }
+
           return this.filter((item) => {
             for (const key of featureKeys) {
-              const values = this.pluck(key).toArray().map(Number)
-              const mean = values.reduce((a, b) => a + b, 0) / values.length
-              const std = Math.sqrt(
-                values.reduce((a, b) => a + (b - mean) ** 2, 0) / values.length,
-              )
-
+              const { mean, std } = zscoreStats.get(key)!
+              if (std === 0)
+                continue
               const zscore = Math.abs((Number(item[key]) - mean) / std)
               if (zscore > threshold)
                 return true
@@ -3482,15 +3562,21 @@ ${collection.items.map(item =>
             ? features
             : (Object.keys(this.first() || {}) as Array<keyof T>)
 
+          // Pre-compute IQR bounds for each feature
+          const iqrBounds = new Map<keyof T, { lower: number, upper: number }>()
+          for (const key of featureKeys) {
+            const values = this.pluck(key).toArray().map(Number).sort((a, b) => a - b)
+            const q1 = values[Math.floor(values.length * 0.25)]
+            const q3 = values[Math.floor(values.length * 0.75)]
+            const iqr = q3 - q1
+            iqrBounds.set(key, { lower: q1 - threshold * iqr, upper: q3 + threshold * iqr })
+          }
+
           return this.filter((item) => {
             for (const key of featureKeys) {
-              const values = this.pluck(key).toArray().map(Number).sort((a, b) => a - b)
-              const q1 = values[Math.floor(values.length * 0.25)]
-              const q3 = values[Math.floor(values.length * 0.75)]
-              const iqr = q3 - q1
-
+              const { lower, upper } = iqrBounds.get(key)!
               const value = Number(item[key])
-              if (value < q1 - threshold * iqr || value > q3 + threshold * iqr) {
+              if (value < lower || value > upper) {
                 return true
               }
             }

@@ -159,10 +159,17 @@ export function createLazyOperations<T>(generator: LazyGenerator<T>): LazyCollec
     },
 
     cache(): LazyCollectionOperations<T> {
-      this.toArray().then((array) => {
-        cached = array
-      })
-      return this
+      // Wrap in a new lazy that materializes and caches on first terminal operation
+      const self = this
+      const cachedOps = createLazyOperations<T>((async function* () {
+        if (!cached) {
+          cached = await self.toArray()
+        }
+        for (const item of cached) {
+          yield item
+        }
+      })())
+      return cachedOps
     },
 
     batch(size: number): LazyCollectionOperations<T> {
