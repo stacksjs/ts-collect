@@ -2937,7 +2937,7 @@ ${collection.items.map(item =>
     sanitize(rules: { [K in keyof T]?: (value: T[K]) => T[K] }): CollectionOperations<T> {
       return this.map((item) => {
         const sanitized = { ...item } as T
-        for (const [key, sanitizer] of Object.entries(rules) as [keyof T, (value: T[keyof T]) => T[keyof T]][]) {
+        for (const [key, sanitizer] of Object.entries(rules) as [keyof T, (_value: T[keyof T]) => T[keyof T]][]) {
           if (sanitizer) {
             sanitized[key] = sanitizer(item[key]) as T[keyof T]
           }
