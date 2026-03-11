@@ -6349,8 +6349,8 @@ describe('Export Operations', () => {
       const collection = collect(data)
       const elastic = collection.toElastic('users')
 
-      expect(elastic.body.length).toBe(data.length * 2)
-      expect(elastic.body.filter((item: any) =>
+      expect((elastic.body as any[]).length).toBe(data.length * 2)
+      expect((elastic.body as any[]).filter((item: any) =>
         typeof item === 'object' && item !== null && 'index' in item,
       )).toHaveLength(data.length)
     })
