@@ -2,7 +2,7 @@
 
 ## About
 
-Laravel Collections for TypeScript.
+ts-collect is a fully-typed, zero-dependency collections library for TypeScript inspired by Laravel Collections. It provides a fluent, chainable API with 200+ methods covering core collection operations, statistical analysis, time series, machine learning (k-means, KNN, linear regression), lazy evaluation, async/parallel processing, data validation, and serialization to JSON/CSV/XML/SQL/GraphQL formats.
 
 ## Linting
 
