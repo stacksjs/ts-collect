@@ -2,7 +2,7 @@
 
 Lazy collections provide memory-efficient processing for large datasets by deferring computation until results are actually needed. Instead of creating intermediate arrays for each operation, lazy collections build up a chain of operations that are executed only when you request the final result.
 
-## Why Use Lazy Collections?
+## Why Use Lazy Collections
 
 ### Memory Efficiency
 
@@ -400,7 +400,7 @@ const processed = await collect(streamData())
 ## Performance Comparison
 
 ```typescript
-const data = Array.from({ length: 1_000_000 }, (_, i) => i)
+const data = Array.from({ length: 1*000*000 }, (_, i) => i)
 
 // Eager: Creates multiple large arrays
 console.time('eager')

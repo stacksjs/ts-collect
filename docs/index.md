@@ -64,5 +64,3 @@ features:
     icon: 🤖
     details: "Integrated clustering, regression, and anomaly detection methods."
 ---
-
-<Home />

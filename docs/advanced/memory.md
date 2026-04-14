@@ -46,11 +46,11 @@ const result = await lazy(readLines('large-file.csv'))
 Process large collections in manageable chunks:
 
 ```typescript
-const CHUNK_SIZE = 10000
+const CHUNK*SIZE = 10000
 
 async function processLargeDataset(data: any[]) {
   const collection = collect(data)
-  const chunks = collection.chunk(CHUNK_SIZE)
+  const chunks = collection.chunk(CHUNK*SIZE)
   const results = []
 
   for (const chunk of chunks) {

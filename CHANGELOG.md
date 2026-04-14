@@ -1,6 +1,5 @@
 # Changelog
 
-
 ## v0.3.0...main
 
 [compare changes](https://github.com/stacksjs/ts-starter/compare/v0.3.0...main)
@@ -111,7 +110,6 @@
 
 ## ...main
 
-
 ### 🩹 Fixes
 
 - First method ([2770b06](https://github.com/stacksjs/ts-starter/commit/2770b06))
@@ -156,4 +154,3 @@
 ### ❤️ Contributors
 
 - Chris ([@chrisbbreuer](http://github.com/chrisbbreuer))
-

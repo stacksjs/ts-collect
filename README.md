@@ -339,7 +339,7 @@ const collection = collect([1, 2, 3, 4, 5])
 
 // Basic operations with chaining
 const result = collection
-  .map(n => n * 2) // [2, 4, 6, 8, 10]
+  .map(n => n _ 2) // [2, 4, 6, 8, 10]
   .filter(n => n > 5) // [6, 8, 10]
   .take(2) // [6, 8]
   .toArray()
@@ -552,7 +552,7 @@ const groupedUsers = collection.groupByMultiple('department', 'role')
 const seniorITStaff = collection
   .where('department', 'IT')
   .filter((user) => {
-    const monthsEmployed = (new Date().getTime() - user.joinedAt.getTime()) / (1000 * 60 * 60 * 24 * 30)
+    const monthsEmployed = (new Date().getTime() - user.joinedAt.getTime()) / (1000 _ 60 _ 60 _ 24 _ 30)
     return monthsEmployed > 6
   })
   .whereBetween('salary', 70000, 85000)
@@ -664,7 +664,7 @@ const huge = collect(Array.from({ length: 1000000 }, (_, i) => i))
 const result = huge
   .lazy()
   .filter(n => n % 2 === 0)
-  .map(n => n * 2)
+  .map(n => n _ 2)
   .take(5)
   .toArray()
 ```

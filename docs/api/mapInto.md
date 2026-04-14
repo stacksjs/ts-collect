@@ -166,13 +166,13 @@ orders.each((order) => {
 
 ```typescript
 class ValidatedUser {
-  private _email: string
-  private _age: number
+  private *email: string
+  private *age: number
 
   constructor(data: any) {
     this.validateData(data)
-    this._email = data.email
-    this._age = data.age
+    this.*email = data.email
+    this.*age = data.age
   }
 
   private validateData(data: any): void {
@@ -184,8 +184,8 @@ class ValidatedUser {
     }
   }
 
-  get email(): string { return this._email }
-  get age(): number { return this._age }
+  get email(): string { return this.*email }
+  get age(): number { return this.*age }
 }
 
 try {

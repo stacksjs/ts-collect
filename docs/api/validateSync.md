@@ -156,7 +156,7 @@ class ProductInputValidator {
   ): string[] {
     return Array.from(errors.entries())
       .filter(([key]) => key.includes(sku))
-      .flatMap(([_, errs]) => errs)
+      .flatMap(([*, errs]) => errs)
   }
 }
 ```
@@ -236,7 +236,7 @@ class ContactFormValidator {
   private getErrors(errors: Map<string, string[]>, identifier: string): string[] {
     return Array.from(errors.entries())
       .filter(([key]) => key.includes(identifier))
-      .flatMap(([_, errs]) => errs)
+      .flatMap(([*, errs]) => errs)
   }
 }
 ```

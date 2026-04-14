@@ -121,7 +121,7 @@ class CacheManager {
     this.cache.put(key, {
       key,
       value,
-      expiry: Date.now() + (expiryMinutes * 60 * 1000)
+      expiry: Date.now() + (expiryMinutes _ 60 _ 1000)
     })
   }
 

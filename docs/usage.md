@@ -329,7 +329,7 @@ const movingAvg = series.movingAverage({ window: 2 })
 ## Lazy Evaluation
 
 ```typescript
-const huge = collect(Array.from({ length: 1000000 }, (_, i) => i))
+const huge = collect(Array.from({ length: 1000000 }, (*, i) => i))
 
 // Operations are deferred until needed
 const result = huge
@@ -344,7 +344,7 @@ const result = huge
 
 ```typescript
 // Process large datasets in batches
-const largeDataset = collect(Array.from({ length: 10000 }, (_, i) => ({
+const largeDataset = collect(Array.from({ length: 10000 }, (*, i) => ({
   id: i,
   data: `Data ${i}`
 })))

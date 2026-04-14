@@ -328,9 +328,11 @@ const result = (collection as any).active().recent(7)
 
 ```typescript
 /**
+
  * Filters users who have logged in within the last N days
  * @param days - Number of days to consider as "recent"
  * @returns Collection of recently active users
+
  */
 users.macro('recentlyActive', function(days: number) {
   const cutoff = new Date()
