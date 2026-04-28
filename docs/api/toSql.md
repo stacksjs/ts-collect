@@ -86,7 +86,7 @@ class OrderExporter {
   }
 
   generateBackupQueries() {
-    const timestamp = new Date().toISOString().split('T')[0]
+    const timestamp = new Date().toISOString().split('T').at(0)
     const backupTable = `orders_backup_${timestamp}`
 
     return [

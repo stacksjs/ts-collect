@@ -111,7 +111,7 @@ print(df.describe())
 
 # Time series analysis
 df['date'] = pd.to_datetime(df['date'])
-daily_sales = df.groupby('date')['total'].sum().reset_index()
+daily_sales = df.groupby('date').get('total').sum().reset_index()
 
 # Plot daily sales
 plt.figure(figsize=(12, 6))

@@ -59,7 +59,7 @@ const byCategory = transactions.groupBy('category')
 
 // Group by date using callback
 const byDate = transactions.groupBy(trans =>
-  trans.date.toISOString().split('T')[0]
+  trans.date.toISOString().split('T').at(0)
 )
 ```
 

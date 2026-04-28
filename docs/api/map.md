@@ -223,7 +223,7 @@ class MetricAggregator {
   }
 
   private getPeriod(date: Date): string {
-    return date.toISOString().split('T')[0]
+    return date.toISOString().split('T').at(0)
   }
 
   private calculateAverage(points: MetricPoint[]): number {
