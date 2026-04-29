@@ -53,7 +53,7 @@
     "format:fix": "bunx --bun pickier . --format --write"
   },
   "devDependencies": {
-    "@stacksjs/bunpress": "^0.1.1",
+    "@stacksjs/bunpress": "^0.1.4",
     "better-dx": "^0.2.7"
   },
   "git-hooks": {
