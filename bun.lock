@@ -5,8 +5,8 @@
     "": {
       "name": "ts-collect",
       "devDependencies": {
-        "@stacksjs/bunpress": "^0.1.1",
-        "better-dx": "^0.2.7",
+        "@stacksjs/bunpress": "^0.1.4",
+        "better-dx": "^0.2.12",
       },
     },
   },
