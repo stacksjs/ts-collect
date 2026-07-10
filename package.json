@@ -64,5 +64,8 @@
       "autoRestage": true
     },
     "commit-msg": "bunx --bun gitlint --edit .git/COMMIT_EDITMSG"
+  },
+  "overrides": {
+    "typescript": "^7.0.2"
   }
 }
