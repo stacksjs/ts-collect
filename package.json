@@ -2,7 +2,7 @@
   "name": "ts-collect",
   "type": "module",
   "sideEffects": false,
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Laravel Collections for TypeScript.",
   "author": "Chris Breuer <chris@stacksjs.org>",
   "license": "MIT",

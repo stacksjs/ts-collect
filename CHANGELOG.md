@@ -1,5 +1,16 @@
 # Changelog
 
+[Compare changes](https://github.com/stacksjs/ts-collect/compare/v0.4.1...v0.4.2)
+
+## 🧹 Chores
+
+- release v0.4.2 ([9aba74c](https://github.com/stacksjs/ts-collect/commit/9aba74c)) _(by Chris <chrisbreuer93@gmail.com>)_
+- add release:patch script ([517cde4](https://github.com/stacksjs/ts-collect/commit/517cde4)) _(by Chris <chrisbreuer93@gmail.com>)_
+
+## Contributors
+
+- _Chris <chrisbreuer93@gmail.com>_
+
 [Compare changes](https://github.com/stacksjs/ts-collect/compare/v0.4.0...v0.4.1)
 
 ## 🚀 Features
