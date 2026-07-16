@@ -37,7 +37,8 @@
   "scripts": {
     "build": "bun --bun build.ts",
     "fresh": "bunx rimraf node_modules/ bun.lock && bun i",
-    "prepublishOnly": "bun --bun run build",
+    "prepublishOnly": "bun --bun run build && bun run smoke",
+    "smoke": "bun --bun scripts/smoke-dist.ts",
     "test": "bun test",
     "lint": "bunx --bun pickier .",
     "lint:fix": "bunx --bun pickier . --fix",
