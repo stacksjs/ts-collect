@@ -1,5 +1,20 @@
 # Changelog
 
+[Compare changes](https://github.com/stacksjs/ts-collect/compare/v0.4.2...v0.4.3)
+
+## 🐛 Bug Fixes
+
+- **pkg**: drop sideEffects:false, it broke the bundle ([a1e4f94](https://github.com/stacksjs/ts-collect/commit/a1e4f94)) _(by Chris <chrisbreuer93@gmail.com>)_
+
+## 🧹 Chores
+
+- release v0.4.3 ([7cd4134](https://github.com/stacksjs/ts-collect/commit/7cd4134)) _(by Chris <chrisbreuer93@gmail.com>)_
+- **deps**: declare bun ^1.3.14 in deps.yaml ([b27b751](https://github.com/stacksjs/ts-collect/commit/b27b751)) _(by Chris <chrisbreuer93@gmail.com>)_
+
+## Contributors
+
+- _Chris <chrisbreuer93@gmail.com>_
+
 [Compare changes](https://github.com/stacksjs/ts-collect/compare/v0.4.1...v0.4.2)
 
 ## 🧹 Chores
