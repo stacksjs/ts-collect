@@ -65,9 +65,16 @@ export function createLazyOperations<T>(generator: LazyGenerator<T>): LazyCollec
     } as LazyCollectionOperations<T>['filter'],
 
     flatMap<U>(callback: (item: T, index: number) => readonly U[]): LazyCollectionOperations<U> {
-      let currentIndex = 0
-      operations.push((value: T) => callback(value, currentIndex++))
-      return createLazyOperations(executeChain() as any)
+      const source = executeChain()
+
+      async function* flatMapped(): AsyncGenerator<U, void, undefined> {
+        let currentIndex = 0
+        for await (const value of source) {
+          yield* callback(value, currentIndex++)
+        }
+      }
+
+      return createLazyOperations(flatMapped())
     },
 
     take(count: number): LazyCollectionOperations<T> {
@@ -83,17 +90,26 @@ export function createLazyOperations<T>(generator: LazyGenerator<T>): LazyCollec
     },
 
     chunk(size: number): LazyCollectionOperations<T[]> {
-      let chunk: T[] = []
-      operations.push((value: T) => {
-        chunk.push(value)
-        if (chunk.length === size) {
-          const result = chunk
-          chunk = []
-          return result
+      if (size < 1)
+        throw new Error('Chunk size must be greater than 0')
+
+      const source = executeChain()
+
+      async function* chunked(): AsyncGenerator<T[], void, undefined> {
+        let chunk: T[] = []
+        for await (const value of source) {
+          chunk.push(value)
+          if (chunk.length === size) {
+            yield chunk
+            chunk = []
+          }
         }
-        return undefined
-      })
-      return createLazyOperations(executeChain() as any)
+
+        if (chunk.length > 0)
+          yield chunk
+      }
+
+      return createLazyOperations(chunked())
     },
 
     async toArray(): Promise<T[]> {
