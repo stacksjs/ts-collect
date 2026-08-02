@@ -1,3 +1,3 @@
 export { collect } from './collect'
 export { range, times, isCollection } from './utils'
-export type { CollectionOperations, Collection, LazyCollectionOperations, PaginationResult, StandardDeviationResult, ValidationResult, ValidationSchema, SerializationOptions, KMeansOptions, RegressionResult, CollectionMetrics, TimeSeriesOptions, TimeSeriesPoint, MovingAverageOptions, HavingOperator } from './types'
+export type { ArrayValue, ArrayValueAtDepth, Assign, Collection, CollectionItem, CollectionMetrics, CollectionOperations, DeepArrayValue, Falsy, HavingOperator, InstanceOf, KMeansOptions, LazyCollectionOperations, LeftAssign, MovingAverageOptions, Overlap, PaginationResult, RegressionResult, RemoveProperties, SelectProperties, SerializationOptions, SetProperty, StandardDeviationResult, TimeSeriesOptions, TimeSeriesPoint, ValidationResult, ValidationSchema, WithNonNullableProperty, WithNullishProperty, WithoutPropertyValue, WithPropertyValue } from './types'

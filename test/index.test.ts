@@ -1066,7 +1066,6 @@ describe('Collection Core Operations', () => {
 
     it('should handle empty collection', () => {
       const collection = collect([])
-      // @ts-expect-error Testing with invalid typing
       expect(collection.put('key', 'value').toArray()).toEqual([])
     })
   })

@@ -58,13 +58,13 @@ export function createLazyOperations<T>(generator: LazyGenerator<T>): LazyCollec
       return createLazyOperations(executeChain() as any)
     },
 
-    filter(predicate: (item: T, index: number) => boolean): LazyCollectionOperations<T> {
+    filter: function (predicate: (item: T, index: number) => boolean): LazyCollectionOperations<T> {
       let currentIndex = 0
       operations.push((value: T) => predicate(value, currentIndex++) ? value : undefined)
       return createLazyOperations(executeChain())
-    },
+    } as LazyCollectionOperations<T>['filter'],
 
-    flatMap<U>(callback: (item: T, index: number) => U[]): LazyCollectionOperations<U> {
+    flatMap<U>(callback: (item: T, index: number) => readonly U[]): LazyCollectionOperations<U> {
       let currentIndex = 0
       operations.push((value: T) => callback(value, currentIndex++))
       return createLazyOperations(executeChain() as any)

@@ -1,4 +1,4 @@
-import type { AnomalyDetectionOptions, AsyncCallback, ClusterResult, Collection, CollectionMetrics, CollectionOperations, CompareFunction, ConditionalCallback, HavingOperator, KeySelector, KMeansOptions, KMeansResult, LazyCollectionOperations, MovingAverageOptions, PaginationResult, PluckedCluster, PluckedData, RecordMerge, RegressionResult, SerializationOptions, StandardDeviationResult, TimeSeriesOptions, TimeSeriesPoint, ValidationResult, ValidationRule, ValidationSchema } from './types'
+import type { AnomalyDetectionOptions, Assign, AsyncCallback, ClusterResult, Collection, CollectionMetrics, CollectionOperations, CompareFunction, ConditionalCallback, HavingOperator, InstanceOf, KeySelector, KMeansOptions, KMeansResult, LazyCollectionOperations, LeftAssign, MovingAverageOptions, Overlap, PaginationResult, PluckedCluster, PluckedData, RecordMerge, RegressionResult, RemoveProperties, SelectProperties, SerializationOptions, SetProperty, StandardDeviationResult, TimeSeriesOptions, TimeSeriesPoint, ValidationResult, ValidationRule, ValidationSchema, WithNonNullableProperty, WithNullishProperty, WithoutPropertyValue, WithPropertyValue } from './types'
 import process from 'node:process'
 import { createLazyOperations } from './lazy'
 import { calculateFuzzyScore, getNextTimestamp, isSameDay, validateCoordinates } from './utils'
@@ -7,8 +7,8 @@ import { calculateFuzzyScore, getNextTimestamp, isSameDay, validateCoordinates }
  * Creates a new collection with optimized performance
  * @param items - Array of items or iterable
  */
-export function collect<T>(items: T[] | Iterable<T>): CollectionOperations<T> {
-  const array = Array.isArray(items) ? items : Array.from(items)
+export function collect<T>(items: readonly T[] | Iterable<T>): CollectionOperations<T> {
+  const array = Array.isArray(items) ? items as T[] : Array.from(items)
   const collection: Collection<T> = {
     items: array,
     get length() { return array.length },
@@ -43,12 +43,12 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       return collect(collection.items.flat() as U[])
     },
 
-    combine<U>(values: U[]): CollectionOperations<Record<string, U | undefined>> {
+    combine<U>(values: readonly U[]): CollectionOperations<Record<Extract<T, string | number>, U | undefined>> {
       const result: Record<string, U | undefined> = {}
       collection.items.forEach((key, index) => {
         result[String(key)] = values[index]
       })
-      return collect([result]) as any
+      return collect([result]) as unknown as CollectionOperations<Record<Extract<T, string | number>, U | undefined>>
     },
 
     contains(keyOrItem: T | keyof T | undefined, value?: any): boolean {
@@ -100,8 +100,8 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       return counts
     },
 
-    diffAssoc(other: T[] | CollectionOperations<T>): CollectionOperations<T> {
-      const otherItems = Array.isArray(other) ? other : other.items
+    diffAssoc(other: readonly T[] | CollectionOperations<T>): CollectionOperations<T> {
+      const otherItems = Array.isArray(other) ? other : (other as CollectionOperations<T>).items
       return collect(
         collection.items.filter((item, index) =>
           otherItems[index] === undefined || JSON.stringify(item) !== JSON.stringify(otherItems[index]),
@@ -121,7 +121,7 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       )
     },
 
-    diffUsing(other: T[], callback: (a: T, b: T) => number) {
+    diffUsing(other: readonly T[], callback: (a: T, b: T) => number) {
       return collect(
         collection.items.filter(item =>
           !other.some(otherItem => callback(item, otherItem) === 0),
@@ -165,14 +165,14 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       return this
     },
 
-    except<K extends keyof T>(...keys: K[]): CollectionOperations<Omit<T, K>> {
+    except<K extends keyof T>(...keys: K[]): CollectionOperations<RemoveProperties<T, K>> {
       return collect(
         collection.items.map((item) => {
           const result = { ...item }
           keys.forEach(key => delete result[key])
           return result
         }),
-      ) as unknown as CollectionOperations<Omit<T, K>>
+      ) as unknown as CollectionOperations<RemoveProperties<T, K>>
     },
 
     firstOrFail() {
@@ -181,8 +181,8 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       return collection.items[0]
     },
 
-    firstWhere<K extends keyof T>(key: K, value: T[K]) {
-      return collection.items.find(item => item[key] === value)
+    firstWhere<K extends keyof T, V extends T[K]>(key: K, value: V): WithPropertyValue<T, K, V> | undefined {
+      return collection.items.find(item => item[key] === value) as WithPropertyValue<T, K, V> | undefined
     },
 
     flatten(depth = Infinity) {
@@ -227,14 +227,14 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       return collect([flipped] as R[])
     },
 
-    forget<K extends keyof T>(key: K): CollectionOperations<Omit<T, K>> {
+    forget<K extends keyof T>(key: K): CollectionOperations<RemoveProperties<T, K>> {
       return collect(
         collection.items.map((item) => {
           const result = { ...item }
           delete result[key]
           return result
         }),
-      ) as unknown as CollectionOperations<Omit<T, K>>
+      ) as unknown as CollectionOperations<RemoveProperties<T, K>>
     },
 
     get<K extends keyof T>(key: K, defaultValue?: T[K]): T[K] | undefined {
@@ -266,7 +266,7 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       })
     },
 
-    make<U>(items: U[]) {
+    make<U>(items: readonly U[]) {
       return collect(items)
     },
 
@@ -276,8 +276,8 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       ) as unknown as CollectionOperations<U>
     },
 
-    mapToDictionary<K extends string | number | symbol, V>(
-      callback: (item: T) => [K, V],
+    mapToDictionary<K extends PropertyKey, V>(
+      callback: (item: T) => readonly [K, V],
     ): Map<K, V> {
       const map = new Map<K, V>()
       collection.items.forEach((item) => {
@@ -287,8 +287,8 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       return map
     },
 
-    mapWithKeys<K extends string | number | symbol, V>(
-      callback: (item: T) => [K, V],
+    mapWithKeys<K extends PropertyKey, V>(
+      callback: (item: T) => readonly [K, V],
     ): Map<K, V> {
       const map = new Map<K, V>()
       collection.items.forEach((item) => {
@@ -298,12 +298,12 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       return map
     },
 
-    merge<U extends T>(other: U[] | CollectionOperations<U>): CollectionOperations<T | U> {
-      const otherItems = Array.isArray(other) ? other : other.items
+    merge<U>(other: readonly U[] | CollectionOperations<U>): CollectionOperations<T | U> {
+      const otherItems = Array.isArray(other) ? other : (other as CollectionOperations<U>).items
       return collect<T | U>([...collection.items, ...otherItems])
     },
 
-    mergeRecursive<U>(other: U[] | CollectionOperations<U>): CollectionOperations<RecordMerge< T, U >> {
+    mergeRecursive<U>(other: readonly U[] | CollectionOperations<U>): CollectionOperations<RecordMerge< T, U >> {
       function mergeRecursiveHelper<A extends object, B extends object>(
         target: A,
         source: B,
@@ -339,7 +339,7 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
         return result as RecordMerge<A, B>
       }
 
-      const otherItems = Array.isArray(other) ? other : other.items
+      const otherItems = Array.isArray(other) ? other : (other as CollectionOperations<U>).items
       const merged = collection.items.map((item, index) => {
         return index < otherItems.length
           ? mergeRecursiveHelper(
@@ -351,17 +351,17 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       return collect(merged) as CollectionOperations<RecordMerge<T, U>>
     },
 
-    only<K extends string>(...keys: K[]) {
+    only<K extends PropertyKey>(...keys: K[]): CollectionOperations<SelectProperties<T, K>> {
       return this.map((item: T) => {
-        const result = {} as { [P in K & keyof T]?: T[P] }
+        const result: Partial<T> = {}
         keys.forEach((key) => {
           // Type guard to ensure item is an object before using 'in'
           if (item && typeof item === 'object' && key in item) {
-            const typedKey = key as keyof T & K
+            const typedKey = key as unknown as keyof T
             result[typedKey] = item[typedKey]
           }
         })
-        return result
+        return result as unknown as SelectProperties<T, K>
       })
     },
 
@@ -412,15 +412,15 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       return collect(shuffled.slice(0, size))
     },
 
-    reject(predicate: (item: T) => boolean) {
+    reject: function (this: CollectionOperations<T>, predicate: (item: T) => boolean) {
       return this.filter(item => !predicate(item))
-    },
+    } as CollectionOperations<T>['reject'],
 
-    replace(items: T[]) {
+    replace<U>(items: readonly U[]) {
       return collect(items)
     },
 
-    replaceRecursive<U>(items: U[]): CollectionOperations<U> {
+    replaceRecursive<U>(items: readonly U[]): CollectionOperations<U> {
       function replaceDeep(target: any, source: any): any {
         if (!source || typeof source !== 'object')
           return source
@@ -526,8 +526,8 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       )
     },
 
-    splice(start: number, deleteCount?: number, ...items: T[]): CollectionOperations<T> {
-      const copy = [...collection.items]
+    splice<U = never>(start: number, deleteCount?: number, ...items: U[]): CollectionOperations<T | U> {
+      const copy: Array<T | U> = [...collection.items]
       if (start > copy.length) {
         return collect(copy)
       }
@@ -562,7 +562,7 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
         : collect(collection.items.slice(0, index))
     },
 
-    takeWhile(value: T | ((_item: T) => boolean)) {
+    takeWhile: function (value: T | ((_item: T) => boolean)): CollectionOperations<T> {
       const predicate = typeof value === 'function'
         ? value as (_item: T) => boolean
         : (item: T) => item === value
@@ -572,7 +572,7 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
         index++
       }
       return collect(collection.items.slice(0, index))
-    },
+    } as CollectionOperations<T>['takeWhile'],
 
     times<U>(count: number, callback: (index: number) => U) {
       const items: U[] = []
@@ -608,11 +608,11 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       return this.isEmpty() ? callback(this) as CollectionOperations<T | U> : this as CollectionOperations<T | U>
     },
 
-    unwrap<U>(value: U | U[] | CollectionOperations<U>): U extends any[] ? U : U[] {
+    unwrap<U>(value: U | readonly U[] | CollectionOperations<U>): U[] {
       if (value instanceof Object && 'items' in value) {
-        return (value as CollectionOperations<U>).toArray() as U extends any[] ? U : U[]
+        return (value as CollectionOperations<U>).toArray()
       }
-      return (Array.isArray(value) ? value : [value]) as U extends any[] ? U : U[]
+      return (Array.isArray(value) ? [...value] : [value]) as U[]
     },
 
     whenEmpty<U = T>(callback: (collection: CollectionOperations<T>) => CollectionOperations<U>): CollectionOperations<T | U> {
@@ -623,14 +623,14 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       return this.isNotEmpty() ? callback(this) as CollectionOperations<T | U> : this as CollectionOperations<T | U>
     },
 
-    wrap<U>(value: U | U[]): CollectionOperations<U> {
+    wrap<U>(value: U | readonly U[]): CollectionOperations<U> {
       if (Array.isArray(value)) {
-        return collect(value)
+        return collect(value as readonly U[])
       }
-      return collect([value])
+      return collect([value as U])
     },
 
-    zip<U>(array: U[]): CollectionOperations<[T, U | undefined]> {
+    zip<U>(array: readonly U[]): CollectionOperations<[T, U | undefined]> {
       return collect(
         collection.items.map((item, index) => [item, array[index]] as [T, U | undefined]),
       )
@@ -640,15 +640,15 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       return collect(collection.items.map(callback))
     },
 
-    filter(predicate: (item: T, index: number) => boolean): CollectionOperations<T> {
+    filter: function (predicate: (item: T, index: number) => boolean): CollectionOperations<T> {
       return collect(collection.items.filter(predicate))
-    },
+    } as CollectionOperations<T>['filter'],
 
     reduce<U>(callback: (accumulator: U, current: T, index: number) => U, initialValue: U): U {
       return collection.items.reduce(callback, initialValue)
     },
 
-    flatMap<U>(callback: (item: T, index: number) => U[]): CollectionOperations<U> {
+    flatMap<U>(callback: (item: T, index: number) => readonly U[]): CollectionOperations<U> {
       return collect(collection.items.flatMap(callback))
     },
 
@@ -918,7 +918,7 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       )
     },
 
-    partition(predicate: (item: T) => boolean): [CollectionOperations<T>, CollectionOperations<T>] {
+    partition: function (predicate: (item: T) => boolean): [CollectionOperations<T>, CollectionOperations<T>] {
       const pass: T[] = []
       const fail: T[] = []
 
@@ -932,20 +932,20 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       }
 
       return [collect(pass), collect(fail)]
+    } as CollectionOperations<T>['partition'],
+
+    where<K extends keyof T, V extends T[K]>(key: K, value: V): CollectionOperations<WithPropertyValue<T, K, V>> {
+      return collect(collection.items.filter(item => item[key] === value)) as CollectionOperations<WithPropertyValue<T, K, V>>
     },
 
-    where<K extends keyof T>(key: K, value: T[K]): CollectionOperations<T> {
-      return collect(collection.items.filter(item => item[key] === value))
+    whereIn<K extends keyof T, V extends T[K]>(key: K, values: readonly V[]): CollectionOperations<WithPropertyValue<T, K, V>> {
+      const valueSet = new Set<T[K]>(values)
+      return collect(collection.items.filter(item => valueSet.has(item[key]))) as CollectionOperations<WithPropertyValue<T, K, V>>
     },
 
-    whereIn<K extends keyof T>(key: K, values: T[K][]): CollectionOperations<T> {
-      const valueSet = new Set(values)
-      return collect(collection.items.filter(item => valueSet.has(item[key])))
-    },
-
-    whereNotIn<K extends keyof T>(key: K, values: T[K][]): CollectionOperations<T> {
-      const valueSet = new Set(values)
-      return collect(collection.items.filter(item => !valueSet.has(item[key])))
+    whereNotIn<K extends keyof T, V extends T[K]>(key: K, values: readonly V[]): CollectionOperations<WithoutPropertyValue<T, K, V>> {
+      const valueSet = new Set<T[K]>(values)
+      return collect(collection.items.filter(item => !valueSet.has(item[key]))) as CollectionOperations<WithoutPropertyValue<T, K, V>>
     },
 
     whereBetween<K extends keyof T>(key: K, min: T[K], max: T[K]): CollectionOperations<T> {
@@ -978,21 +978,23 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       )
     },
 
-    when<U = T>(
+    when: function <U = T>(
+      this: CollectionOperations<T>,
       condition: boolean | ConditionalCallback<T>,
       callback: (collection: CollectionOperations<T>) => CollectionOperations<U>,
-    ): CollectionOperations<U> {
+    ): CollectionOperations<T | U> {
       const shouldRun = typeof condition === 'function' ? condition(this) : condition
-      return shouldRun ? callback(this) : this as unknown as CollectionOperations<U>
-    },
+      return shouldRun ? callback(this) as CollectionOperations<T | U> : this as CollectionOperations<T | U>
+    } as CollectionOperations<T>['when'],
 
-    unless<U = T>(
+    unless: function <U = T>(
+      this: CollectionOperations<T>,
       condition: boolean | ConditionalCallback<T>,
       callback: (collection: CollectionOperations<T>) => CollectionOperations<U>,
-    ): CollectionOperations<U> {
+    ): CollectionOperations<T | U> {
       const shouldRun = typeof condition === 'function' ? condition(this) : condition
-      return shouldRun ? this as unknown as CollectionOperations<U> : callback(this)
-    },
+      return shouldRun ? this as CollectionOperations<T | U> : callback(this) as CollectionOperations<T | U>
+    } as CollectionOperations<T>['unless'],
 
     sort(compareFunction?: CompareFunction<T>): CollectionOperations<T> {
       if (!compareFunction) {
@@ -1220,13 +1222,14 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
     //   return result
     // },
 
-    intersect(other: T[] | CollectionOperations<T>): CollectionOperations<T> {
-      const otherSet = new Set(Array.isArray(other) ? other : other.items)
-      return collect(collection.items.filter(item => otherSet.has(item)))
+    intersect<U>(other: readonly U[] | CollectionOperations<U>): CollectionOperations<Overlap<T, U>> {
+      const otherItems = Array.isArray(other) ? other : (other as CollectionOperations<U>).items
+      const otherSet = new Set<unknown>(otherItems)
+      return collect(collection.items.filter(item => otherSet.has(item))) as CollectionOperations<Overlap<T, U>>
     },
 
-    union(other: T[] | CollectionOperations<T>): CollectionOperations<T> {
-      const otherArray = Array.isArray(other) ? other : other.items
+    union<U>(other: readonly U[] | CollectionOperations<U>): CollectionOperations<T | U> {
+      const otherArray = Array.isArray(other) ? other : (other as CollectionOperations<U>).items
       return collect([...new Set([...collection.items, ...otherArray])])
     },
 
@@ -1322,12 +1325,12 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       return freq
     },
 
-    whereNull<K extends keyof T>(key: K): CollectionOperations<T> {
-      return collect(collection.items.filter(item => item[key] == null))
+    whereNull<K extends keyof T>(key: K): CollectionOperations<WithNullishProperty<T, K>> {
+      return collect(collection.items.filter(item => item[key] == null)) as CollectionOperations<WithNullishProperty<T, K>>
     },
 
-    whereNotNull<K extends keyof T>(key: K): CollectionOperations<T> {
-      return collect(collection.items.filter(item => item[key] != null))
+    whereNotNull<K extends keyof T>(key: K): CollectionOperations<WithNonNullableProperty<T, K>> {
+      return collect(collection.items.filter(item => item[key] != null)) as CollectionOperations<WithNonNullableProperty<T, K>>
     },
 
     whereLike<K extends keyof T>(key: K, pattern: string): CollectionOperations<T> {
@@ -1343,8 +1346,8 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       return collect(collection.items.filter(item => regex.test(String(item[key]))))
     },
 
-    whereInstanceOf<U>(constructor: new (...args: any[]) => U): CollectionOperations<T> {
-      return collect(collection.items.filter(item => item instanceof constructor))
+    whereInstanceOf<U>(constructor: abstract new (...args: never[]) => U): CollectionOperations<InstanceOf<T, U>> {
+      return collect(collection.items.filter(item => item instanceof constructor)) as CollectionOperations<InstanceOf<T, U>>
     },
 
     async mapAsync<U>(callback: AsyncCallback<T, U>): Promise<CollectionOperations<Awaited<U>>> {
@@ -1428,8 +1431,8 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       }
     },
 
-    symmetricDiff<U = T>(other: U[] | CollectionOperations<U>): CollectionOperations<T | U> {
-      const otherItems = Array.isArray(other) ? other : other.items
+    symmetricDiff<U = T>(other: readonly U[] | CollectionOperations<U>): CollectionOperations<T | U> {
+      const otherItems = Array.isArray(other) ? other : (other as CollectionOperations<U>).items
       const otherSet = new Set(otherItems)
       const thisSet = new Set(collection.items)
       const result = new Set<T | U>()
@@ -1451,8 +1454,8 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       return collect([...result])
     },
 
-    cartesianProduct<U>(other: U[] | CollectionOperations<U>): CollectionOperations<[T, U]> {
-      const otherItems = Array.isArray(other) ? other : other.items
+    cartesianProduct<U>(other: readonly U[] | CollectionOperations<U>): CollectionOperations<[T, U]> {
+      const otherItems = Array.isArray(other) ? other : (other as CollectionOperations<U>).items
       const result: [T, U][] = []
 
       for (const item1 of collection.items) {
@@ -2516,7 +2519,7 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       query: string,
       fields: K[],
       options: { fuzzy?: boolean, weights?: Partial<Record<K, number>> } = {},
-    ): CollectionOperations<T & { score: number }> {
+    ): CollectionOperations<SetProperty<T, 'score', number>> {
       const { fuzzy = false, weights = {} as Partial<Record<K, number>> } = options
       const normalizedQuery = query.toLowerCase()
 
@@ -2533,7 +2536,7 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
           }
         }
         return { ...item, score }
-      })).filter(item => item.score > 0).sort((a, b) => b.score - a.score)
+      })).filter(item => item.score > 0).sort((a, b) => b.score - a.score) as unknown as CollectionOperations<SetProperty<T, 'score', number>>
     },
 
     // Advanced querying operations
@@ -2784,7 +2787,7 @@ ${collection.items.map(item =>
       key: K,
       point: readonly [number, number],
       unit: 'km' | 'mi' = 'km',
-    ): CollectionOperations<T & { distance: number }> {
+    ): CollectionOperations<SetProperty<T, 'distance', number>> {
       function haversine(lat1: number, lon1: number, lat2: number, lon2: number): number {
         // Validate coordinates
         if (!validateCoordinates(lat1, lon1) || !validateCoordinates(lat2, lon2)) {
@@ -2815,13 +2818,13 @@ ${collection.items.map(item =>
           ...item,
           distance: haversine(coords[0], coords[1], point[0], point[1]),
         }
-      }))
+      })) as unknown as CollectionOperations<SetProperty<T, 'distance', number>>
     },
 
     money<K extends keyof T>(
       key: K,
       currency: string = 'USD',
-    ): CollectionOperations<T & { formatted: string }> {
+    ): CollectionOperations<SetProperty<T, 'formatted', string>> {
       const formatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency,
@@ -2830,17 +2833,17 @@ ${collection.items.map(item =>
       return collect(collection.items.map(item => ({
         ...item,
         formatted: formatter.format(Number(item[key])),
-      })))
+      }))) as unknown as CollectionOperations<SetProperty<T, 'formatted', string>>
     },
 
     dateTime<K extends keyof T>(
       key: K,
       format: string = 'en-US',
-    ): CollectionOperations<T & { formatted: string }> {
+    ): CollectionOperations<SetProperty<T, 'formatted', string>> {
       return collect(collection.items.map(item => ({
         ...item,
         formatted: new Date(item[key] as any).toLocaleString(format),
-      })))
+      }))) as unknown as CollectionOperations<SetProperty<T, 'formatted', string>>
     },
 
     // Configuration method
@@ -3045,11 +3048,11 @@ ${collection.items.map(item =>
       return this.filter(item => comparator(item[key], value))
     },
 
-    crossJoin<U>(other: CollectionOperations<U>): CollectionOperations<T & U> {
-      const result: Array<T & U> = []
+    crossJoin<U>(other: CollectionOperations<U>): CollectionOperations<Assign<T, U>> {
+      const result: Array<Assign<T, U>> = []
       for (const item1 of this.items) {
         for (const item2 of other.items) {
-          result.push({ ...item1, ...item2 })
+          result.push({ ...item1, ...item2 } as Assign<T, U>)
         }
       }
       return collect(result)
@@ -3059,7 +3062,7 @@ ${collection.items.map(item =>
       other: CollectionOperations<U>,
       key: K,
       otherKey: O,
-    ): CollectionOperations<T & Partial<U>> {
+    ): CollectionOperations<LeftAssign<T, U>> {
       // Build a lookup map for O(n+m) instead of O(n×m)
       const otherMap = new Map<unknown, U>()
       for (const otherItem of other.items) {
@@ -3069,7 +3072,7 @@ ${collection.items.map(item =>
       return this.map((item) => {
         const match = otherMap.get(item[key])
         return { ...item, ...(match || {}) }
-      })
+      }) as unknown as CollectionOperations<LeftAssign<T, U>>
     },
 
     batch(size: number): AsyncGenerator<CollectionOperations<T>, void, unknown> {
@@ -3405,7 +3408,7 @@ ${collection.items.map(item =>
     normalize<K extends keyof T>(
       key: K,
       method: 'minmax' | 'zscore',
-    ): CollectionOperations<T> {
+    ): CollectionOperations<SetProperty<T, K, number>> {
       const values = this.pluck(key).toArray().map(Number)
 
       if (method === 'minmax') {
@@ -3420,7 +3423,7 @@ ${collection.items.map(item =>
         return this.map(item => ({
           ...item,
           [key]: range !== 0 ? (Number(item[key]) - min) / range : 0,
-        })) as CollectionOperations<T>
+        })) as unknown as CollectionOperations<SetProperty<T, K, number>>
       }
 
       // z-score normalization
@@ -3432,7 +3435,7 @@ ${collection.items.map(item =>
       return this.map(item => ({
         ...item,
         [key]: stdDev !== 0 ? (Number(item[key]) - mean) / stdDev : 0,
-      })) as CollectionOperations<T>
+      })) as unknown as CollectionOperations<SetProperty<T, K, number>>
     },
 
     knn<K extends keyof T>(

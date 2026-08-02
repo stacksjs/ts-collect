@@ -38,6 +38,85 @@ export interface StandardDeviationResult {
  */
 export type AsyncCallback<T, U> = (_item: T, _index: number) => Promise<U>
 
+/** Extracts the item type carried by a collection. */
+export type CollectionItem<C> = C extends CollectionOperations<infer T> ? T : never
+
+/** Recursively extracts values from nested readonly or mutable arrays. */
+export type DeepArrayValue<T> = T extends readonly (infer U)[] ? DeepArrayValue<U> : T
+
+/** Extracts values from one array level. */
+export type ArrayValue<T> = T extends readonly (infer U)[] ? U : T
+
+/** Extracts values from a requested number of nested array levels. */
+export type ArrayValueAtDepth<T, D extends number, Seen extends unknown[] = []> = Seen['length'] extends D
+  ? T
+  : T extends readonly (infer U)[]
+    ? ArrayValueAtDepth<U, D, [...Seen, unknown]>
+    : T
+
+/** Converts a tuple-like collection item into mutable callback parameters. */
+export type SpreadArguments<T> = T extends readonly [...infer A] ? A : [T]
+
+/** Values removed by JavaScript truthiness filtering. */
+export type Falsy = false | 0 | 0n | '' | null | undefined
+
+/** Selects properties distributively across union members. */
+export type SelectProperties<T, K extends PropertyKey> = T extends unknown
+  ? Pick<T, Extract<keyof T, K>>
+  : never
+
+/** Removes properties distributively across union members. */
+export type RemoveProperties<T, K extends PropertyKey> = T extends unknown
+  ? Omit<T, Extract<keyof T, K>>
+  : never
+
+/** Replaces a property while retaining every unaffected property. */
+export type SetProperty<T, K extends PropertyKey, V> = T extends unknown
+  ? { [P in keyof (Omit<T, K> & Record<K, V>)]: (Omit<T, K> & Record<K, V>)[P] }
+  : never
+
+/** Narrows a structurally compatible item union to instances of a class. */
+export type InstanceOf<T, U> = T extends U ? T : U extends T ? U : never
+
+/** Keeps the structurally overlapping portion of two item types. */
+export type Overlap<T, U> = T extends U ? T : U extends T ? U : never
+
+/** Models object spread, where properties from the right-hand value win. */
+export type Assign<T, U> = T extends unknown
+  ? U extends unknown ? Omit<T, keyof U> & U : never
+  : never
+
+/** Models a left join, including unmatched rows and right-side overwrites. */
+export type LeftAssign<T, U> = T extends unknown
+  ? U extends unknown
+    ? { [P in keyof T]: P extends keyof U ? T[P] | U[P] : T[P] } & Partial<Omit<U, keyof T>>
+    : never
+  : never
+
+/** Narrows collection members to a specific property value. */
+export type WithPropertyValue<T, K extends keyof T, V extends T[K]> = T extends unknown
+  ? T extends Record<K, V> ? T : V extends T[K] ? T & Record<K, V> : never
+  : never
+
+/** Removes collection members with a specific property value. */
+export type WithoutPropertyValue<T, K extends keyof T, V> = T extends unknown
+  ? T extends Record<K, V>
+    ? never
+    : Exclude<T[K], V> extends never
+      ? never
+      : T extends Record<K, Exclude<T[K], V>> ? T : T & Record<K, Exclude<T[K], V>>
+  : never
+
+/** Narrows a property to its non-nullable value. */
+export type WithNonNullableProperty<T, K extends keyof T> = T extends unknown
+  ? NonNullable<T[K]> extends never ? never : T & Record<K, NonNullable<T[K]>>
+  : never
+
+/** Narrows a property to nullish values supported by the input type. */
+export type WithNullishProperty<T, K extends keyof T> = T extends unknown
+  ? Extract<T[K], null | undefined> extends never ? never : T & Record<K, Extract<T[K], null | undefined>>
+  : never
+
 /**
  * Represents a collection of items with type safety and chainable methods
  */
@@ -170,9 +249,13 @@ export type LazyGenerator<T> = Generator<T, void, unknown> | AsyncGenerator<T, v
  */
 export interface LazyCollectionOperations<T> {
   // Core Operations - these build up the computation chain without executing
-  map: <U>(callback: (item: T, index: number) => U) => LazyCollectionOperations<U>
-  filter: (predicate: (item: T, index: number) => boolean) => LazyCollectionOperations<T>
-  flatMap: <U>(callback: (item: T, index: number) => U[]) => LazyCollectionOperations<U>
+  map: <const U>(callback: (item: T, index: number) => U) => LazyCollectionOperations<U>
+  filter: {
+    (predicate: BooleanConstructor): LazyCollectionOperations<Exclude<T, Falsy>>
+    <S extends T>(predicate: (item: T, index: number) => item is S): LazyCollectionOperations<S>
+    (predicate: (item: T, index: number) => boolean): LazyCollectionOperations<T>
+  }
+  flatMap: <const U>(callback: (item: T, index: number) => readonly U[]) => LazyCollectionOperations<U>
   take: (count: number) => LazyCollectionOperations<T>
   skip: (count: number) => LazyCollectionOperations<T>
   chunk: (size: number) => LazyCollectionOperations<T[]>
@@ -200,8 +283,8 @@ export interface CollectionOperations<T> extends Collection<T> {
   // Laravel-like
   all: () => T[]
   average: (key?: keyof T) => number // alias for avg
-  collapse: () => CollectionOperations<T extends Array<infer U> ? U : T>
-  combine: <U>(values: U[]) => CollectionOperations<Record<string, U | undefined>>
+  collapse: () => CollectionOperations<ArrayValue<T>>
+  combine: <const U>(values: readonly U[]) => CollectionOperations<Record<Extract<T, string | number>, U | undefined>>
   contains: {
     (item: T | undefined): boolean
     <K extends keyof T>(key: K, value: T[K]): boolean
@@ -215,56 +298,58 @@ export interface CollectionOperations<T> extends Collection<T> {
     <K extends keyof T>(key: K): Map<T[K], number>
     <U extends string | number>(callback: (item: T) => U): Map<U, number>
   }
-  diffAssoc: (other: T[] | CollectionOperations<T>) => CollectionOperations<T>
+  diffAssoc: (other: readonly T[] | CollectionOperations<T>) => CollectionOperations<T>
   diffKeys: <K extends keyof T>(other: Record<K, T[K]>[]) => CollectionOperations<T>
-  diffUsing: (other: T[], callback: (a: T, b: T) => number) => CollectionOperations<T>
+  diffUsing: (other: readonly T[], callback: (a: T, b: T) => number) => CollectionOperations<T>
   doesntContain: ((_item: T) => boolean) & (<K extends keyof T>(key: K, value: T[K]) => boolean)
   duplicates: <K extends keyof T>(key?: K) => CollectionOperations<T>
   each: (callback: (item: T) => void) => CollectionOperations<T>
-  eachSpread: (callback: (...args: any[]) => void) => CollectionOperations<T>
-  except: <K extends keyof T>(...keys: K[]) => CollectionOperations<Omit<T, K>>
+  eachSpread: (callback: (...args: SpreadArguments<T>) => void) => CollectionOperations<T>
+  except: <K extends keyof T>(...keys: K[]) => CollectionOperations<RemoveProperties<T, K>>
   firstOrFail: () => T
-  firstWhere: <K extends keyof T>(key: K, value: T[K]) => T | undefined
-  flatten: (depth?: number) => CollectionOperations<T extends Array<infer U> ? U : T>
+  firstWhere: <K extends keyof T, const V extends T[K]>(key: K, value: V) => WithPropertyValue<T, K, V> | undefined
+  flatten: {
+    (): CollectionOperations<DeepArrayValue<T>>
+    <D extends number>(depth: D): CollectionOperations<ArrayValueAtDepth<T, D>>
+  }
   flip: <R extends Record<string | number, string | number> = {
     [K in Extract<keyof T, string | number> as T[K] extends string | number ? T[K] : never]: K
   }>() => CollectionOperations<R>
-  forget: <K extends keyof T>(key: K) => CollectionOperations<Omit<T, K>>
-  get: <K extends keyof T>(key: K, defaultValue?: T[K]) => T[K] | undefined
+  forget: <K extends keyof T>(key: K) => CollectionOperations<RemoveProperties<T, K>>
+  get: {
+    <K extends keyof T>(key: K): T[K] | undefined
+    <K extends keyof T, const D>(key: K, defaultValue: D): Exclude<T[K], undefined> | D
+  }
   has: <K extends keyof T>(key: K) => boolean
   keyBy: <K extends keyof T>(key: K) => Map<T[K], T>
   macro: (name: string, callback: (...args: any[]) => any) => void
-  make: <U>(items: U[]) => CollectionOperations<U>
+  make: <const U>(items: readonly U[]) => CollectionOperations<U>
   mapInto: <U extends Record<string, any>>(constructor: new () => U) => CollectionOperations<U>
-  mapToDictionary: <K extends string | number | symbol, V>(
-    callback: (item: T) => [K, V]
+  mapToDictionary: <const K extends PropertyKey, const V>(
+    callback: (item: T) => readonly [K, V]
   ) => Map<K, V>
-  mapWithKeys: <K extends string | number | symbol, V>(
-    callback: (item: T) => [K, V]
+  mapWithKeys: <const K extends PropertyKey, const V>(
+    callback: (item: T) => readonly [K, V]
   ) => Map<K, V>
-  merge: <U extends T>(other: U[] | CollectionOperations<U>) => CollectionOperations<T | U>
-  mergeRecursive: <U>(other: U[] | CollectionOperations<U>) => CollectionOperations<RecordMerge<T, U>>
-  only: <K extends string>(...keys: K[]) => CollectionOperations<{
-    [P in K & keyof T]?: T[P]
-  }>
+  merge: <const U>(other: readonly U[] | CollectionOperations<U>) => CollectionOperations<T | U>
+  mergeRecursive: <U>(other: readonly U[] | CollectionOperations<U>) => CollectionOperations<RecordMerge<T, U>>
+  only: <const K extends PropertyKey>(...keys: K[]) => CollectionOperations<SelectProperties<T, K>>
   // eslint-disable-next-line ts/method-signature-style
-  pad<U = T>(size: number, value: U): CollectionOperations<T | U>
+  pad<const U = T>(size: number, value: U): CollectionOperations<T | U>
   pop: () => T | undefined
   // eslint-disable-next-line ts/method-signature-style
-  prepend<U = T>(value: U): CollectionOperations<T | U>
+  prepend<const U = T>(value: U): CollectionOperations<T | U>
   pull: <K extends keyof T>(key: K) => T[K] | undefined
   // eslint-disable-next-line ts/method-signature-style
-  push<U = T>(value: U): CollectionOperations<T | U>
-  // First overload handles existing keys
-  // eslint-disable-next-line ts/method-signature-style
-  put<K extends keyof T>(key: K, value: T[K]): CollectionOperations<T>
-  // Second overload handles new keys
-  // eslint-disable-next-line ts/method-signature-style
-  put<K extends string, V>(key: Exclude<K, keyof T>, value: V): CollectionOperations<T & Record<K, V>>
+  push<const U = T>(value: U): CollectionOperations<T | U>
+  put: <const K extends string, const V>(key: K, value: V) => CollectionOperations<SetProperty<T, K, V>>
   random: (size?: number) => CollectionOperations<T>
-  reject: (predicate: (item: T) => boolean) => CollectionOperations<T>
-  replace: (items: T[]) => CollectionOperations<T>
-  replaceRecursive: <U>(items: U[]) => CollectionOperations<U>
+  reject: {
+    <S extends T>(predicate: (item: T) => item is S): CollectionOperations<Exclude<T, S>>
+    (predicate: (item: T) => boolean): CollectionOperations<T>
+  }
+  replace: <const U>(items: readonly U[]) => CollectionOperations<U>
+  replaceRecursive: <const U>(items: readonly U[]) => CollectionOperations<U>
   reverse: () => CollectionOperations<T>
   shift: () => T | undefined
   shuffle: () => CollectionOperations<T>
@@ -275,29 +360,36 @@ export interface CollectionOperations<T> extends Collection<T> {
   sortDesc: () => CollectionOperations<T>
   sortKeys: () => CollectionOperations<T>
   sortKeysDesc: () => CollectionOperations<T>
-  splice: (start: number, deleteCount?: number, ...items: T[]) => CollectionOperations<T>
+  splice: <const U = never>(start: number, deleteCount?: number, ...items: U[]) => CollectionOperations<T | U>
   split: (numberOfGroups: number) => CollectionOperations<T[]>
   takeUntil: (value: T | ((_item: T) => boolean)) => CollectionOperations<T>
-  takeWhile: (value: T | ((_item: T) => boolean)) => CollectionOperations<T>
+  takeWhile: {
+    <S extends T>(predicate: (_item: T) => _item is S): CollectionOperations<S>
+    (value: T | ((_item: T) => boolean)): CollectionOperations<T>
+  }
   times: <U>(count: number, callback: (index: number) => U) => CollectionOperations<U>
   undot: () => CollectionOperations<Record<string, unknown>>
   unlessEmpty: <U = T>(callback: (collection: CollectionOperations<T>) => CollectionOperations<U>) => CollectionOperations<T | U>
   unlessNotEmpty: <U = T>(callback: (collection: CollectionOperations<T>) => CollectionOperations<U>) => CollectionOperations<T | U>
-  unwrap: <U>(value: U | U[] | CollectionOperations<U>) => U extends any[] ? U : U[]
+  unwrap: <const U>(value: U | readonly U[] | CollectionOperations<U>) => U[]
   whenEmpty: <U = T>(callback: (collection: CollectionOperations<T>) => CollectionOperations<U>) => CollectionOperations<T | U>
   whenNotEmpty: <U = T>(callback: (collection: CollectionOperations<T>) => CollectionOperations<U>) => CollectionOperations<T | U>
-  wrap: <U>(value: U | U[]) => CollectionOperations<U>
-  zip: <U>(array: U[]) => CollectionOperations<[T, U | undefined]>
+  wrap: <const U>(value: U | readonly U[]) => CollectionOperations<U>
+  zip: <const U>(array: readonly U[]) => CollectionOperations<[T, U | undefined]>
 
   // Transformations
-  map: <U>(callback: (item: T, index: number) => U) => CollectionOperations<U>
-  filter: (predicate: (item: T, index: number) => boolean) => CollectionOperations<T>
+  map: <const U>(callback: (item: T, index: number) => U) => CollectionOperations<U>
+  filter: {
+    (predicate: BooleanConstructor): CollectionOperations<Exclude<T, Falsy>>
+    <S extends T>(predicate: (item: T, index: number) => item is S): CollectionOperations<S>
+    (predicate: (item: T, index: number) => boolean): CollectionOperations<T>
+  }
   reduce: <U>(callback: (accumulator: U, current: T, index: number) => U, initialValue: U) => U
-  flatMap: <U>(callback: (item: T, index: number) => U[]) => CollectionOperations<U>
+  flatMap: <const U>(callback: (item: T, index: number) => readonly U[]) => CollectionOperations<U>
 
   // Advanced Transformations
   mapToGroups: <K extends keyof T | string | number, V>(callback: (item: T) => [K, V]) => Map<K, CollectionOperations<V>>
-  mapSpread: <U>(callback: (...args: any[]) => U) => CollectionOperations<U>
+  mapSpread: <const U>(callback: (...args: SpreadArguments<T>) => U) => CollectionOperations<U>
   mapUntil: <U>(callback: (item: T, index: number) => U, predicate: (item: U) => boolean) => CollectionOperations<U>
 
   // Async Operations
@@ -333,7 +425,7 @@ export interface CollectionOperations<T> extends Collection<T> {
    */
   round: {
     (this: CollectionOperations<number>, precision?: number): CollectionOperations<number>
-    <K extends keyof T>(key: K, precision?: number): CollectionOperations<T>
+    <K extends keyof T>(key: K, precision?: number): CollectionOperations<SetProperty<T, K, number>>
   }
 
   /**
@@ -341,7 +433,7 @@ export interface CollectionOperations<T> extends Collection<T> {
    */
   ceil: {
     (this: CollectionOperations<number>, precision?: number): CollectionOperations<number>
-    <K extends keyof T>(key: K, precision?: number): CollectionOperations<T>
+    <K extends keyof T>(key: K, precision?: number): CollectionOperations<SetProperty<T, K, number>>
   }
 
   /**
@@ -349,7 +441,7 @@ export interface CollectionOperations<T> extends Collection<T> {
    */
   floor: {
     (this: CollectionOperations<number>, precision?: number): CollectionOperations<number>
-    <K extends keyof T>(key: K, precision?: number): CollectionOperations<T>
+    <K extends keyof T>(key: K, precision?: number): CollectionOperations<SetProperty<T, K, number>>
   }
 
   /**
@@ -357,7 +449,7 @@ export interface CollectionOperations<T> extends Collection<T> {
    */
   abs: {
     (this: CollectionOperations<number>): CollectionOperations<number>
-    <K extends keyof T>(key: K): CollectionOperations<T>
+    <K extends keyof T>(key: K): CollectionOperations<SetProperty<T, K, number>>
   }
 
   /**
@@ -365,7 +457,7 @@ export interface CollectionOperations<T> extends Collection<T> {
    */
   clamp: {
     (this: CollectionOperations<number>, min: number, max: number): CollectionOperations<number>
-    <K extends keyof T>(key: K, min: number, max: number): CollectionOperations<T>
+    <K extends keyof T>(key: K, min: number, max: number): CollectionOperations<SetProperty<T, K, number>>
   }
 
   /**
@@ -389,35 +481,38 @@ export interface CollectionOperations<T> extends Collection<T> {
   // Grouping & Chunking
   chunk: (size: number) => CollectionOperations<T[]>
   groupBy: (<K extends keyof T>(_key: K) => Map<T[K], CollectionOperations<T>>) & ((callback: KeySelector<T>) => Map<string | number, CollectionOperations<T>>)
-  partition: (predicate: (item: T) => boolean) => [CollectionOperations<T>, CollectionOperations<T>]
+  partition: {
+    <S extends T>(predicate: (item: T) => item is S): [CollectionOperations<S>, CollectionOperations<Exclude<T, S>>]
+    (predicate: (item: T) => boolean): [CollectionOperations<T>, CollectionOperations<T>]
+  }
 
   // Advanced Grouping
   groupByMultiple: <K extends keyof T>(...keys: K[]) => Map<string, CollectionOperations<T>>
   pivot: <K extends keyof T, V extends keyof T>(keyField: K, valueField: V) => Map<T[K], T[V]>
 
   // Filtering & Searching
-  where: <K extends keyof T>(key: K, value: T[K]) => CollectionOperations<T>
-  whereIn: <K extends keyof T>(key: K, values: T[K][]) => CollectionOperations<T>
-  whereNotIn: <K extends keyof T>(key: K, values: T[K][]) => CollectionOperations<T>
+  where: <K extends keyof T, const V extends T[K]>(key: K, value: V) => CollectionOperations<WithPropertyValue<T, K, V>>
+  whereIn: <K extends keyof T, const V extends T[K]>(key: K, values: readonly V[]) => CollectionOperations<WithPropertyValue<T, K, V>>
+  whereNotIn: <K extends keyof T, const V extends T[K]>(key: K, values: readonly V[]) => CollectionOperations<WithoutPropertyValue<T, K, V>>
   whereBetween: <K extends keyof T>(key: K, min: T[K], max: T[K]) => CollectionOperations<T>
   whereNotBetween: <K extends keyof T>(key: K, min: T[K], max: T[K]) => CollectionOperations<T>
   unique: <K extends keyof T>(key?: K) => CollectionOperations<T>
-  when: <U = T>(
-    condition: boolean | ConditionalCallback<T>,
-    callback: (collection: CollectionOperations<T>) => CollectionOperations<U>
-  ) => CollectionOperations<U>
+  when: {
+    <const C extends boolean, U = T>(condition: C, callback: (collection: CollectionOperations<T>) => CollectionOperations<U>): CollectionOperations<C extends true ? U : T>
+    <U = T>(condition: ConditionalCallback<T>, callback: (collection: CollectionOperations<T>) => CollectionOperations<U>): CollectionOperations<T | U>
+  }
 
-  unless: <U = T>(
-    condition: boolean | ConditionalCallback<T>,
-    callback: (collection: CollectionOperations<T>) => CollectionOperations<U>
-  ) => CollectionOperations<U>
+  unless: {
+    <const C extends boolean, U = T>(condition: C, callback: (collection: CollectionOperations<T>) => CollectionOperations<U>): CollectionOperations<C extends true ? T : U>
+    <U = T>(condition: ConditionalCallback<T>, callback: (collection: CollectionOperations<T>) => CollectionOperations<U>): CollectionOperations<T | U>
+  }
 
   // Advanced Filtering
-  whereNull: <K extends keyof T>(key: K) => CollectionOperations<T>
-  whereNotNull: <K extends keyof T>(key: K) => CollectionOperations<T>
+  whereNull: <K extends keyof T>(key: K) => CollectionOperations<WithNullishProperty<T, K>>
+  whereNotNull: <K extends keyof T>(key: K) => CollectionOperations<WithNonNullableProperty<T, K>>
   whereLike: <K extends keyof T>(key: K, pattern: string) => CollectionOperations<T>
   whereRegex: <K extends keyof T>(key: K, regex: RegExp) => CollectionOperations<T>
-  whereInstanceOf: <U>(constructor: new (...args: any[]) => U) => CollectionOperations<T>
+  whereInstanceOf: <U>(constructor: abstract new (...args: never[]) => U) => CollectionOperations<InstanceOf<T, U>>
 
   // Sorting
   sort: (compareFunction?: CompareFunction<T>) => CollectionOperations<T>
@@ -442,13 +537,13 @@ export interface CollectionOperations<T> extends Collection<T> {
   slug: (this: CollectionOperations<string>) => CollectionOperations<string>
 
   // Set Operations
-  symmetricDiff: <U = T>(other: U[] | CollectionOperations<U>) => CollectionOperations<T | U>
-  cartesianProduct: <U>(other: U[] | CollectionOperations<U>) => CollectionOperations<[T, U]>
+  symmetricDiff: <const U = T>(other: readonly U[] | CollectionOperations<U>) => CollectionOperations<T | U>
+  cartesianProduct: <const U>(other: readonly U[] | CollectionOperations<U>) => CollectionOperations<[T, U]>
   power: () => CollectionOperations<CollectionOperations<T>>
 
   // Set Operations
-  intersect: (other: T[] | CollectionOperations<T>) => CollectionOperations<T>
-  union: (other: T[] | CollectionOperations<T>) => CollectionOperations<T>
+  intersect: <const U>(other: readonly U[] | CollectionOperations<U>) => CollectionOperations<Overlap<T, U>>
+  union: <const U>(other: readonly U[] | CollectionOperations<U>) => CollectionOperations<T | U>
 
   // Analysis and Statistics
   describe: <K extends keyof T>(key?: K) => Map<string, number>
@@ -489,12 +584,12 @@ export interface CollectionOperations<T> extends Collection<T> {
   // Advanced Querying
   query: (sql: string, params?: unknown[]) => CollectionOperations<T>
   having: <K extends keyof T>(key: K, op: HavingOperator, value: T[K]) => CollectionOperations<T>
-  crossJoin: <U>(other: CollectionOperations<U>) => CollectionOperations<T & U>
+  crossJoin: <U>(other: CollectionOperations<U>) => CollectionOperations<Assign<T, U>>
   leftJoin: <U, K extends keyof T>(
     other: CollectionOperations<U>,
     key: K,
     otherKey: keyof U
-  ) => CollectionOperations<T & Partial<U>>
+  ) => CollectionOperations<LeftAssign<T, U>>
 
   // Streaming Operations
   stream: () => ReadableStream<T>
@@ -582,7 +677,7 @@ export interface CollectionOperations<T> extends Collection<T> {
   // dataQuality: () => DataQualityMetrics
   detectAnomalies: (options: AnomalyDetectionOptions<T>) => CollectionOperations<T>
   impute: <K extends keyof T>(key: K, strategy: 'mean' | 'median' | 'mode') => CollectionOperations<T>
-  normalize: <K extends keyof T>(key: K, method: 'minmax' | 'zscore') => CollectionOperations<T>
+  normalize: <K extends keyof T>(key: K, method: 'minmax' | 'zscore') => CollectionOperations<SetProperty<T, K, number>>
   removeOutliers: <K extends keyof T>(key: K, threshold?: number) => CollectionOperations<T>
 
   // Versioning & History
@@ -615,7 +710,7 @@ export interface CollectionOperations<T> extends Collection<T> {
     query: string,
     fields: K[],
     options?: { fuzzy?: boolean, weights?: Partial<Record<K, number>> }
-  ) => CollectionOperations<T & { score: number }>
+  ) => CollectionOperations<SetProperty<T, 'score', number>>
 
   aggregate: <K extends keyof T>(
     key: K,
@@ -671,15 +766,15 @@ export interface CollectionOperations<T> extends Collection<T> {
     key: K,
     point: readonly [number, number],
     unit?: 'km' | 'mi'
-  ) => CollectionOperations<T & { distance: number }>
+  ) => CollectionOperations<SetProperty<T, 'distance', number>>
   money: <K extends keyof T>(
     key: K,
     currency?: string
-  ) => CollectionOperations<T & { formatted: string }>
+  ) => CollectionOperations<SetProperty<T, 'formatted', string>>
   dateTime: <K extends keyof T>(
     key: K,
     format?: string
-  ) => CollectionOperations<T & { formatted: string }>
+  ) => CollectionOperations<SetProperty<T, 'formatted', string>>
 
   // Configuration & Metadata
   configure: (options: {
@@ -728,11 +823,11 @@ export interface KMeansResult<T> extends CollectionOperations<ClusterResult<T>> 
   }
 }
 
-type IsEmptyType<T> = T extends never[] ? true : T extends Record<string, never> ? true : false
+type IsEmptyType<T> = T extends readonly never[] ? true : T extends Record<string, never> ? true : false
 
 export type RecordMerge<T, U> = IsEmptyType<U> extends true
   ? T
-  : [T, U] extends [any[], any[]]
+  : [T, U] extends [readonly unknown[], readonly unknown[]]
       ? U
       : [T, U] extends [object, object]
           ? {
