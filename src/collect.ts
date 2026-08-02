@@ -8,7 +8,7 @@ import { calculateFuzzyScore, getNextTimestamp, isSameDay, validateCoordinates }
  * @param items - Array of items or iterable
  */
 export function collect<T>(items: readonly T[] | Iterable<T>): CollectionOperations<T> {
-  const array = Array.isArray(items) ? items as T[] : Array.from(items)
+  const array = Array.from(items)
   const collection: Collection<T> = {
     items: array,
     get length() { return array.length },
