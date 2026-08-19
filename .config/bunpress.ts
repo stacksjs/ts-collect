@@ -1,11 +1,9 @@
-import type { BunpressConfig } from 'bunpress'
+import type { BunPressConfig } from '@stacksjs/bunpress'
 
-const config: BunpressConfig = {
-  name: 'ts-collect',
+const config: BunPressConfig = {
+  title: 'ts-collect',
   description: 'A powerful, fully-typed collections library for TypeScript',
   url: 'https://ts-collect.stacksjs.org',
-  theme: 'docs',
-
   nav: [
     { text: 'Guide', link: '/guide/getting-started' },
     { text: 'Methods', link: '/guide/methods' },
@@ -48,9 +46,11 @@ const config: BunpressConfig = {
     },
   ],
 
-  socialLinks: [
-    { icon: 'github', link: 'https://github.com/stacksjs/ts-collect' },
-  ],
+  themeConfig: {
+    socialLinks: [
+      { icon: 'github', link: 'https://github.com/stacksjs/ts-collect' },
+    ],
+  },
 }
 
 export default config
