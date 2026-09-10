@@ -55,8 +55,8 @@
     "release:patch": "bunx --bun bumpx patch --recursive --commit --tag --push --yes"
   },
   "devDependencies": {
-    "@stacksjs/bunpress": "^0.2.11",
-    "better-dx": "^0.2.15"
+    "@stacksjs/bunpress": "^0.2.14",
+    "better-dx": "^0.2.25"
   },
   "git-hooks": {
     "pre-commit": {
