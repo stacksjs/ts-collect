@@ -45,7 +45,7 @@
     "changelog": "bunx --bun @stacksjs/logsmith --verbose",
     "changelog:generate": "bunx --bun @stacksjs/logsmith --output CHANGELOG.md",
     "release": "bunx --bun @stacksjs/bumpx prompt --recursive",
-    "postinstall": "bunx bun-git-hooks",
+    "hooks:install": "bun-git-hooks",
     "dev:docs": "bun --bun bunpress dev docs",
     "build:docs": "bun --bun bunpress build docs",
     "preview:docs": "bun --bun bunpress preview docs",

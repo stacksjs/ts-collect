@@ -885,6 +885,8 @@ Please see our [releases](https://github.com/stackjs/ts-collect/releases) page f
 
 Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
 
+Run `bun install` in your checkout, then use `bun run hooks:install` to set up the contributor Git hooks.
+
 ## Community
 
 For help, discussion about best practices, or any other conversation that would benefit from being searchable:
