@@ -78,9 +78,21 @@ export function createLazyOperations<T>(generator: LazyGenerator<T>): LazyCollec
     },
 
     take(count: number): LazyCollectionOperations<T> {
-      let taken = 0
-      operations.push((value: T) => taken++ < count ? value : undefined)
-      return createLazyOperations(executeChain())
+      const source = executeChain()
+
+      async function* limited(): AsyncGenerator<T, void, undefined> {
+        if (!(count > 0))
+          return
+
+        let taken = 0
+        for await (const value of source) {
+          yield value
+          if (++taken >= count)
+            return
+        }
+      }
+
+      return createLazyOperations(limited())
     },
 
     skip(count: number): LazyCollectionOperations<T> {

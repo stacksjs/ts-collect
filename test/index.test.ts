@@ -1,6 +1,5 @@
 import type { CollectionOperations } from '../src/types'
 import { afterEach, describe, expect, it, mock, setSystemTime, spyOn } from 'bun:test'
-import { Buffer } from 'node:buffer'
 import { collect } from '../src/collect'
 import { calculateFuzzyScore } from '../src/utils'
 
@@ -4404,62 +4403,24 @@ describe('Collection Performance Features', () => {
       expect(computeSpy).not.toHaveBeenCalled()
     })
 
-    it('should reduce memory usage with lazy evaluation', async () => {
-      // Create data that will actually cause measurable memory differences
-      const createLargeObject = (i: number) => ({
-        id: i,
-        value: i / 100,
-        data: Buffer.alloc(1000).fill(i), // 1KB of data per item
-      })
+    it('stops a lazy pipeline after enough values pass the filter', async () => {
+      const collection = collect([1, 2, 3, 4, 5, 6])
+      const filter = mock((value: number) => value % 2 === 0)
+      const map = mock((value: number) => value * 2)
+      const pipeline = collection.lazy().filter(filter).map(map).take(2)
 
-      const testSize = 1000 // 1000 items * 1KB = ~1MB of data
-      const testData = Array.from({ length: testSize }, (_, i) => createLargeObject(i))
-      const collection = collect(testData)
+      expect(filter).not.toHaveBeenCalled()
+      expect(map).not.toHaveBeenCalled()
+      expect(await pipeline.toArray()).toEqual([4, 8])
+      expect(filter.mock.calls.map(([value]) => value)).toEqual([1, 2, 3, 4])
+      expect(map.mock.calls.map(([value]) => value)).toEqual([2, 4])
+    })
 
-      // Force garbage collection if available
-      globalThis.gc?.()
+    it('does no upstream work for an empty lazy take', async () => {
+      const map = mock((value: number) => value * 2)
 
-      // Measure baseline memory
-      const baselineMemory = process.memoryUsage().heapUsed
-
-      // Eager evaluation with explicit memory holding
-      const eagerResults: any[] = []
-      collection
-        .filter(item => item.value > 0.9)
-        .map(item => ({
-          ...item,
-          computed: Buffer.from(item.data).reduce((a, b) => a + b, 0),
-        }))
-        .take(10)
-        .toArray()
-        .forEach(item => eagerResults.push(item))
-
-      const eagerMemory = process.memoryUsage().heapUsed - baselineMemory
-
-      // Clear results and force GC
-      eagerResults.length = 0
-      globalThis.gc?.()
-
-      // Lazy evaluation
-      const lazyResults: any[] = []
-      await collection
-        .lazy()
-        .filter(item => item.value > 0.9)
-        .map(item => ({
-          ...item,
-          computed: Buffer.from(item.data).reduce((a, b) => a + b, 0),
-        }))
-        .take(10)
-        .toArray()
-        .then(results => lazyResults.push(...results))
-
-      const lazyMemory = process.memoryUsage().heapUsed - baselineMemory
-
-      // Use a reasonable threshold for memory comparison
-      expect(lazyMemory).toBeLessThanOrEqual(eagerMemory)
-
-      // Cleanup
-      lazyResults.length = 0
+      expect(await collect([1, 2]).lazy().map(map).take(0).toArray()).toEqual([])
+      expect(map).not.toHaveBeenCalled()
     })
   })
 })
