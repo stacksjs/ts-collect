@@ -260,7 +260,7 @@ Please note, all of these methods may be chained to fluently manipulate the unde
 | [_correlate_](https://ts-collect.netlify.app/api/correlate) | [_count_](https://ts-collect.netlify.app/api/count) | [_countBy_](https://ts-collect.netlify.app/api/countBy) |
 | [_crossJoin_](https://ts-collect.netlify.app/api/crossJoin) | [_cursor_](https://ts-collect.netlify.app/api/cursor) | [_dateTime_](https://ts-collect.netlify.app/api/dateTime) |
 | [_debug_](https://ts-collect.netlify.app/api/debug) | [_dd_](https://ts-collect.netlify.app/api/dd) | [_describe_](https://ts-collect.netlify.app/api/describe) |
-| [_detectAnomalies_](https://ts-collect.netlify.app/api/detectAnomalies) | [_differentiate_](https://ts-collect.netlify.app/api/differentiate) | [_diffAssoc_](https://ts-collect.netlify.app/api/diffAssoc) |
+| [_detectAnomalies_](https://ts-collect.netlify.app/api/detectAnomalies) | [_differentiate_](https://ts-collect.netlify.app/api/differentiate) | [_diff_](https://ts-collect.netlify.app/api/diff) · [_diffAssoc_](https://ts-collect.netlify.app/api/diffAssoc) |
 | [_diffKeys_](https://ts-collect.netlify.app/api/diffKeys) | [_diffUsing_](https://ts-collect.netlify.app/api/diffUsing) | [_doesntContain_](https://ts-collect.netlify.app/api/doesntContain) |
 | [_dump_](https://ts-collect.netlify.app/api/dump) | [_duplicates_](https://ts-collect.netlify.app/api/duplicates) | [_each_](https://ts-collect.netlify.app/api/each) |
 | [_eachSpread_](https://ts-collect.netlify.app/api/eachSpread) | [_entropy_](https://ts-collect.netlify.app/api/entropy) | [_everyAsync_](https://ts-collect.netlify.app/api/everyAsync) |
@@ -384,13 +384,13 @@ collection.contains(3) // true
 collection.containsOneItem() // false
 
 // countBy - Count occurrences by value
-const items = collect(['apple', 'banana', 'apple', 'orange'])
-items.countBy() // Map { 'apple' => 2, 'banana' => 1, 'orange' => 1 }
+const fruit = collect(['apple', 'banana', 'apple', 'orange'])
+fruit.countBy() // Map { 'apple' => 2, 'banana' => 1, 'orange' => 1 }
 
 // diff/diffAssoc/diffKeys - Find differences between collections
 const col1 = collect([1, 2, 3])
 const col2 = collect([2, 3, 4])
-col1.diff(col2) // [1]
+col1.diff(col2).all() // [1]
 
 // dd/dump - Dump collection and die or just dump
 collection.dump() // Console logs items
@@ -400,30 +400,33 @@ collection.dd() // Console logs and exits
 collection.each(item => console.log(item))
 collection.eachSpread((a, b) => console.log(a, b)) // For array items
 
-// except/only - Get all items except/only specified keys
-const user = collect({ id: 1, name: 'John', age: 25 })
-user.except('age') // { id: 1, name: 'John' }
-user.only('name', 'age') // { name: 'John', age: 25 }
+// except/only - Omit or select fields on each record
+const user = collect([{ id: 1, name: 'John', age: 25 }])
+user.except('age').all() // [{ id: 1, name: 'John' }]
+user.only('name', 'age').all() // [{ name: 'John', age: 25 }]
 
 // firstOrFail - Get first item or throw
 collection.firstOrFail() // 1 or throws if empty
 
 // firstWhere - Get first item matching criteria
-const users = collect([
+const people = collect([
   { id: 1, name: 'John' },
   { id: 2, name: 'Jane' }
 ])
-users.firstWhere('name', 'Jane') // { id: 2, name: 'Jane' }
+people.firstWhere('name', 'Jane') // { id: 2, name: 'Jane' }
 
 // flip - Swap keys and values
-const flipped = collect({ name: 'John' }).flip() // { John: 'name' }
+const flipped = collect([{ name: 'John' }]).flip().all() // [{ John: 'name' }]
 
-// forget - Remove an item by key
+// forget - Remove a field from each record
+user.forget('age').all() // [{ id: 1, name: 'John' }]
+
+// filter - Remove the item at an array position
 const array = collect(['a', 'b', 'c'])
-array.forget(1) // ['a', 'c']
+array.filter((_, index) => index !== 1).all() // ['a', 'c']
 
-// has/get - Check key existence / Get value
-const item = collect({ name: 'John' })
+// has checks all records, while get reads the first record
+const item = collect([{ name: 'John' }])
 item.has('name') // true
 item.get('name') // 'John'
 

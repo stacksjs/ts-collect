@@ -295,9 +295,11 @@ export interface CollectionOperations<T> extends Collection<T> {
     <K extends keyof T>(key: K, values: Array<T[K] | undefined>): boolean // Handle key/value check
   }
   countBy: {
+    (): Map<T, number>
     <K extends keyof T>(key: K): Map<T[K], number>
     <U extends string | number>(callback: (item: T) => U): Map<U, number>
   }
+  diff: <const U>(other: readonly U[] | CollectionOperations<U>) => CollectionOperations<T>
   diffAssoc: (other: readonly T[] | CollectionOperations<T>) => CollectionOperations<T>
   diffKeys: <K extends keyof T>(other: Record<K, T[K]>[]) => CollectionOperations<T>
   diffUsing: (other: readonly T[], callback: (a: T, b: T) => number) => CollectionOperations<T>

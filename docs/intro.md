@@ -254,7 +254,7 @@ Please note, all of these methods may be chained to fluently manipulate the unde
 | [_correlate_](https://ts-collect.netlify.app/api/correlate) | [_count_](https://ts-collect.netlify.app/api/count) | [_countBy_](https://ts-collect.netlify.app/api/countBy) |
 | [_crossJoin_](https://ts-collect.netlify.app/api/crossJoin) | [_cursor_](https://ts-collect.netlify.app/api/cursor) | [_dateTime_](https://ts-collect.netlify.app/api/dateTime) |
 | [_debug_](https://ts-collect.netlify.app/api/debug) | [_dd_](https://ts-collect.netlify.app/api/dd) | [_describe_](https://ts-collect.netlify.app/api/describe) |
-| [_detectAnomalies_](https://ts-collect.netlify.app/api/detectAnomalies) | [_differentiate_](https://ts-collect.netlify.app/api/differentiate) | [_diffAssoc_](https://ts-collect.netlify.app/api/diffAssoc) |
+| [_detectAnomalies_](https://ts-collect.netlify.app/api/detectAnomalies) | [_differentiate_](https://ts-collect.netlify.app/api/differentiate) | [_diff_](https://ts-collect.netlify.app/api/diff) · [_diffAssoc_](https://ts-collect.netlify.app/api/diffAssoc) |
 | [_diffKeys_](https://ts-collect.netlify.app/api/diffKeys) | [_diffUsing_](https://ts-collect.netlify.app/api/diffUsing) | [_doesntContain_](https://ts-collect.netlify.app/api/doesntContain) |
 | [_dump_](https://ts-collect.netlify.app/api/dump) | [_duplicates_](https://ts-collect.netlify.app/api/duplicates) | [_each_](https://ts-collect.netlify.app/api/each) |
 | [_eachSpread_](https://ts-collect.netlify.app/api/eachSpread) | [_entropy_](https://ts-collect.netlify.app/api/entropy) | [_everyAsync_](https://ts-collect.netlify.app/api/everyAsync) |

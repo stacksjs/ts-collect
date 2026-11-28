@@ -84,20 +84,26 @@ function createCollectionOperations<T>(collection: Collection<T>): CollectionOpe
       )
     },
 
-    countBy<K extends keyof T | string | number>(
-      keyOrCallback: K | ((_item: T) => K extends keyof T ? T[K] : string | number),
-    ): Map<any, number> {
+    countBy(keyOrCallback?: keyof T | ((item: T) => string | number)): Map<any, number> {
       const counts = new Map<any, number>()
 
       for (const item of collection.items) {
-        const value = typeof keyOrCallback === 'function'
-          ? (keyOrCallback as (item: T) => string | number)(item)
-          : item[keyOrCallback as keyof T]
+        let value: T | T[keyof T] | string | number = item
+        if (typeof keyOrCallback === 'function')
+          value = keyOrCallback(item)
+        else if (keyOrCallback !== undefined)
+          value = item[keyOrCallback]
 
-        counts.set(value, (counts.get(value) || 0) + 1)
+        counts.set(value, (counts.get(value) ?? 0) + 1)
       }
 
       return counts
+    },
+
+    diff<U>(other: readonly U[] | CollectionOperations<U>): CollectionOperations<T> {
+      const otherItems = Array.isArray(other) ? other : (other as CollectionOperations<U>).items
+      const otherSet = new Set<unknown>(otherItems)
+      return collect(collection.items.filter(item => !otherSet.has(item)))
     },
 
     diffAssoc(other: readonly T[] | CollectionOperations<T>): CollectionOperations<T> {

@@ -334,6 +334,23 @@ describe('Collection Core Operations', () => {
   })
 
   describe('countBy()', () => {
+    it('counts item values with no selector', () => {
+      const counts: Map<'apple' | 'banana' | 'orange', number> = collect(['apple', 'banana', 'apple', 'orange'] as const).countBy()
+      expect([...counts]).toEqual([['apple', 2], ['banana', 1], ['orange', 1]])
+    })
+
+    it('counts undefined, NaN, and distinct object references', () => {
+      const first = { id: 1 }
+      const second = { id: 1 }
+      const counts = collect([first, undefined, Number.NaN, second, first, Number.NaN]).countBy()
+      expect(counts.size).toBe(4)
+      expect(counts.get(first)).toBe(2)
+      expect(counts.get(second)).toBe(1)
+      expect(counts.get(undefined)).toBe(1)
+      expect(counts.get(Number.NaN)).toBe(2)
+      expect(collect([]).countBy().size).toBe(0)
+    })
+
     it('should count occurrences by primitive values', () => {
       const collection = collect([1, 1, 2, 2, 2, 3])
       const counts = collection.countBy(item => item)
@@ -356,6 +373,43 @@ describe('Collection Core Operations', () => {
       const counts = collection.countBy('any')
       expect(Array.from(counts.entries())).toEqual([])
     })
+  })
+
+  describe('diff()', () => {
+    it('preserves surviving values, order, duplicates, and the input collections', () => {
+      const input = collect([1, 2, 3, 1, 2] as const)
+      const other = collect([2, 4] as const)
+      const result: CollectionOperations<1 | 2 | 3> = input.diff(other)
+      expect(result.toArray()).toEqual([1, 3, 1])
+      expect(input.diff([2, 4] as const).toArray()).toEqual([1, 3, 1])
+      expect(input.toArray()).toEqual([1, 2, 3, 1, 2])
+      expect(other.toArray()).toEqual([2, 4])
+    })
+
+    it('compares values by identity and handles empty inputs', () => {
+      const first = { id: 1 }
+      const second = { id: 1 }
+      const input = collect([first, Number.NaN, second, undefined])
+      const result = input.diff([first, Number.NaN, undefined]).toArray()
+      expect(result).toHaveLength(1)
+      expect(result[0]).toBe(second)
+      expect(input.diff([]).toArray()).toEqual(input.toArray())
+      expect(collect([]).diff(input).toArray()).toEqual([])
+    })
+  })
+
+  it('supports the documented record and sequence examples', () => {
+    const user = collect([{ id: 1, name: 'John', age: 25 }])
+    expect(user.except('age').toArray()).toEqual([{ id: 1, name: 'John' }])
+    expect(user.only('name', 'age').toArray()).toEqual([{ name: 'John', age: 25 }])
+    expect(user.forget('age').toArray()).toEqual([{ id: 1, name: 'John' }])
+    expect(user.toArray()).toEqual([{ id: 1, name: 'John', age: 25 }])
+    expect(collect([{ name: 'John' }]).flip().toArray()).toEqual([{ John: 'name' }])
+    expect(collect(['a', 'b', 'c']).filter((_, index) => index !== 1).toArray()).toEqual(['a', 'c'])
+    const records = collect<{ name?: string, age?: number }>([{ name: 'John' }, { age: 25 }])
+    expect(records.get('name')).toBe('John')
+    expect(records.get('age', 0)).toBe(0)
+    expect(records.has('age')).toBe(true)
   })
 
   describe('diffAssoc()', () => {

@@ -55,13 +55,13 @@ collection.contains(3) // true
 collection.containsOneItem() // false
 
 // countBy - Count occurrences by value
-const items = collect(['apple', 'banana', 'apple', 'orange'])
-items.countBy() // Map { 'apple' => 2, 'banana' => 1, 'orange' => 1 }
+const fruit = collect(['apple', 'banana', 'apple', 'orange'])
+fruit.countBy() // Map { 'apple' => 2, 'banana' => 1, 'orange' => 1 }
 
 // diff/diffAssoc/diffKeys - Find differences between collections
 const col1 = collect([1, 2, 3])
 const col2 = collect([2, 3, 4])
-col1.diff(col2) // [1]
+col1.diff(col2).all() // [1]
 
 // dd/dump - Dump collection and die or just dump
 collection.dump() // Console logs items
@@ -71,30 +71,33 @@ collection.dd() // Console logs and exits
 collection.each(item => console.log(item))
 collection.eachSpread((a, b) => console.log(a, b)) // For array items
 
-// except/only - Get all items except/only specified keys
-const user = collect({ id: 1, name: 'John', age: 25 })
-user.except('age') // { id: 1, name: 'John' }
-user.only('name', 'age') // { name: 'John', age: 25 }
+// except/only - Omit or select fields on each record
+const user = collect([{ id: 1, name: 'John', age: 25 }])
+user.except('age').all() // [{ id: 1, name: 'John' }]
+user.only('name', 'age').all() // [{ name: 'John', age: 25 }]
 
 // firstOrFail - Get first item or throw
 collection.firstOrFail() // 1 or throws if empty
 
 // firstWhere - Get first item matching criteria
-const users = collect([
+const people = collect([
   { id: 1, name: 'John' },
   { id: 2, name: 'Jane' }
 ])
-users.firstWhere('name', 'Jane') // { id: 2, name: 'Jane' }
+people.firstWhere('name', 'Jane') // { id: 2, name: 'Jane' }
 
 // flip - Swap keys and values
-const flipped = collect({ name: 'John' }).flip() // { John: 'name' }
+const flipped = collect([{ name: 'John' }]).flip().all() // [{ John: 'name' }]
 
-// forget - Remove an item by key
+// forget - Remove a field from each record
+user.forget('age').all() // [{ id: 1, name: 'John' }]
+
+// filter - Remove the item at an array position
 const array = collect(['a', 'b', 'c'])
-array.forget(1) // ['a', 'c']
+array.filter((_, index) => index !== 1).all() // ['a', 'c']
 
-// has/get - Check key existence / Get value
-const item = collect({ name: 'John' })
+// has checks all records, while get reads the first record
+const item = collect([{ name: 'John' }])
 item.has('name') // true
 item.get('name') // 'John'
 

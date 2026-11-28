@@ -15,7 +15,7 @@ This API reference page provides a list of available methods available in the `t
 | [_correlate_](/api-reference#correlate) | [_count_](/api-reference#count) | [_countBy_](/api-reference#countBy) |
 | [_crossJoin_](/api-reference#crossJoin) | [_cursor_](/api-reference#cursor) | [_dateTime_](/api-reference#dateTime) |
 | [_debug_](/api-reference#debug) | [_dd_](/api-reference#dd) | [_describe_](/api-reference#describe) |
-| [_detectAnomalies_](/api-reference#detectAnomalies) | [_differentiate_](/api-reference#differentiate) | [_diffAssoc_](/api-reference#diffAssoc) |
+| [_detectAnomalies_](/api-reference#detectAnomalies) | [_differentiate_](/api-reference#differentiate) | [_diff_](/api/diff) · [_diffAssoc_](/api-reference#diffAssoc) |
 | [_diffKeys_](/api-reference#diffKeys) | [_diffUsing_](/api-reference#diffUsing) | [_doesntContain_](/api-reference#doesntContain) |
 | [_dump_](/api-reference#dump) | [_duplicates_](/api-reference#duplicates) | [_each_](/api-reference#each) |
 | [_eachSpread_](/api-reference#eachSpread) | [_entropy_](/api-reference#entropy) | [_everyAsync_](/api-reference#everyAsync) |

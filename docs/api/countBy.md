@@ -1,11 +1,12 @@
 # CountBy Method
 
-The `countBy()` method counts the occurrences of values in the collection based on a key or callback function. It returns a Map with the counted values and their frequencies.
+The `countBy()` method counts the occurrences of values in the collection using the items themselves, a field on each item, or a callback. It returns a Map with the counted values and their frequencies.
 
 ## Basic Syntax
 
 ```typescript
-const key: keyof T = ''
+// Count by item value
+collect(items).countBy()
 
 // Count by key
 collect(items).countBy(key)
@@ -16,7 +17,20 @@ collect(items).countBy((item: T) => string | number)
 
 ## Examples
 
-### Basic Usage - Counting by Key
+### Counting item values
+
+```typescript
+import { collect } from 'ts-collect'
+
+const fruit = collect(['apple', 'banana', 'apple', 'orange'] as const)
+const counts = fruit.countBy()
+counts.get('apple') // 2
+counts.get('banana') // 1
+```
+
+The map keys have the item type. Object items are counted by reference.
+
+### Counting by Key
 
 ```typescript
 import { collect } from 'ts-collect'
@@ -249,5 +263,5 @@ const typeChecked = items.countBy((item: TypedItem) => {
 
 Returns a Map object where:
 
-- Keys are the distinct values found by the key or callback function
+- Keys are the distinct items or the values selected by the key or callback
 - Values are the number of occurrences of each key

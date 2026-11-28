@@ -714,17 +714,17 @@ users.keys('id').all() // [1, 2]
 
 ### only()
 
-Returns only specified keys.
+Keeps the specified fields on each record.
 
 ```typescript
-const user = collect({ id: 1, name: 'John', email: 'john@example.com' })
+const user = collect([{ id: 1, name: 'John', email: 'john@example.com' }])
 user.only('name', 'email').all()
 // [{ name: 'John', email: 'john@example.com' }]
 ```
 
 ### except()
 
-Returns all except specified keys.
+Removes the specified fields from each record.
 
 ```typescript
 user.except('email').all()
@@ -774,15 +774,17 @@ const b = [3, 4, 5]
 a.union(b).all() // [1, 2, 3, 4, 5]
 ```
 
-### diff() / diffAssoc() / diffKeys()
+### diff()
 
-Returns items not in the other collection.
+Removes values that occur in the other array or collection. The result keeps the order and duplicates of the remaining items.
 
 ```typescript
-const a = collect([1, 2, 3, 4])
+const a = collect([1, 2, 3, 4, 1])
 const b = [3, 4, 5, 6]
-a.diffAssoc(b).all() // [1, 2]
+a.diff(b).all() // [1, 2, 1]
 ```
+
+[`diffAssoc()`](/api/diffAssoc) compares items at the same position. [`diffKeys()`](/api/diffKeys) compares record fields.
 
 ### symmetricDiff()
 
